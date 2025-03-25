@@ -2021,79 +2021,74 @@ if (strlen($r_tt['anh']) > 3) {
 	echo json_encode($info);
 } 
 else if ($action == 'register') {
-	$email = addslashes(strip_tags($_REQUEST['email']));
-	$password = addslashes(strip_tags($_REQUEST['password']));
-	$re_passpord = addslashes(strip_tags($_REQUEST['re_password']));
-	$ho_ten = addslashes(strip_tags($_REQUEST['ho_ten']));
-	$dien_thoai = addslashes(strip_tags($_REQUEST['dien_thoai']));
-	$gioi_tinh = addslashes(strip_tags($_REQUEST['gioi_tinh']));
-	$tinh = addslashes(strip_tags($_REQUEST['tinh']));
-	$huyen = addslashes(strip_tags($_REQUEST['huyen']));
-	$xa = addslashes(strip_tags($_REQUEST['xa']));
-	$maso_thue = addslashes(strip_tags($_REQUEST['maso_thue']));
-	$maso_thue_cap = addslashes(strip_tags($_REQUEST['maso_thue_cap']));
-	$maso_thue_noicap = addslashes(strip_tags($_REQUEST['maso_thue_noicap']));
-	$nhan_vien = addslashes(strip_tags($_REQUEST['nhan_vien']));
+    $email = addslashes(strip_tags($_REQUEST['email']));
+    $password = addslashes(strip_tags($_REQUEST['password']));
+    $re_passpord = addslashes(strip_tags($_REQUEST['re_password']));
+    $ho_ten = addslashes(strip_tags($_REQUEST['ho_ten']));
+    $dien_thoai = addslashes(strip_tags($_REQUEST['dien_thoai']));
+    //$gioi_tinh = addslashes(strip_tags($_REQUEST['gioi_tinh']));
+    $tinh = addslashes(strip_tags($_REQUEST['tinh']));
+    $huyen = addslashes(strip_tags($_REQUEST['huyen'] ?? ''));
+    $xa = addslashes(strip_tags($_REQUEST['xa'] ?? ''));
+    $maso_thue = addslashes(strip_tags($_REQUEST['maso_thue'] ?? ''));
+    $maso_thue_cap = addslashes(strip_tags($_REQUEST['maso_thue_cap'] ?? ''));
+    $maso_thue_noicap = addslashes(strip_tags($_REQUEST['maso_thue_noicap'] ?? ''));
+    $nhan_vien = addslashes(strip_tags($_REQUEST['nhan_vien'] ?? ''));
 
+    $username = addslashes(strip_tags($_REQUEST['username']));
+    if ($check->check_username($username) == false) {
+        $ok = 0;
+        $thongbao = 'Thất bại! Tài khoản không đúng định dạng';
+    } else if (strlen($ho_ten) < 2) {
+        $ok = 0;
+        $thongbao = 'Thất bại! Vui lòng nhập họ và tên';
+    } else if (strlen($dien_thoai) < 2) {
+        $ok = 0;
+        $thongbao = 'Thất bại! Vui lòng nhập số điện thoại';
+    } else if ($check->check_email($email) == false) {
+        $ok = 0;
+        $thongbao = 'Thất bại! Địa chỉ email không đúng';
+    } else if (strlen($password) < 6) {
+        $ok = 0;
+        $thongbao = 'Thất bại! Mật khẩu quá ngắn';
+    } else if ($password != $re_passpord) {
+        $ok = 0;
+        $thongbao = 'Thất bại! Nhập lại mật khẩu không khớp';
+    } else {
+        $thongtin = mysqli_query($conn, "SELECT *,count(*) AS total FROM user_info WHERE username='$username' AND shop='$shop'");
+        $r_tt = mysqli_fetch_assoc($thongtin);
+        if ($r_tt['total'] > 0) {
+            $ok = 0;
+            $thongbao = 'Thất bại! Tài khoản đã tồn tại trên hệ thống';
+        } else {
+            $thongtin_e = mysqli_query($conn, "SELECT *,count(*) AS total FROM user_info WHERE email='$email' AND shop='$shop'");
+            $r_e = mysqli_fetch_assoc($thongtin_e);
+            if ($r_e['total'] > 0) {
+                $ok = 0;
+                $thongbao = 'Thất bại! Email đã tồn tại trên hệ thống';
+            } else {
+                $ok = 1;
+                $thongbao = 'Đăng ký tài khoản thành công';
+                $pass = md5($password);
+                $hientai = time();
+                $ip_address = $_SERVER['REMOTE_ADDR'];
+                $dia_chi = $tinh;
 
-	$username = addslashes(strip_tags($_REQUEST['username']));
-	if ($check->check_username($username) == false) {
-		$ok = 0;
-		$thongbao = 'Thất bại! Tài khoản không đúng định dạng';
-	} else if (strlen($ho_ten) < 2) {
-		$ok = 0;
-		$thongbao = 'Thất bại! Vui lòng nhập họ và tên';
-	} else if (strlen($dien_thoai) < 2) {
-		$ok = 0;
-		$thongbao = 'Thất bại! Vui lòng nhập số điện thoại';
-	} else if ($check->check_email($email) == false) {
-		$ok = 0;
-		$thongbao = 'Thất bại! Địa chỉ email không đúng';
-	} else if (strlen($password) < 6) {
-		$ok = 0;
-		$thongbao = 'Thất bại! Mật khẩu quá ngắn';
-	} else if ($password != $re_passpord) {
-		$ok = 0;
-		$thongbao = 'Thất bại! Nhập lại mật khẩu không khớp';
-	} else {
-		$thongtin = mysqli_query($conn, "SELECT *,count(*) AS total FROM user_info WHERE username='$username' AND shop='$shop'");
-		$r_tt = mysqli_fetch_assoc($thongtin);
-		if ($r_tt['total'] > 0) {
-			$ok = 0;
-			$thongbao = 'Thất bại! Tài khoản đã tồn tại trên hệ thống';
-		} else {
-			$thongtin_e = mysqli_query($conn, "SELECT *,count(*) AS total FROM user_info WHERE email='$email' AND shop='$shop'");
-			$r_e = mysqli_fetch_assoc($thongtin_e);
-			if ($r_e['total'] > 0) {
-				$ok = 0;
-				$thongbao = 'Thất bại! Email đã tồn tại trên hệ thống';
-			} else {
-				$ok = 1;
-				$thongbao = 'Đăng ký tài khoản thành công';
-				$pass = md5($password);
-				$hientai = time();
-				$ip_address = $_SERVER['REMOTE_ADDR'];
-				mysqli_query($conn, "INSERT INTO user_info(
-					username, shop, user_money, user_money2, email, password, name, avatar, 
-					mobile, domain, ngaysinh, cmnd, gioi_tinh, ngaycap, noicap, dia_chi, dropship, ctv, 
-					code_active, active, chinh_thuc, created, date_update, ip_address, 
-					logined, aff, about, nhom, tinh, huyen, xa, maso_thue, maso_thue_cap, nhan_vien, 
-					end_online, maso_thue_noicap, gia_leader, leader, doitac, leader_start
-				) VALUES (
-					'$username', '$shop', '0', '0', '$email', '$pass', '$ho_ten', '', 
-					'$dien_thoai', '', '$ngaysinh', '$cmnd', '$gioi_tinh', '$ngaycap', '$noicap', 
-					'$dia_chi', '0', '0', '', '1', '0', '$hientai', '$hientai', '$ip_address', '', 
-					'', '', '', '0', '0', '0', '$maso_thue', '$maso_thue_cap', '0', 
-					'', '$maso_thue_noicap', '0', '0', '', ''
-				)");
-				
-				
-				
-			}
-		}
-	}
-	echo json_encode(array('ok' => $ok, 'thongbao' => $thongbao));
-} 
+                // Câu lệnh INSERT phù hợp với 16 cột trong bảng user_info
+                mysqli_query($conn, "INSERT INTO user_info(
+                    shop, username, password, email, name, dia_chi, 
+                    ngaysinh, avatar, mobile, domain, active, 
+                    nhan_vien, chinh_thuc, dropship, created
+                ) VALUES (
+                    '$shop', '$username', '$pass', '$email', '$ho_ten', '$dia_chi',
+                    '', '', '$dien_thoai', '', '1',
+                    '0', '0', '0', '$hientai'
+                )");
+            }
+        }
+    }
+    echo json_encode(array('ok' => $ok, 'thongbao' => $thongbao));
+}
 else if ($action == 'change_profile') {
 	if (!isset($_COOKIE['user_id'])) {
 		echo json_encode(array('ok' => 0, 'thongbao' => 'Bạn chưa đăng nhập...'));

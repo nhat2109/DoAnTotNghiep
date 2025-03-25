@@ -1446,8 +1446,9 @@ $(document).ready(function() {
         });
     });
     //////////////////////
-    $('button[name=quen_matkhau]').on('click', function() {
+    $('body').on('click', 'button[name=quen_matkhau]', function() {
         email = $('input[name=email]').val();
+        console.log(email);
         var form_data = new FormData();
         form_data.append('action', 'forgot_password');
         form_data.append('email', email);
@@ -1482,160 +1483,7 @@ $(document).ready(function() {
         });
     });
    
-    $('button[name=dangky]').on('click', function() {
-        // Lấy giá trị các trường input
-        var username = $('input[name=username]').val().trim();
-        var email = $('input[name=email]').val().trim();
-        var password = $('input[name=password]').val();
-        var confirm_password = $('input[name=re_password]').val();
-        var ho_ten = $('input[name=ho_ten]').val().trim();
-        var dien_thoai = $('input[name=dien_thoai]').val().trim();
-        var gioi_tinh = $('input[name=gioi_tinh]').val();
-        var tinh = $('input[name=tinh]').val();
-        var huyen = $('input[name=huyen]').val();
-        var xa = $('input[name=xa]').val();
-        var maso_thue = $('input[name=maso_thue]').val().trim();
-        var maso_thue_cap = $('input[name=maso_thue_cap]').val();
-        var maso_thue_noicap = $('input[name=maso_thue_noicap]').val();
-        var nhan_vien = $('input[name=nhan_vien]').val();
-        var isValid = true;
-    
-        // Reset tất cả thông báo lỗi
-        $('.error-message').hide();
-    
-        // Kiểm tra tuần tự từng trường
-        if (username === '') {
-            $('#username-error').text('Vui lòng nhập tên đăng nhập').show();
-            $('input[name=username]').focus();
-            isValid = false;
-        } else if (username.length < 4) {
-            $('#username-error').text('Tên đăng nhập phải có ít nhất 4 ký tự').show();
-            $('input[name=username]').focus();
-            isValid = false;
-        } else if (!/^[a-zA-Z0-9_]+$/.test(username)) {
-            $('#username-error').text('Tên đăng nhập chỉ được chứa chữ cái, số và dấu gạch dưới').show();
-            $('input[name=username]').focus();
-            isValid = false;
-        } else if (ho_ten === '') {
-            $('#ho_ten-error').text('Vui lòng nhập họ tên').show();
-            $('input[name=ho_ten]').focus();
-            isValid = false;
-        } else if (ho_ten.length < 5) {
-            $('#ho_ten-error').text('Họ tên phải có ít nhất 5 ký tự').show();
-            $('input[name=ho_ten]').focus();
-            isValid = false;
-        } else if (dien_thoai === '') {
-            $('#dien_thoai-error').text('Vui lòng nhập số điện thoại').show();
-            $('input[name=dien_thoai]').focus();
-            isValid = false;
-        } else if (!/^(0[3|5|7|8|9])+([0-9]{8})\b$/.test(dien_thoai)) {
-            $('#dien_thoai-error').text('Số điện thoại không hợp lệ (phải có 10 số và bắt đầu bằng 03, 05, 07, 08, 09)').show();
-            $('input[name=dien_thoai]').focus();
-            isValid = false;
-        } else if (email === '') {
-            $('#email-error').text('Vui lòng nhập email').show();
-            $('input[name=email]').focus();
-            isValid = false;
-        } else if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/.test(email)) {
-            $('#email-error').text('Email không hợp lệ').show();
-            $('input[name=email]').focus();
-            isValid = false;
-        } else if (password === '') {
-            $('#password-error').text('Vui lòng nhập mật khẩu').show();
-            $('input[name=password]').focus();
-            isValid = false;
-        } else if (password.length < 6) {
-            $('#password-error').text('Mật khẩu phải có ít nhất 6 ký tự').show();
-            $('input[name=password]').focus();
-            isValid = false;
-        } else if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/.test(password)) {
-            $('#password-error').text('Mật khẩu phải chứa cả chữ và số').show();
-            $('input[name=password]').focus();
-            isValid = false;
-        } else if (confirm_password === '') {
-            $('#re_password-error').text('Vui lòng nhập lại mật khẩu').show();
-            $('input[name=re_password]').focus();
-            isValid = false;
-        } else if (password !== confirm_password) {
-            $('#re_password-error').text('Mật khẩu nhập lại không khớp').show();
-            $('input[name=re_password]').focus();
-            isValid = false;
-        } else if (gioi_tinh === '') {
-            $('#gioi_tinh-error').text('Vui lòng chọn giới tính').show();
-            $('input[name=gioi_tinh]').focus();
-            isValid = false;
-        } else if (tinh === '') {
-            $('#tinh-error').text('Vui lòng chọn tỉnh/thành phố').show();
-            $('input[name=tinh]').focus();
-            isValid = false;
-        } else if (huyen === '') {
-            $('#huyen-error').text('Vui lòng chọn quận/huyện').show();
-            $('input[name=huyen]').focus();
-            isValid = false;
-        } else if (xa === '') {
-            $('#xa-error').text('Vui lòng chọn phường/xã').show();
-            $('input[name=xa]').focus();
-            isValid = false;
-        } else if (maso_thue === '') {
-            $('#maso_thue-error').text('Vui lòng nhập mã số thuế').show();
-            $('input[name=maso_thue]').focus();
-            isValid = false;
-        } else if (!/^\d{10}(\d{3})?$/.test(maso_thue)) {
-            $('#maso_thue-error').text('Mã số thuế không hợp lệ (10 hoặc 13 số)').show();
-            $('input[name=maso_thue]').focus();
-            isValid = false;
-        } else if (maso_thue_cap === '') {
-            $('#maso_thue_cap-error').text('Vui lòng nhập ngày/tháng/năm cấp mã số thuế').show();
-            $('input[name=maso_thue_cap]').focus();
-            isValid = false;
-        } else if (maso_thue_noicap === '') {
-            $('#maso_thue_noicap-error').text('Vui lòng nhập nơi cấp mã số thuế').show();
-            $('input[name=maso_thue_noicap]').focus();
-            isValid = false;
-        }
-    
-        if (isValid) {
-            $('.load_overlay').show();
-            $('.load_process').fadeIn();
-            
-            // Gửi form nếu tất cả đều hợp lệ
-            $.ajax({
-                url: "/process.php",
-                type: "post",
-                data: {
-                    action: "register",
-                    username: username,
-                    email: email,
-                    password: password,
-                    re_password: confirm_password,
-                    ho_ten: ho_ten,
-                    dien_thoai: dien_thoai,
-                    gioi_tinh: gioi_tinh,
-                    tinh: tinh,
-                    huyen: huyen,
-                    xa: xa,
-                    maso_thue: maso_thue,
-                    maso_thue_cap: maso_thue_cap,
-                    maso_thue_noicap: maso_thue_noicap,
-                    nhan_vien: nhan_vien
-                },
-                success: function(kq) {
-                    var info = JSON.parse(kq);
-                    setTimeout(function() {
-                        $('.load_note').html(info.thongbao);
-                    }, 500);
-                    setTimeout(function() {
-                        $('.load_process').hide();
-                        $('.load_note').html('Hệ thống đang xử lý');
-                        $('.load_overlay').hide();
-                        if (info.ok == 1) {
-                            window.location.href = '/dang-nhap.html';
-                        }
-                    }, 700);
-                }
-            });
-        }
-    });
+   
     ////////////////////////
     $('button[name=change_profile]').on('click', function() {
         email = $('input[name=email]').val();

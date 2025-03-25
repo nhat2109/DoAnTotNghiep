@@ -218,113 +218,78 @@
 	</div>
 </section>
 <div class="container mr-bottom-20">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="page-login account-box-shadow">
-                    <div id="login">
-                        <h1 class="title-head text-center">Tạo tài khoản</h1>
-                        <div class="text-center"><span>Nếu chưa có tài khoản vui lòng đăng ký tại đây</span></div>
-                        <div class="form-signup clearfix" style="margin-bottom: 30px;">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <fieldset class="form-group">
-                                        <label>Tài khoản<span class="required">*</span></label>
-                                        <input type="text" class="form-control form-control-lg" name="username" id="username" placeholder="Nhập tài khoản">
-                                        <span class="error-message" id="username-error"></span>
-                                    </fieldset>
-                                </div>
-                                <div class="col-md-12">
-                                    <fieldset class="form-group">
-                                        <label>Họ và tên<span class="required">*</span></label>
-                                        <input type="text" class="form-control form-control-lg" name="ho_ten" id="ho_ten" placeholder="Nhập họ và tên">
-                                        <span class="error-message" id="ho_ten-error"></span>
-                                    </fieldset>
-                                </div>
-                                <div class="col-md-12">
-                                    <fieldset class="form-group">
-                                        <label>Điện thoại<span class="required">*</span></label>
-                                        <input type="text" class="form-control form-control-lg" name="dien_thoai" id="dien_thoai" placeholder="Nhập điện thoại">
-                                        <span class="error-message" id="dien_thoai-error"></span>
-                                    </fieldset>
-                                </div>
-                                <div class="col-md-12">
-                                    <fieldset class="form-group">
-                                        <label>Email<span class="required">*</span></label>
-                                        <input type="email" class="form-control form-control-lg" data-validation="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,63}$" name="email" id="email" placeholder="Nhập địa chỉ email" />
-                                        <span class="error-message" id="email-error"></span>
-                                    </fieldset>
-                                </div>
-                                <div class="col-md-12">
-                                    <fieldset class="form-group">
-                                        <label>Mật khẩu<span class="required">*</span></label>
-                                        <input type="password" class="form-control form-control-lg" name="password" id="password" placeholder="Nhập mật khẩu đăng nhập">
-                                        <span class="error-message" id="password-error"></span>
-                                    </fieldset>
-                                </div>
-                                <div class="col-md-12">
-                                    <fieldset class="form-group">
-                                        <label>Nhập lại mật khẩu<span class="required">*</span></label>
-                                        <input type="password" class="form-control form-control-lg" name="re_password" id="re_password" placeholder="Nhập lại mật khẩu đăng nhập">
-                                        <span class="error-message" id="re_password-error"></span>
-                                    </fieldset>
-                                </div>
-                                <div class="col-md-12">
-                                    <fieldset class="form-group">
-                                        <label>Giới tính<span class="required">*</span></label>
-                                        <input type="text" class="form-control form-control-lg" name="gioi_tinh" id="gioi_tinh" placeholder="Nhập giới tính">
-                                        <span class="error-message" id="gioi_tinh-error"></span>
-                                    </fieldset>
-                                </div>
-                                <div class="col-md-12">
-                                    <fieldset class="form-group">
-                                        <label>Tỉnh<span class="required">*</span></label>
-                                        <input type="text" class="form-control form-control-lg" name="tinh" id="tinh" placeholder="Nhập tỉnh">
-                                        <span class="error-message" id="tinh-error"></span>
-                                    </fieldset>
-                                </div>
-                                <div class="col-md-12">
-                                    <fieldset class="form-group">
-                                        <label>Huyện<span class="required">*</span></label>
-                                        <input type="text" class="form-control form-control-lg" name="huyen" id="huyen" placeholder="Nhập huyện">
-                                        <span class="error-message" id="huyen-error"></span>
-                                    </fieldset>
-                                </div>
-                                <div class="col-md-12">
-                                    <fieldset class="form-group">
-                                        <label>Xã<span class="required">*</span></label>
-                                        <input type="text" class="form-control form-control-lg" name="xa" id="xa" placeholder="Nhập xã">
-                                        <span class="error-message" id="xa-error"></span>
-                                    </fieldset>
-                                </div>
-                                <div class="col-md-12">
-                                    <fieldset class="form-group">
-                                        <label>Mã số thuế<span class="required">*</span></label>
-                                        <input type="text" class="form-control form-control-lg" name="maso_thue" id="maso_thue" placeholder="Nhập mã số thuế">
-                                        <span class="error-message" id="maso_thue-error"></span>
-                                    </fieldset>
-                                </div>
-                                <div class="col-md-12">
-                                    <fieldset class="form-group">
-                                        <label>Mã số thuế cấp<span class="required">*</span></label>
-                                        <input type="text" class="form-control form-control-lg" name="maso_thue_cap" id="maso_thue_cap" placeholder="Nhập mã số thuế cấp">
-                                        <span class="error-message" id="maso_thue_cap-error"></span>
-                                    </fieldset>
-                                </div>
-                                <div class="col-md-12">
-                                    <fieldset class="form-group">
-                                        <label>Nơi cấp mã số thuế<span class="required">*</span></label>
-                                        <input type="text" class="form-control form-control-lg" name="maso_thue_noicap" id="maso_thue_noicap" placeholder="Nhập nơi cấp mã số thuế">
-                                        <span class="error-message" id="maso_thue_noicap-error"></span>
-                                    </fieldset>
-                                </div>
-                                <div class="action_bottom text-center">
-                                    <button class="btn btn-style btn-blues" style="margin-top: 15px;" type="button" name="dangky">Đăng ký</button>
-                                </div>
-                                <div class="clearfix"></div>
-                                <p class="text-center"></p>
-                                <div class="text-center">
-                                    <a href="/dang-nhap.html" class="btn-link-style btn">Đăng nhập</a> | <a href="/quen-mat-khau.html">Quên mật khẩu?</a>
-                                </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="page-login account-box-shadow">
+                <div id="login">
+                    <h1 class="title-head text-center">Tạo tài khoản</h1>
+                    <div class="text-center"><span>Nếu chưa có tài khoản vui lòng đăng ký tại đây</span></div>
+                    <div class="form-signup clearfix" style="margin-bottom: 30px;">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <fieldset class="form-group">
+                                    <label>Tài khoản<span class="required">*</span></label>
+                                    <input type="text" class="form-control form-control-lg" name="username" id="username" placeholder="Nhập tài khoản">
+                                    <span class="error-message" id="username-error"></span>
+                                </fieldset>
+                            </div>
+                            <div class="col-md-12">
+                                <fieldset class="form-group">
+                                    <label>Họ và tên<span class="required">*</span></label>
+                                    <input type="text" class="form-control form-control-lg" name="ho_ten" id="ho_ten" placeholder="Nhập họ và tên">
+                                    <span class="error-message" id="ho_ten-error"></span>
+                                </fieldset>
+                            </div>
+                            <div class="col-md-12">
+                                <fieldset class="form-group">
+                                    <label>Điện thoại<span class="required">*</span></label>
+                                    <input type="text" class="form-control form-control-lg" name="dien_thoai" id="dien_thoai" placeholder="Nhập điện thoại">
+                                    <span class="error-message" id="dien_thoai-error"></span>
+                                </fieldset>
+                            </div>
+                            <div class="col-md-12">
+                                <fieldset class="form-group">
+                                    <label>Email<span class="required">*</span></label>
+                                    <input type="email" class="form-control form-control-lg" data-validation="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,63}$" name="email" id="email" placeholder="Nhập địa chỉ email" />
+                                    <span class="error-message" id="email-error"></span>
+                                </fieldset>
+                            </div>
+                            <div class="col-md-12">
+                                <fieldset class="form-group">
+                                    <label>Mật khẩu<span class="required">*</span></label>
+                                    <input type="password" class="form-control form-control-lg" name="password" id="password" placeholder="Nhập mật khẩu đăng nhập">
+                                    <span class="error-message" id="password-error"></span>
+                                </fieldset>
+                            </div>
+                            <div class="col-md-12">
+                                <fieldset class="form-group">
+                                    <label>Nhập lại mật khẩu<span class="required">*</span></label>
+                                    <input type="password" class="form-control form-control-lg" name="re_password" id="re_password" placeholder="Nhập lại mật khẩu đăng nhập">
+                                    <span class="error-message" id="re_password-error"></span>
+                                </fieldset>
+                            </div>
+                            <!-- <div class="col-md-12">
+                                <fieldset class="form-group">
+                                    <label>Giới tính<span class="required">*</span></label>
+                                    <input type="text" class="form-control form-control-lg" name="gioi_tinh" id="gioi_tinh" placeholder="Nhập giới tính">
+                                    <span class="error-message" id="gioi_tinh-error"></span>
+                                </fieldset>
+                            </div> -->
+                            <div class="col-md-12">
+                                <fieldset class="form-group">
+                                    <label>Địa chỉ<span class="required">*</span></label>
+                                    <input type="text" class="form-control form-control-lg" name="tinh" id="tinh" placeholder="Nhập tỉnh">
+                                    <span class="error-message" id="tinh-error"></span>
+                                </fieldset>
+                            </div>
+
+                            <div class="action_bottom text-center">
+                                <button class="btn btn-style btn-blues" style="margin-top: 15px;" type="button" name="dangky">Đăng ký</button>
+                            </div>
+                            <div class="clearfix"></div>
+                            <p class="text-center"></p>
+                            <div class="text-center">
+                                <a href="/dang-nhap.html" class="btn-link-style btn">Đăng nhập</a> | <a href="/quen-mat-khau.html">Quên mật khẩu?</a>
                             </div>
                         </div>
                     </div>
@@ -332,6 +297,7 @@
             </div>
         </div>
     </div>
+</div>
 		    
 <style>
 	.error-message {
@@ -3186,3 +3152,137 @@ var requireInit = "";
 }
 
     </style>
+
+	<script>
+		$('button[name=dangky]').on('click', function() {
+			// Lấy giá trị các trường input từ form
+			var username = $('input[name=username]').val().trim();
+			var email = $('input[name=email]').val().trim();
+			var password = $('input[name=password]').val();
+			var confirm_password = $('input[name=re_password]').val();
+			var ho_ten = $('input[name=ho_ten]').val().trim();
+			var dien_thoai = $('input[name=dien_thoai]').val().trim();
+			//var gioi_tinh = $('input[name=gioi_tinh]').val().trim();
+			var tinh = $('input[name=tinh]').val().trim();
+			
+			// Các trường không có trong form nhưng có trong code gốc, để trống
+			var huyen = '';
+			var xa = '';
+			var maso_thue = '';
+			var maso_thue_cap = '';
+			var maso_thue_noicap = '';
+			var nhan_vien = '';
+			
+			var isValid = true;
+		
+			// Reset tất cả thông báo lỗi
+			$('.error-message').text('').hide();
+		
+			// Kiểm tra tuần tự từng trường
+			if (username === '') {
+				$('#username-error').text('Vui lòng nhập tên đăng nhập').show();
+				$('input[name=username]').focus();
+				isValid = false;
+			} else if (username.length < 4) {
+				$('#username-error').text('Tên đăng nhập phải có ít nhất 4 ký tự').show();
+				$('input[name=username]').focus();
+				isValid = false;
+			} else if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+				$('#username-error').text('Tên đăng nhập chỉ được chứa chữ cái, số và dấu gạch dưới').show();
+				$('input[name=username]').focus();
+				isValid = false;
+			} else if (ho_ten === '') {
+				$('#ho_ten-error').text('Vui lòng nhập họ tên').show();
+				$('input[name=ho_ten]').focus();
+				isValid = false;
+			} else if (ho_ten.length < 2) {
+				$('#ho_ten-error').text('Họ tên phải có ít nhất 2 ký tự').show();
+				$('input[name=ho_ten]').focus();
+				isValid = false;
+			} else if (dien_thoai === '') {
+				$('#dien_thoai-error').text('Vui lòng nhập số điện thoại').show();
+				$('input[name=dien_thoai]').focus();
+				isValid = false;
+			} else if (!/^(0[3|5|7|8|9])+([0-9]{8})\b$/.test(dien_thoai)) {
+				$('#dien_thoai-error').text('Số điện thoại không hợp lệ (10 số, bắt đầu 03, 05, 07, 08, 09)').show();
+				$('input[name=dien_thoai]').focus();
+				isValid = false;
+			} else if (email === '') {
+				$('#email-error').text('Vui lòng nhập email').show();
+				$('input[name=email]').focus();
+				isValid = false;
+			} else if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/.test(email)) {
+				$('#email-error').text('Email không hợp lệ').show();
+				$('input[name=email]').focus();
+				isValid = false;
+			} else if (password === '') {
+				$('#password-error').text('Vui lòng nhập mật khẩu').show();
+				$('input[name=password]').focus();
+				isValid = false;
+			} else if (password.length < 6) {
+				$('#password-error').text('Mật khẩu phải có ít nhất 6 ký tự').show();
+				$('input[name=password]').focus();
+				isValid = false;
+			} else if (confirm_password === '') {
+				$('#re_password-error').text('Vui lòng nhập lại mật khẩu').show();
+				$('input[name=re_password]').focus();
+				isValid = false;
+			} else if (password !== confirm_password) {
+				$('#re_password-error').text('Mật khẩu nhập lại không khớp').show();
+				$('input[name=re_password]').focus();
+				isValid = false;
+			
+			} else if (tinh === '') {
+				$('#tinh-error').text('Vui lòng nhập tỉnh/thành phố').show();
+				$('input[name=tinh]').focus();
+				isValid = false;
+			}
+		
+			if (isValid) {
+				$('.load_overlay').show();
+				$('.load_process').fadeIn();
+		
+				// Gửi form qua AJAX
+				$.ajax({
+					url: "/process.php",
+					type: "post",
+					data: {
+						action: "register",
+						username: username,
+						email: email,
+						password: password,
+						re_password: confirm_password,
+						ho_ten: ho_ten,
+						dien_thoai: dien_thoai,
+						
+						tinh: tinh,
+						huyen: huyen,
+						xa: xa,
+						maso_thue: maso_thue,
+						maso_thue_cap: maso_thue_cap,
+						maso_thue_noicap: maso_thue_noicap,
+						nhan_vien: nhan_vien
+					},
+					success: function(kq) {
+						var info = JSON.parse(kq);
+						setTimeout(function() {
+							$('.load_note').html(info.thongbao);
+						}, 1000);
+						setTimeout(function() {
+							$('.load_process').hide();
+							$('.load_note').html('Hệ thống đang xử lý');
+							$('.load_overlay').hide();
+							if (info.ok == 1) {
+								window.location.href = '/dang-nhap.html';
+							}
+						}, 1500);
+					},
+					error: function() {
+						$('.load_process').hide();
+						$('.load_overlay').hide();
+						alert('Đã có lỗi xảy ra, vui lòng thử lại!');
+					}
+				});
+			}
+		});
+	</script>

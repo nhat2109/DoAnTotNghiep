@@ -136,7 +136,7 @@
 								<label style="float: left; margin:15px 1px;">Email<span
 										class="required">*</span></label>
 								<input type="email" class="form-control form-control-lg" value="" name="Email"
-									id="recover-email" placeholder="Email"
+									id="email" placeholder="Email"
 									pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,63}$" />
 							</fieldset>
 						</div>
