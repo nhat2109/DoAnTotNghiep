@@ -1,0 +1,95 @@
+RewriteEngine on
+<IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "*"
+    Header set Access-Control-Allow-Methods "GET, POST, OPTIONS"
+    Header set Access-Control-Allow-Headers "Content-Type, Authorization"
+</IfModule>
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
+
+#RewriteBase /
+#RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+#RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
+#RewriteCond %{REQUEST_URI} !\.(jpg|jpeg|png|gif|css|js|svg|ico|webp|woff|woff2|ttf|eot|otf|mp4|mp3)$ [NC]
+#RewriteRule ^(.*)$ baotri.php [L]
+RewriteRule ^index.html index.php
+RewriteRule ^tim-kiem.html timkiem.php
+RewriteRule ^detail/([^/]+).html view_tintuc.php?blank=$1
+RewriteRule ^chungnhan_detail/([^/]+).html view_chungnhan.php?blank=$1
+RewriteRule ^product/([^/]+).html view.php?blank=$1
+RewriteRule ^addon-deal.html addon_deal.php
+RewriteRule ^coupon-detail.html coupon_detail.php
+RewriteRule ^bai-viet/([^/]+).html tintuc.php?blank=$1
+RewriteRule ^san-pham/([^/]+).html sanpham_category.php?blank=$1
+RewriteRule ^v/([^/]+) rut_gon.php?rut_gon=$1
+RewriteRule ^dang-ky.html dangky.php
+RewriteRule ^kichhoat-baohanh.html kichhoat_baohanh.php
+RewriteRule ^dangky-banhang.html dangky_banhang.php
+RewriteRule ^dang-nhap.html dangnhap.php
+RewriteRule ^tai-khoan.html taikhoan.php
+RewriteRule ^dang-xuat.html process_logout.php
+RewriteRule ^quen-mat-khau.html quen_matkhau.php
+RewriteRule ^doi-mat-khau.html doi_matkhau.php
+RewriteRule ^tich-diem.html tich_diem.php
+RewriteRule ^dia-chi.html dia_chi.php
+RewriteRule ^vi-voucher.html vi_voucher.php
+RewriteRule ^chinh-sach.html chinh_sach.php
+RewriteRule ^danh-gia.html danh_gia.php
+RewriteRule ^doi-avatar.html doi_avatar.php
+RewriteRule ^don-hang.html don_hang.php
+RewriteRule ^order-detail.html order_detail.php
+RewriteRule ^ban-hang.html ban_hang.php
+RewriteRule ^lien-he.html lienhe.php
+RewriteRule ^thongbao.html thongbao.php
+RewriteRule ^thongbao-chitiet.html thongbao_detail.php
+RewriteRule ^san-pham.html sanpham.php
+RewriteRule ^san-pham-hot.html sanpham_hot.php
+RewriteRule ^san-pham-noi-bat.html sanpham_noibat.php
+RewriteRule ^san-pham-deal.html sanpham_deal.php
+RewriteRule ^flash-sale.html flash_sale.php
+RewriteRule ^coupon.html coupon.php
+RewriteRule ^gioi-thieu.html gioithieu.php
+RewriteRule ^gop-don.html gop_don.php
+RewriteRule ^deal-soc.html deal_soc.php
+RewriteRule ^gio-hang.html shopcart.php
+RewriteRule ^checkout.html checkout.php
+RewriteRule ^checkout-gopdon.html checkout_gopdon.php
+RewriteRule ^kho-giao-dien.html kho_giaodien.php
+RewriteRule ^sieu-sale.html sieu_sale.php
+RewriteRule ^sitemap.xml sitemap.php
+RewriteRule ^product-([0-9]+).xml sitemap.php?loai=product&page=$1
+RewriteRule ^post-([0-9]+).xml sitemap.php?loai=post&page=$1
+RewriteRule ^page.xml sitemap.php?loai=page
+RewriteRule ^danhmuc-tintuc-([0-9]+).xml sitemap.php?loai=category_tintuc&page=$1
+RewriteRule ^category-([0-9]+).xml sitemap.php?loai=category&page=$1
+
+
+
+
+RewriteRule ^admin/login admin/login.php
+RewriteRule ^admin/logout admin/logout.php
+RewriteRule ^admin/forgot-password admin/forgot_password.php
+RewriteRule ^admin/profile admin/index.php?action=profile
+RewriteRule ^admin/change-password admin/index.php?action=change_password
+RewriteRule ^admin/dashboard admin/index.php?action=dashboard
+RewriteRule ^admin/sms-detail admin/index.php?action=sms_detail
+RewriteRule ^admin/contact-detail admin/index.php?action=contact_detail
+RewriteRule ^admin/print-detail admin/index.php?action=print_detail
+RewriteRule ^admin/post admin/index.php?action=post
+RewriteRule ^admin/domain admin/index.php?action=domain
+RewriteRule ^admin/dangky-leader admin/index.php?action=dangky_leader
+
+RewriteRule ^admin/add-(.*) admin/index.php?action=add_$1
+RewriteRule ^admin/copy-(.*) admin/index.php?action=copy_$1
+RewriteRule ^admin/edit-(.*) admin/index.php?action=edit_$1
+RewriteRule ^admin/view-(.*) admin/index.php?action=view_$1
+RewriteRule ^admin/list-(.*) admin/index.php?action=list_$1
+RewriteRule ^admin/danh-muc-video/(.*) admin/index.php?action=category_video&link=$1
+RewriteRule ^admin/thongke-(.*) admin/index.php?action=thongke_$1
+RewriteRule ^admin/video admin/index.php?action=video
+RewriteRule ^admin/nhiemvu-nguoimoi admin/index.php?action=nhiemvu
+RewriteRule ^admin/$ admin/index.php
+
+RewriteRule ^404.html 404.php
+ErrorDocument 404 /404.html

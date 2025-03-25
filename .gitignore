@@ -1,0 +1,50 @@
+# Ignore node_modules directory
+node_modules/
+
+# Ignore Composer vendor directory
+vendor/
+
+# Ignore environment configuration files
+.env
+
+# Ignore log files
+*.log
+logs/
+debug_log.txt
+
+# Ignore temporary files
+*.tmp
+*.temp
+
+# Ignore cache files
+cache/
+*.cache
+
+# Ignore compiled files
+*.class
+*.o
+*.so
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore IDE/editor specific files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Ignore backup files
+*.bak
+*.old
+*.orig
+
+# Ignore specific files and directories
+uploads/
+images/
+openid/images/
+tinymce_7.1.0/
+socket.io/
+composer.lock
+cookie.txt
