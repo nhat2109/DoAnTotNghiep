@@ -960,70 +960,7 @@ $(document).ready(function() {
             });
         }
     });
-    /////////////////////////////
-    // $('.add_to_cart').on('click',function(){
-    //     if(!$(this).hasClass('disabled')){
-    //         sp_id=$(this).attr('sp_id');
-    //         loai=$(this).attr('loai');
-    //         if($('input[name=size]').length>0){
-    //             size=$('input[name=size]:checked').val();
-    //         }else{
-    //             size='';
-    //         }
-    //         if($('input[name=mau]').length>0){
-    //             mau=$('input[name=mau]:checked').val();
-    //         }else{
-    //             mau='';
-    //         }
-    //         if($('#quantity_view').length>0){
-    //             quantity=$('#quantity_view').val();
-    //         }else{
-    //             quantity=1;
-    //         }
-    //         $('.load_overlay').show();
-    //         $('.load_process').fadeIn();
-    //         $.ajax({
-    //             url:'/process.php',
-    //             type:'post',
-    //             data:{
-    //                 action:'add_to_cart',
-    //                 sp_id:sp_id,
-    //                 loai:loai,
-    //                 size:size,
-    //                 mau:mau,
-    //                 quantity:quantity
-    //             },
-    //             success: function(kq){
-    //                  try {
-    //                 var info = JSON.parse(kq);
-    //                 setTimeout(function() {
-    //                     $('.load_process').hide();
-    //                     $('.load_note').html('Hệ thống đang xử lý');
-    //                     $('#popup-cart').css('display', 'block');
-    //                     $('#popup-cart .tbody-popup').html(info.list);
-    //                     $('#popup-cart .tfoot-popup .total-price').html(info.total_price);
-    //                     $('#popup-cart .cart-popup-name').html(info.name);
-    //                     $('#popup-cart .cart-popup-count').html(info.total_cart);
-    //                     $('.count_item_pr').html(info.total);
-    //                 }, 500);
-    //             } catch (e) {
-    //                 console.error('Invalid JSON response:', kq);
-    //                 $('.load_process').hide();
-    //                 $('.load_note').html('Có lỗi xảy ra, vui lòng thử lại sau.');
-    //                 $('.load_overlay').hide();
-    //             }
-    //         },
-    //         error: function(xhr, status, error) {
-    //             console.error('AJAX error:', status, error);
-    //             $('.load_process').hide();
-    //             $('.load_note').html('Có lỗi xảy ra, vui lòng thử lại sau.');
-    //             $('.load_overlay').hide();
-    //         }
-    //         });
-    //         // console.log(total_cart);
-    //     }
-    // });
-    /////////////////////////////
+  
     $('.page_redirect a').on('click',function(){
         page=$(this).attr('page');
         var queryParams = new URLSearchParams(window.location.search);
@@ -1209,6 +1146,7 @@ $(document).ready(function() {
             }
         });*/
     });
+    
     /////////////////////////////
     $('input[name=size-filter]').click(function(){
         var queryParams = new URLSearchParams(window.location.search);
