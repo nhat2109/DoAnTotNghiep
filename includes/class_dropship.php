@@ -1,5 +1,7 @@
  <?php
+ 
 class class_dropship extends class_manage {
+	
 	///////////////////
 	function list_menu($conn, $shop, $page, $limit) {
 		$skin = $this->load('class_skin_cpanel');
@@ -21,6 +23,120 @@ class class_dropship extends class_manage {
 			$list .= $skin->skin_replace('skin_dropship/box_action/tr_menu', $r_tt);
 		}
 		return $list;
+	}
+	function list_kq_timkiem_thanhviennhom($conn, $page, $limit, $key, $user_id) {
+		$skin = $this->load('class_skin_cpanel');
+		$start = ($page - 1) * $limit;
+		
+		$query = "SELECT u.*, 
+					(SELECT count(*) FROM donhang d WHERE d.user_id = u.user_id AND d.status NOT IN ('3', '4')) AS total_donhang,
+					(SELECT count(*) FROM donhang_ctv d_ctv WHERE d_ctv.user_id = u.user_id AND d_ctv.status NOT IN ('3', '4')) AS total_donhang_ctv,
+					(SELECT SUM(tongtien) FROM donhang_ctv d_ctv WHERE d_ctv.user_id = u.user_id AND d_ctv.status NOT IN ('3', '4')) AS total_doanhso_ctv,
+					(SELECT SUM(tongtien) FROM donhang d WHERE d.user_id = u.user_id AND d.status NOT IN ('3', '4')) AS total_doanhso
+				FROM user_info u 
+				WHERE (username LIKE ? OR name LIKE ? OR email LIKE ? OR user_id = ? OR mobile LIKE ?) AND aff = ?
+				ORDER BY user_id ASC 
+				LIMIT ?, ?";
+		
+		$stmt = $conn->prepare($query);
+		$searchKey = "%$key%";
+		$stmt->bind_param("ssssssii", $searchKey, $searchKey, $searchKey, $key, $searchKey, $user_id, $start, $limit);
+		$stmt->execute();
+		$result = $stmt->get_result();
+		
+		$list = "";
+		$i = $start;
+		while ($r_tt = $result->fetch_assoc()) {
+			$i++;
+			$r_tt['i'] = $i;
+			$r_tt['vaitro'] = ($r_tt['user_id'] == $user_id) ? 'Trưởng nhóm' : 'Thành viên';
+			
+			$tong_doanhso = $r_tt['total_doanhso'] + $r_tt['total_doanhso_ctv'];
+			$total_donhang = $r_tt['total_donhang'] + $r_tt['total_donhang_ctv'];
+			
+			$r_tt['total_doanhso'] = number_format($tong_doanhso) . ' đ';
+			$r_tt['total_donhang'] = number_format($total_donhang);
+			if($r_tt['dropship'] == 0) {
+				
+				$r_tt['add_hot'] = $r_tt['status_cre'] == 0 ? '' : '';
+			} else {
+				$r_tt['add_hot'] = $r_tt['status_cre'] == 1 
+				? '<button class="btn btn-danger da_themhot">Đã thêm HOT</button>' 
+				: '<button class="btn btn-success add_hot">Thêm HOT</button>';
+			}
+			if ($r_tt['active'] == 2) {
+				$r_tt['tinh_trang'] = 'Tạm khóa';
+			} else if ($r_tt['active'] == 3) {
+				$r_tt['tinh_trang'] = '<span class="color_red bold">Khóa vĩnh viễn</span>';
+			} else {
+				//$r_tt['tinh_trang'] = 'Bình thường';
+			}
+			if($r_tt['dropship'] == 0) {
+				$r_tt['tinh_trang'] = 'Mua hàng';
+			} else {
+				// $r_tt['tinh_trang'] = 'Nhà bán';
+				$createdDate = strtotime(str_replace('/', '-', $r_tt['created'])); // Chuyển đổi ngày tạo về timestamp
+				$cutoffDate = strtotime('2025-01-01'); // Ngày giới hạn
+				$expirationDate = strtotime("+15 days", $createdDate); // Ngày hết hạn dùng thử
+				$currentDate = strtotime(date('Y-m-d')); // Ngày hiện tại
+				$thongtin_userkh = mysqli_query($conn, "SELECT * FROM user_kh WHERE user_id='{$r_tt['user_id']}' AND date_post >= '2025-01-01'");
+				$r_ttkh = mysqli_fetch_assoc($thongtin_userkh);
+
+				
+				if ($createdDate >= $cutoffDate) {
+					// Xác định trạng thái dropship
+					if ($r_tt['dropship'] == 1) {
+						// Kiểm tra nếu đã duyệt (có tiền)
+						if ($r_ttkh && $r_ttkh['tien_kh'] == 500000) {
+							$r_tt['dropship'] = 1; // Đã duyệt
+						}
+						// Nếu chưa duyệt, tiếp tục kiểm tra thời gian hết hạn
+						elseif ($currentDate <= $expirationDate) {
+							$r_tt['dropship'] = 2; // Dùng thử
+						}
+						else {
+							$r_tt['dropship'] = 4; // Tạm khóa
+							mysqli_query($conn, "UPDATE user_info SET dropship = 4 WHERE user_id='{$r_tt['user_id']}'");
+						}
+					}
+				
+					// Hiển thị radio button tương ứng với trạng thái
+					//<input type="radio" value="1" name="drop_' . $r_tt['user_id'] . '" ' . ($r_tt['dropship'] == 1 ? 'checked' : '') . '> Đã duyệt 
+					$r_tt['tinh_trang'] = '
+					<input type="radio" name="drop_' . $r_tt['user_id'] . '" value="2" ' . ($r_tt['dropship'] == 2 ? 'checked' : '') . '> Dùng thử 
+					<input type="radio" value="1" name="drop_' . $r_tt['user_id'] . '" ' . ($r_tt['dropship'] == 1 || $r_tt['leader'] == 1 ? 'checked' : '') . '> Đã duyệt
+					<input type="radio" value="4" name="drop_' . $r_tt['user_id'] . '" ' . ($r_tt['dropship'] == 4 ? 'checked' : '') . '> Tạm khóa';
+
+				} else {
+					if ($r_tt['dropship'] == 2) {
+						$r_tt['tinh_trang'] = '<input type="radio" name="drop_' . $r_tt['user_id'] . '" value="2" checked> Chờ duyệt 
+											<input type="radio" name="drop_' . $r_tt['user_id'] . '" value="3"> Từ chối 
+											<input type="radio" value="1" name="drop_' . $r_tt['user_id'] . '">Duyệt 
+											<input type="radio" value="4" name="drop_' . $r_tt['user_id'] . '">Tạm khóa';
+					} else if ($r_tt['dropship'] == 3) {
+						$r_tt['tinh_trang'] = '<input type="radio" name="drop_' . $r_tt['user_id'] . '" value="2"> Chờ duyệt 
+											<input type="radio" name="drop_' . $r_tt['user_id'] . '" value="3" checked> Từ chối 
+											<input type="radio" value="1" name="drop_' . $r_tt['user_id'] . '">Duyệt 
+											<input type="radio" value="4" name="drop_' . $r_tt['user_id'] . '">Tạm khóa';
+					} else if ($r_tt['dropship'] == 4) {
+						$r_tt['tinh_trang'] = '<input type="radio" name="drop_' . $r_tt['user_id'] . '" value="2"> Chờ duyệt 
+											<input type="radio" name="drop_' . $r_tt['user_id'] . '" value="3"> Từ chối 
+											<input type="radio" value="1" name="drop_' . $r_tt['user_id'] . '">Duyệt 
+											<input type="radio" value="4" name="drop_' . $r_tt['user_id'] . '" checked>Tạm khóa';
+					} else if ($r_tt['dropship'] == 1) {
+						$r_tt['tinh_trang'] = '<input type="radio" name="drop_' . $r_tt['user_id'] . '" value="2"> Chờ duyệt 
+											<input type="radio" name="drop_' . $r_tt['user_id'] . '" value="3"> Từ chối 
+											<input type="radio" value="1" name="drop_' . $r_tt['user_id'] . '" checked>Duyệt 
+											<input type="radio" value="4" name="drop_' . $r_tt['user_id'] . '">Tạm khóa';
+					}
+				}
+			}
+			$list .= $skin->skin_replace('skin_dropship/box_action/tr_thanhvien_nhom', $r_tt);
+		}
+		
+		$stmt->close();
+		
+		return $list ?: '<center>Không có kết quả</center>';
 	}
 	///////////////////
 	function list_notification($conn,$user_id,$loai,$page,$limit) {
@@ -88,6 +204,20 @@ class class_dropship extends class_manage {
 			'ten_color'=>$ten_color
 		);
 		return json_encode($bien);
+	}
+	////////////////////
+	function list_color($conn, $shop, $page, $limit) {
+		$skin = $this->load('class_skin_cpanel');
+		$check = $this->load('class_check');
+		$start = $page * $limit - $limit;
+		$i = $start;
+		$thongtin = mysqli_query($conn, "SELECT * FROM mau_sanpham WHERE shop='$shop' ORDER BY thu_tu ASC LIMIT $start,$limit");
+		while ($r_tt = mysqli_fetch_assoc($thongtin)) {
+			$i++;
+			$r_tt['i'] = $i;
+			$list .= $skin->skin_replace('skin_dropship/box_action/tr_color', $r_tt);
+		}
+		return $list;
 	}
 	////////////////////
 	function list_nhiemvu($conn,$user_id) {
@@ -422,13 +552,36 @@ class class_dropship extends class_manage {
 		return $list;
 	}
 	////////////////////
-	function list_thanhvien_nhom($conn,$user_id, $page, $limit) {
+	function list_thanhvien_nhom($conn, $user_id,  $page, $limit) {
+
 		$skin = $this->load('class_skin_cpanel');
 		$check = $this->load('class_check');
 		$start = $page * $limit - $limit;
 		$i = $start;
-		$tach_nhomtruong = explode(',', $list_nhomtruong);
-		$thongtin = mysqli_query($conn, "SELECT *,(SELECT count(*) FROM donhang d WHERE d.user_id=u.user_id AND d.status!='3' AND d.status!='4') AS total_donhang,(SELECT count(*) FROM donhang_ctv d_ctv WHERE d_ctv.user_id=u.user_id AND d_ctv.status!='3' AND d_ctv.status!='4') AS total_donhang_ctv,(SELECT sum(tongtien) FROM donhang_ctv d_ctv WHERE d_ctv.user_id=u.user_id AND d_ctv.status!='3' AND d_ctv.status!='4') AS total_doanhso_ctv,(SELECT sum(tongtien) FROM donhang d WHERE d.user_id=u.user_id AND d.status!='3' AND d.status!='4') AS total_doanhso FROM user_info u WHERE aff='$user_id' ORDER BY user_id ASC LIMIT $start,$limit");
+		$fixed_date = strtotime('2025-03-15'); // Thời gian cố định 10/3/2025
+		$current_date = strtotime(date('Y-m-d')); // Ngày hiện tại
+		// $tach_nhomtruong = explode(',', $list_nhomtruong);
+		$thongtin = mysqli_query($conn, "SELECT u.*, u.created,
+		(SELECT count(*) FROM donhang d WHERE d.user_id=u.user_id AND d.status!='3' AND d.status!='4') AS total_donhang,
+		(SELECT count(*) FROM donhang_ctv d_ctv WHERE d_ctv.user_id=u.user_id AND d_ctv.status!='3' AND d_ctv.status!='4') AS total_donhang_ctv,
+		(SELECT sum(tongtien) FROM donhang_ctv d_ctv WHERE d_ctv.user_id=u.user_id AND d_ctv.status!='3' AND d_ctv.status!='4') AS total_doanhso_ctv,
+		(SELECT sum(tongtien) FROM donhang d WHERE d.user_id=u.user_id AND d.status!='3' AND d.status!='4') AS total_doanhso 
+		FROM user_info u 
+		WHERE aff='$user_id' 
+		ORDER BY user_id ASC 
+		LIMIT $start, $limit");
+		// var_dump("SELECT u.*, u.created,
+		// (SELECT count(*) FROM donhang d WHERE d.user_id=u.user_id AND d.status!='3' AND d.status!='4') AS total_donhang,
+		// (SELECT count(*) FROM donhang_ctv d_ctv WHERE d_ctv.user_id=u.user_id AND d_ctv.status!='3' AND d_ctv.status!='4') AS total_donhang_ctv,
+		// (SELECT sum(tongtien) FROM donhang_ctv d_ctv WHERE d_ctv.user_id=u.user_id AND d_ctv.status!='3' AND d_ctv.status!='4') AS total_doanhso_ctv,
+		// (SELECT sum(tongtien) FROM donhang d WHERE d.user_id=u.user_id AND d.status!='3' AND d.status!='4') AS total_doanhso 
+		// FROM user_info u 
+		// WHERE aff='$user_id' 
+		// ORDER BY user_id ASC 
+		// LIMIT $start, $limit");
+		// die;
+		
+
 		while ($r_tt = mysqli_fetch_assoc($thongtin)) {
 			$i++;
 			$r_tt['i'] = $i;
@@ -437,13 +590,89 @@ class class_dropship extends class_manage {
 			} else {
 				$r_tt['vaitro'] = 'Thành viên';
 			}
-			$r_tt['nhom'] = $nhom;
+			// $r_tt['nhom'] = $nhom;
 			$tong_doanhso=$r_tt['total_doanhso'] + $r_tt['total_doanhso_ctv'];
 			$total_donhang=$r_tt['total_donhang'] + $r_tt['total_donhang_ctv'];
+			
+
 			$r_tt['total_doanhso'] = number_format($tong_doanhso) . ' đ';
 			$r_tt['total_donhang'] = number_format($total_donhang);
+			// Xử lý thông tin quản lý
+			if ($r_tt['aff'] > 0) {
+				$thongtin_quanly = mysqli_query($conn, "SELECT * FROM user_info WHERE user_id='{$r_tt['aff']}'");
+				$r_ql = mysqli_fetch_assoc($thongtin_quanly);
+				$r_tt['nguoi_quanly'] = $r_ql['name'];
+			} else {
+				$r_tt['nguoi_quanly'] = '<button class="show_quanly" user_id="' . $r_tt['user_id'] . '">Thêm quản lý</button>';
+			}
+	
+			// Xử lý các trường khác
+			$r_tt['leader'] = ($r_tt['leader'] == 1) ? 'Có' : 'Không';
+			$r_tt['user_money'] = number_format($r_tt['user_money']);
+			$r_tt['user_donate'] = number_format($r_tt['user_donate']);
+			$r_tt['sodu'] = number_format($r_tt['user_money'] + $r_tt['user_money2']);
+			$r_tt['user_money2'] = number_format($r_tt['user_money2']);
+			$r_tt['created'] = date('d/m/Y', $r_tt['created']);
+	
+			// Xử lý nút "Thêm HOT"
+			if ($r_tt['dropship'] == 0) {
+				$r_tt['add_hot'] = $r_tt['status_cre'] == 0 ? '' : '';
+			} else {
+				$r_tt['add_hot'] = $r_tt['status_cre'] == 1 
+					? '<button class="btn btn-danger da_themhot">Đã thêm HOT</button>' 
+					: '<button class="btn btn-success add_hot">Thêm HOT</button>';
+			}
+	
+			// Xử lý trạng thái tài khoản
+			if ($r_tt['active'] == 2) {
+				$r_tt['tinh_trang'] = 'Tạm khóa';
+			} else if ($r_tt['active'] == 3) {
+				$r_tt['tinh_trang'] = '<span class="color_red bold">Khóa vĩnh viễn</span>';
+			}
+	
+			// Xử lý trạng thái dropship
+			if ($r_tt['dropship'] == 0) {
+				$r_tt['tinh_trang'] = 'Mua hàng';
+			} else {
+				// Chuyển đổi created từ d/m/Y sang timestamp
+				$created_date_str = str_replace('/', '-', $r_tt['created']); // Đổi sang định dạng Y-m-d
+				$created_date = strtotime($created_date_str); // Chuyển thành timestamp
+	
+				$thongtin_userkh = mysqli_query($conn, "SELECT COUNT(*) as count FROM user_kh WHERE user_id='{$r_tt['user_id']}'");
+				$r_ttkh = mysqli_fetch_assoc($thongtin_userkh);
+	
+				// Kiểm tra điều kiện "Đã duyệt" (dropship = 1)
+				if ($r_ttkh['count'] > 0 || $r_tt['leader'] == "Có" || $r_tt['nhan_vien'] == 1) {
+					$r_tt['dropship'] = 1; // Đã duyệt
+				} else {
+					// Trường hợp 1: Nếu created_date < fixed_date
+					if ($created_date < $fixed_date) {
+						$expiration_date = strtotime("+15 days", $fixed_date); // 15 ngày từ fixed_date
+					} else {
+						// Trường hợp 2: Nếu created_date >= fixed_date
+						$expiration_date = strtotime("+15 days", $created_date); // 15 ngày từ created_date
+					}
+	
+					// Kiểm tra trạng thái dùng thử hoặc tạm khóa
+					if ($current_date <= $expiration_date) {
+						$r_tt['dropship'] = 2; // Dùng thử
+					} else {
+						$r_tt['dropship'] = 4; // Tạm khóa
+						mysqli_query($conn, "UPDATE user_info SET dropship = 4 WHERE user_id='{$r_tt['user_id']}'");
+					}
+				}
+	
+				// Hiển thị radio button theo trạng thái
+				$r_tt['tinh_trang'] = '
+					<input type="radio" name="drop_' . $r_tt['user_id'] . '" value="2" ' . ($r_tt['dropship'] == 2 ? 'checked' : '') . '> Dùng thử 
+					<input type="radio" name="drop_' . $r_tt['user_id'] . '" value="1" ' . ($r_tt['dropship'] == 1 ? 'checked' : '') . '> Kích hoạt
+					<input type="radio" name="drop_' . $r_tt['user_id'] . '" value="4" ' . ($r_tt['dropship'] == 4 ? 'checked' : '') . '> Tạm khóa';
+			}
+			
+			
 			$list .= $skin->skin_replace('skin_dropship/box_action/tr_thanhvien_nhom', $r_tt);
 		}
+		
 		return $list;
 	}
 	///////////////////
@@ -613,6 +842,7 @@ class class_dropship extends class_manage {
 				$doanhthu_nangcap += $r_nc['sotien'];
 			}
 		}
+
 		$thongtin = mysqli_query($conn, "SELECT * FROM donhang WHERE user_id IN ($list_id) AND date_post>='$dau' AND date_post<='$cuoi'");
 		while ($r_tt = mysqli_fetch_assoc($thongtin)) {
 			$ngay = date('d', $r_tt['date_post']);
@@ -622,7 +852,9 @@ class class_dropship extends class_manage {
 				$doanhthu_nhom += $r_tt['tamtinh'];
 			}
 		}
+		
 		$doanhthu_nhom=intval(($doanhthu_nhom/100)*5);
+		
 		$thongtin_ctv = mysqli_query($conn, "SELECT * FROM donhang_ctv WHERE user_id IN ($list_id) AND date_post>='$dau' AND date_post<='$cuoi'");
 		while ($r_tt_ctv = mysqli_fetch_assoc($thongtin_ctv)) {
 			$ngay = date('d', $r_tt_ctv['date_post']);
@@ -633,9 +865,10 @@ class class_dropship extends class_manage {
 			}
 		}
 		$doanhthu_ctv_nhom=intval(($doanhthu_ctv_nhom/100)*5);
+		
 		$thongtin_aff = mysqli_query($conn, "SELECT * FROM user_info WHERE aff IN ($list_id) AND leader='0'");
 		while ($r_aff = mysqli_fetch_assoc($thongtin_aff)) {
-			$list_aff=$r_aff['user_id'].',';
+			$list_aff.=$r_aff['user_id'].',';
 		}
 		if($list_aff==''){
 			$hoahong_gioithieu=0;
@@ -652,9 +885,10 @@ class class_dropship extends class_manage {
 					$doanhthu_nhom_gioithieu += $r_gt['tamtinh'];
 				}
 			}
-			$doanhthu_nhom_gioithieu=intval(($doanhthu_nhom/100)*5);
+			$doanhthu_nhom_gioithieu=intval(($doanhthu_nhom_gioithieu/100)*5);
 			$hoahong_gioithieu=intval(($doanhthu_nhom_gioithieu/100)*10);
 		}
+		
 		$donhang_tong=$donhang_nhom + $donhang_ctv_nhom + $donhang_nhom_gioithieu;
 		$doanhthu_tong=($doanhthu_nangcap/2) + $hoahong_gioithieu + $doanhthu_nhom + $doanhthu_ctv_nhom;
 		$info = array(
@@ -1426,6 +1660,8 @@ class class_dropship extends class_manage {
 					$r_tt['sotien'] = '-' . number_format($r_tt['sotien']);
 				} else if (strpos($r_tt['noidung'], 'Cài đặt giao diện') !== false) {
 					$r_tt['sotien'] = '-' . number_format($r_tt['sotien']);
+				}else if (strpos($r_tt['noidung'], 'Kích hoạt tài khoản bán hàng') !== false) {
+					$r_tt['sotien'] = '-' . number_format($r_tt['sotien']);
 				} else if (strpos($r_tt['noidung'], 'Đặt mua tên miền') !== false) {
 					$r_tt['sotien'] = '-' . number_format($r_tt['sotien']);
 				} else if (strpos($r_tt['noidung'], 'Yêu cầu hỗ trợ cài đặt tên miền') !== false) {
@@ -1442,7 +1678,11 @@ class class_dropship extends class_manage {
 					$r_tt['sotien'] = '<span class="color_red">+' . number_format($r_tt['sotien']) . '</span>';
 				} else if (strpos($r_tt['noidung'], 'Thưởng') !== false) {
 					$r_tt['sotien'] = '<span class="color_red">+' . number_format($r_tt['sotien']) . '</span>';
-				} else {
+				}
+				else if (strpos($r_tt['noidung'], 'Tuyển dụng thành viên thành công') !== false) {
+					$r_tt['sotien'] = '<span class="color_red">+' . number_format($r_tt['sotien']) . '</span>';
+				} 
+				else {
 					$r_tt['sotien'] = number_format($r_tt['sotien']);
 				}
 			}
@@ -1618,8 +1858,8 @@ class class_dropship extends class_manage {
 		while ($r_tt = mysqli_fetch_assoc($thongtin)) {
 			$i++;
 			$r_tt['i'] = $i;
-			$r_tt['start'] = date('H:i:s d/m/Y', $r_tt['date_start']);
-			$r_tt['end'] = date('H:i:s d/m/Y', $r_tt['date_end']);
+			$r_tt['start'] = date('H:i:s d/m/Y', (int)$r_tt['date_start']);
+			$r_tt['end'] = date('H:i:s d/m/Y', (int)$r_tt['date_end']);
 			if ($r_tt['loai'] == 'muakem') {
 				$r_tt['loai'] = 'Mua kèm deal sốc';
 			} else if ($r_tt['loai'] == 'tang') {
@@ -1885,7 +2125,19 @@ class class_dropship extends class_manage {
 			}
 			$r_tt['list_sanpham'] = $list_sanpham;
 			unset($list_sanpham);
-			$list .= $skin->skin_replace('skin_dropship/box_action/tr_donhang_shop', $r_tt);
+			$thongtin_thanhtoan=mysqli_query($conn,"SELECT * FROM mbapp_transaction WHERE order_id='{$r_tt['ma_don']}' ORDER BY id DESC LIMIT 1");
+			$r_thanhtoan=mysqli_fetch_assoc($thongtin_thanhtoan);
+			if($r_thanhtoan['status']==1){
+				$thanhtoan='Đã thanh toán';
+			}else{
+				$thanhtoan='Chưa thanh toán';
+			}
+			$r_tt['thanhtoan']=$thanhtoan;
+			if($shop==8185){
+				$list .= $skin->skin_replace('skin_dropship/box_action/tr_donhang_mbapp', $r_tt);
+			}else{
+				$list .= $skin->skin_replace('skin_dropship/box_action/tr_donhang_shop', $r_tt);
+			}
 		}
 		return $list;
 	}
@@ -3108,29 +3360,42 @@ class class_dropship extends class_manage {
 		}
 		return $list;
 	}
-	///////////////////
-	function list_sanpham_shop($conn,$leader,$gia_leader, $domain, $shop, $page, $limit) {
-		$skin = $this->load('class_skin_cpanel');
-		$check = $this->load('class_check');
-		$start = $page * $limit - $limit;
-		$thongtin = mysqli_query($conn, "SELECT sanpham_shop.*,sanpham.gia_drop,sanpham.kho FROM sanpham_shop LEFT JOIN sanpham ON sanpham_shop.sp_id=sanpham.id WHERE sanpham_shop.shop='$shop' ORDER BY sanpham_shop.id DESC LIMIT $start,$limit");
-		$i = $start;
-		while ($r_tt = mysqli_fetch_assoc($thongtin)) {
-			$i++;
-			$r_tt['i'] = $i;
-			$r_tt['date_post'] = date('d/m/Y', $r_tt['date_post']);
-			$r_tt['gia_cu'] = number_format($r_tt['gia_cu']);
-			$r_tt['gia_moi'] = number_format($r_tt['gia_moi']);
-			if($leader==1 OR $gia_leader==1){
-				$r_tt['gia_nhap'] = number_format($r_tt['gia_drop']);
-			}else{
-				$r_tt['gia_nhap'] = number_format($r_tt['gia_ctv']);
+		///////////////////
+		function list_sanpham_shop($conn, $leader, $gia_leader, $domain, $shop, $page, $limit) {
+			$skin = $this->load('class_skin_cpanel');
+			$check = $this->load('class_check');
+			$start = $page * $limit - $limit;
+			$thongtin = mysqli_query($conn, "SELECT sanpham_shop.*,sanpham.gia_drop,sanpham.kho FROM sanpham_shop LEFT JOIN sanpham ON sanpham_shop.sp_id=sanpham.id WHERE sanpham_shop.shop='$shop' ORDER BY sanpham_shop.id DESC LIMIT $start,$limit");
+			$i = $start;
+			while ($r_tt = mysqli_fetch_assoc($thongtin)) {
+				$i++;
+				$r_tt['i'] = $i;
+				$r_tt['date_post'] = date('d/m/Y', $r_tt['date_post']);
+				$r_tt['gia_cu'] = number_format($r_tt['gia_cu']);
+				$r_tt['gia_moi'] = number_format($r_tt['gia_moi']);
+				if($leader==1 OR $gia_leader==1){
+					$r_tt['gia_nhap'] = number_format($r_tt['gia_drop']);
+				} else {
+					$r_tt['gia_nhap'] = number_format($r_tt['gia_ctv']);
+				}
+				$r_tt['domain'] = $domain;
+				
+				$thongtin_phanloai = mysqli_query($conn, "SELECT * FROM phanloai_sanpham_shop WHERE sp_id='{$r_tt['id']}'");
+				$total_phanloai = mysqli_num_rows($thongtin_phanloai);
+				if ($total_phanloai == 0) {
+					$list_ma = '';
+				} else {
+					$list_ma = '';
+					while ($r_pl = mysqli_fetch_assoc($thongtin_phanloai)) {
+						$list_ma .= $r_pl['ma_sp'] . ': ' . $r_pl['ten_color'] . '<br>';
+					}
+				}
+				$r_tt['list_ma'] = $list_ma;
+				unset($list_ma);
+				$list .= $skin->skin_replace('skin_dropship/box_action/tr_sanpham_shop', $r_tt);
 			}
-			$r_tt['domain'] = $domain;
-			$list .= $skin->skin_replace('skin_dropship/box_action/tr_sanpham_shop', $r_tt);
+			return $list;
 		}
-		return $list;
-	}
 	///////////////////
 	function list_sanpham_hethang_catma($conn,$leader,$gia_leader, $kho, $page, $limit) {
 		$skin = $this->load('class_skin_cpanel');
@@ -3604,12 +3869,13 @@ class class_dropship extends class_manage {
 		//return intval($mon) . ',' . intval($tus) . ',' . intval($web) . ',' . intval($thu) . ',' . intval($fri) . ',' . intval($sat) . ',' . intval($sun);
 	}
 	///////////////////
-	function list_kq_timkiem_sanpham_thuonghieu($conn,$list_follow,$leader,$gia_leader,$kieu, $kho, $thuong_hieu) {
+	function list_kq_timkiem_sanpham_thuonghieu($conn, $list_follow, $leader, $gia_leader, $kieu, $kho, $thuong_hieu)
+	{
 		$skin = $this->load('class_skin_cpanel');
 		$check = $this->load('class_check');
 		$tach_key = explode(' ', $key);
 		$k = 0;
-		$tach_follow=explode(',', $list_follow);
+		$tach_follow = explode(',', $list_follow);
 		$thongtin = mysqli_query($conn, "SELECT * FROM sanpham WHERE thuong_hieu='$thuong_hieu' AND (noi_ban LIKE '%drop%' OR noi_ban LIKE '%all%') AND cat_ma='0' ORDER BY tieu_de ASC");
 		$i = 0;
 		while ($r_tt = mysqli_fetch_assoc($thongtin)) {
@@ -3618,9 +3884,23 @@ class class_dropship extends class_manage {
 			$r_tt['date_post'] = date('d/m/Y', $r_tt['date_post']);
 			$r_tt['gia_cu'] = number_format($r_tt['gia_cu']);
 			$r_tt['gia_moi'] = number_format($r_tt['gia_moi']);
-			if($leader==1 OR $gia_leader==1){
+			if ($r_tt['drop_min'] == 0) {
+				if ($leader == 1 or $gia_leader == 1) {
+					$loi_nhuan = $r_tt['gia_moi'] - $r_tt['gia_drop'];
+				} else {
+					$loi_nhuan = $r_tt['gia_moi'] - $r_tt['gia_ctv'];
+				}
+			} else {
+				if ($leader == 1 or $gia_leader == 1) {
+					$loi_nhuan = $r_tt['drop_min'] - $r_tt['gia_drop'];
+				} else {
+					$loi_nhuan = $r_tt['drop_min'] - $r_tt['gia_ctv'];
+				}
+			}
+			$r_tt['loi_nhuan'] = number_format($loi_nhuan);
+			if ($leader == 1 or $gia_leader == 1) {
 				$r_tt['gia_nhap'] = number_format($r_tt['gia_drop']);
-			}else{
+			} else {
 				$r_tt['gia_nhap'] = number_format($r_tt['gia_ctv']);
 			}
 			if ($r_tt['drop_min'] == 0) {
@@ -3629,13 +3909,14 @@ class class_dropship extends class_manage {
 				$r_tt['drop_min'] = number_format($r_tt['drop_min']);
 			}
 			$r_tt['drop_max'] = number_format($r_tt['drop_max']);
+
 			if ($kho == 'kho_hcm') {
 				$r_tt['kho'] = $r_tt['kho_hcm'];
 			}
-			if(in_array($r_tt['id'], $tach_follow)==true){
-				$r_tt['class_follow']='fa-check-square';
-			}else{
-				$r_tt['class_follow']='fa-square-o';
+			if (in_array($r_tt['id'], $tach_follow) == true) {
+				$r_tt['class_follow'] = 'fa-check-square';
+			} else {
+				$r_tt['class_follow'] = 'fa-square-o';
 			}
 			if ($r_tt['ma_sanpham'] != '') {
 				if (strpos($r_tt['ma_sanpham'], '|') !== false) {
@@ -3644,7 +3925,6 @@ class class_dropship extends class_manage {
 						$tach_value = explode('&&', $value);
 						$list_ma .= $tach_value[2] . ':' . $tach_value[1] . '<br>';
 					}
-
 				} else {
 					$tach_ma_sanpham = explode('&&', $r_tt['ma_sanpham']);
 					$list_ma = $tach_ma_sanpham[2] . ':' . $tach_ma_sanpham[1];
@@ -3654,9 +3934,9 @@ class class_dropship extends class_manage {
 			}
 			$r_tt['list_ma'] = $list_ma;
 			unset($list_ma);
-			if($kieu=='mobile'){
+			if ($kieu == 'mobile') {
 				$list .= $skin->skin_replace('skin_dropship/box_action/tr_sanpham_drop_mobile', $r_tt);
-			}else{
+			} else {
 				$list .= $skin->skin_replace('skin_dropship/box_action/tr_sanpham_drop', $r_tt);
 			}
 		}
@@ -3940,49 +4220,77 @@ class class_dropship extends class_manage {
 		}
 		return $list;
 	}
-	///////////////////
-	function list_kq_timkiem_sanpham_shop($conn,$leader,$gia_leader, $shop, $key) {
-		$skin = $this->load('class_skin_cpanel');
-		$check = $this->load('class_check');
-		$tach_key = explode(' ', $key);
-		$k = 0;
-		foreach ($tach_key as $key => $value) {
-			$k++;
-			if ($value != '') {
-				if ($k == 1) {
-					$where .= "sanpham_shop.tieu_de LIKE '%$value%'";
-				} else {
-					$where .= " AND sanpham_shop.tieu_de LIKE '%$value%'";
+		///////////////////
+		function list_kq_timkiem_sanpham_shop($conn, $leader, $gia_leader, $shop, $key) {
+			$skin = $this->load('class_skin_cpanel');
+			$check = $this->load('class_check');
+			
+			// Xử lý từ khóa tìm kiếm
+			$tach_key = explode(' ', $key);
+			$k = 0;
+			$where = '';
+			foreach ($tach_key as $key => $value) {
+				$value = mysqli_real_escape_string($conn, $value); // Bảo mật chống SQL injection
+				if ($value != '') {
+					if ($k == 0) {
+						$where .= "sanpham_shop.tieu_de LIKE '%$value%'";
+					} else {
+						$where .= " AND sanpham_shop.tieu_de LIKE '%$value%'";
+					}
+					$k++;
 				}
 			}
-		}
-		$thongtin = mysqli_query($conn, "SELECT sanpham_shop.*,sanpham.kho,sanpham.gia_drop FROM sanpham_shop LEFT JOIN sanpham ON sanpham_shop.sp_id=sanpham.id WHERE $where AND sanpham_shop.shop='$shop' ORDER BY sanpham_shop.tieu_de ASC");
-		$i = 0;
-		while ($r_tt = mysqli_fetch_assoc($thongtin)) {
-			$i++;
-			$r_tt['i'] = $i;
-			$r_tt['date_post'] = date('d/m/Y', $r_tt['date_post']);
-			$r_tt['gia_cu'] = number_format($r_tt['gia_cu']);
-			$r_tt['gia_moi'] = number_format($r_tt['gia_moi']);
-			if($leader==1 OR $gia_leader==1){
-				$r_tt['gia_nhap'] = number_format($r_tt['gia_drop']);
-			}else{
-				$r_tt['gia_nhap'] = number_format($r_tt['gia_ctv']);
+			if ($where == '') {
+				return '<center>Vui lòng nhập từ khóa tìm kiếm</center>';
 			}
-			if ($r_tt['drop_min'] == 0) {
-				$r_tt['drop_min'] = 'Không quy định';
-			} else {
-				$r_tt['drop_min'] = number_format($r_tt['drop_min']);
+		
+			// Truy vấn dữ liệu sản phẩm
+			$thongtin = mysqli_query($conn, "SELECT sanpham_shop.*, sanpham.gia_drop, sanpham.kho 
+											FROM sanpham_shop 
+											LEFT JOIN sanpham ON sanpham_shop.sp_id = sanpham.id 
+											WHERE $where AND sanpham_shop.shop='$shop' 
+											ORDER BY sanpham_shop.id DESC");
+			
+			$i = 0;
+			$list = '';
+			while ($r_tt = mysqli_fetch_assoc($thongtin)) {
+				$i++;
+				$r_tt['i'] = $i;
+				$r_tt['date_post'] = date('d/m/Y', $r_tt['date_post']);
+				$r_tt['gia_cu'] = number_format($r_tt['gia_cu']);
+				$r_tt['gia_moi'] = number_format($r_tt['gia_moi']);
+				
+				// Xử lý giá nhập
+				if ($leader == 1 || $gia_leader == 1) {
+					$r_tt['gia_nhap'] = number_format($r_tt['gia_drop']);
+				} else {
+					$r_tt['gia_nhap'] = number_format($r_tt['gia_ctv'] ?? 0); // Đảm bảo gia_ctv tồn tại
+				}
+		
+				// Xử lý cột "Mã" (list_ma) từ bảng phanloai_sanpham_shop
+				$thongtin_phanloai = mysqli_query($conn, "SELECT * FROM phanloai_sanpham_shop WHERE sp_id='{$r_tt['id']}'");
+				$total_phanloai = mysqli_num_rows($thongtin_phanloai);
+				if ($total_phanloai == 0) {
+					$list_ma = '';
+				} else {
+					$list_ma = '';
+					while ($r_pl = mysqli_fetch_assoc($thongtin_phanloai)) {
+						$list_ma .= $r_pl['ma_sp'] . ': ' . $r_pl['ten_color'] . '<br>';
+					}
+				}
+				$r_tt['list_ma'] = $list_ma;
+				unset($list_ma);
+		
+				// Tạo HTML cho mỗi dòng sản phẩm
+				$list .= $skin->skin_replace('skin_dropship/box_action/tr_sanpham_shop', $r_tt);
 			}
-			$r_tt['drop_max'] = number_format($r_tt['drop_max']);
-			$list .= $skin->skin_replace('skin_dropship/box_action/tr_sanpham_shop', $r_tt);
+			
+			mysqli_free_result($thongtin);
+			if ($i == 0) {
+				$list = '<center>Không có kết quả</center>';
+			}
+			return $list;
 		}
-		mysqli_free_result($thongtin);
-		if ($i == 0) {
-			$list = '<center>Không có kết quả</center>';
-		}
-		return $list;
-	}
 	///////////////////
 	function list_kq_timkiem_sanpham_tuan($conn,$leader,$gia_leader, $kho, $key) {
 		$skin = $this->load('class_skin_cpanel');
@@ -4557,5 +4865,81 @@ class class_dropship extends class_manage {
 		return $r_tt;
 	}
 //////////////////////////////////////////////////////////////////
+
+	function list_banner($conn , $id)
+	{
+		$skin = $this->load('class_skin_cpanel');
+		$check = $this->load('class_check');
+		$data = mysqli_query($conn, "SELECT * FROM banner WHERE shop_id= '$id' ORDER BY vi_tri ASC, thu_tu ASC");
+		while ($r_tt = mysqli_fetch_assoc($data)) {
+			$r_tt['blank'] = $check->blank($r_tt['post_tieude']);
+			$i++;
+			$r_tt['i'] = $i;
+			$list .= $skin->skin_replace('skin_dropship/box_action/tr_banner', $r_tt);
+		}
+		return $list;
+	}
+	function list_donhang_moi_socdo($conn, $shop, $page, $limit)
+		{
+			$skin = $this->load('class_skin_cpanel');
+			$check = $this->load('class_check');
+
+			$start = $page * $limit - $limit;
+			$index = $start;
+			$start_of_day = strtotime(date('Y-m-d 00:00:00'));
+			$end_of_day   = strtotime(date('Y-m-d 23:59:59'));
+
+			$sql = "
+			SELECT donhang.*, user_info.avatar 
+			FROM donhang 
+			LEFT JOIN user_info ON donhang.user_id = user_info.user_id 
+			WHERE FIND_IN_SET('$shop', shop_id) > 0
+			  AND donhang.date_post >= '$start_of_day' 
+			  AND donhang.date_post <= '$end_of_day'
+			ORDER BY donhang.date_post ASC
+		";
+			$result = mysqli_query($conn, $sql);
+			$total = mysqli_num_rows($result);
+
+			if ($total == 0) {
+				$list = '<p><center>Chưa có đơn nào trong ngày, cần cố gắng hơn!</center></p>';
+				$list_slide = '';
+			} else {
+				$list_items = [];
+				$list_items_slide = [];
+				$order_count = [];
+
+				while ($order = mysqli_fetch_assoc($result)) {
+					$index++;
+					$order['i'] = $index;
+					$order['dien_thoai'] = substr($order['dien_thoai'], 0, -3) . 'xxx';
+					$order['tong_tien'] = number_format($order['tongtien']) . 'đ';
+					$order['date_post'] = $check->chat_update($order['date_post']);
+					if ($order['user_id'] > 0) {
+						$uid = $order['user_id'];
+						$order_count[$uid]++;
+						if ($order_count[$uid] > 1) {
+							$noi_dung = 'Vừa có <b>đơn hàng thứ ' . $order_count[$uid] . '</b> trong ngày';
+						} else {
+							$noi_dung = 'Vừa có đơn hàng';
+						}
+					} else {
+						$noi_dung = 'Vừa có đơn hàng';
+					}
+
+					$order['noi_dung'] = $noi_dung;
+					$list_items[] = $skin->skin_replace('skin_dropship/box_action/li_donhang', $order);
+					$list_items_slide[] = $skin->skin_replace('skin_dropship/box_action/li_donhang_slide', $order);
+				}
+
+				$list = implode('', array_reverse($list_items));
+				$list_slide = implode('', array_reverse($list_items_slide));
+			}
+
+			return json_encode([
+				'list' => $list,
+				'list_slide' => $list_slide
+			]);
+		}
 }
 ?>

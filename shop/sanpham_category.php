@@ -12,9 +12,6 @@ if($page>1){
 	$page=1;
 	$title_page='';
 }
-$thongtin_shop=mysqli_query($conn,"SELECT *,count(*) AS total FROM user_info WHERE domain='$web' ORDER BY user_id DESC LIMIT 1");
-$r_shop=mysqli_fetch_assoc($thongtin_shop);
-$shop=$r_shop['user_id'];
 $brand=addslashes(strip_tags($url_query['brand']));
 $color=addslashes(strip_tags($url_query['color']));
 $price=addslashes(strip_tags($url_query['price']));

@@ -16,7 +16,7 @@ class class_manage
 			/*========================================/*
 			*|
 			*| Class load
-			*| Chi input class name , ko .pzhp
+			*| Chi input class name , ko .php
 			/*========================================*/
 			function load($class_name)
 			{

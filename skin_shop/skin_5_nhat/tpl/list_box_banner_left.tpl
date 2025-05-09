@@ -1,0 +1,1 @@
+    {list_banner_left}

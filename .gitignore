@@ -48,3 +48,75 @@ tinymce_7.1.0/
 socket.io/
 composer.lock
 cookie.txt
+
+
+
+# Ignore Excel, PDF, media, and database files
+*.sql
+*.xlsx
+*.xls
+*.pdf
+*.mp3
+*.mp4
+*.wav
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.svg
+*.ico
+*.zip
+*.rar
+*.tar
+*.gz
+*.7z
+
+# Ignore backup, test, and old files
+*_old.php
+*_backup.php
+*_copy.php
+test.php
+test_*.php
+
+# Ignore more upload folders (if you only want to keep some images, adjust as needed)
+uploads/minh-hoa/
+uploads/hinh-anh/
+uploads/avatar/
+uploads/bao-hanh/
+uploads/dinh-kem/
+uploads/log_ninja/
+uploads/xahoigiaitri/
+uploads/tac-gia/
+
+# Ignore debug and data files
+debug.log
+debug_sub_product.log
+debug.txt
+*.bak
+*.swp
+*.swo
+
+# Ignore config files that may contain sensitive info
+config.php
+
+# Ignore system and hidden files
+*.DS_Store
+Thumbs.db
+
+# Ignore PHPExcel and other large vendor folders
+PHPExcel/
+tinymce_4.4.3/
+tinymce_7.1.0/
+securimage/
+dist/
+carousel/
+datetimepicker/
+slick/
+swiper/
+media-player/
+player/
+player2/
+luckywheel/
+vongquay/
+speedsms/
+sms_gateway/

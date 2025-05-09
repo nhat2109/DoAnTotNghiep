@@ -1,5 +1,8 @@
 <?php
-session_start();
+// thêm lỗi của chức năng tìm kiếm nâng cao
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 // Config
 error_reporting(1);
 include('config.php');

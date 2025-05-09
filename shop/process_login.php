@@ -25,7 +25,7 @@ if($r_tt['total']>0){
         $hientai=time();
         setcookie("user_id",token_login($r_tt['user_id'],$r_tt['password']),time() + 2593000,'/');
 		$ok=1;
-		$thongbao='Đang nhập thành công';
+		$thongbao='Đăng nhập thành công';
     }
 }else{
 	$ok=0;

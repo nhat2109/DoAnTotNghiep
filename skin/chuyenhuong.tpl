@@ -109,7 +109,7 @@
         <div class="rd-top">
             <div class="image-wrapper">
                 <div class="merchant-logo-wrapper" id="logo">
-                    <img src="/skin/css/images/loading.gif">
+                    <img src="/skin/css/images/load.png">
                 </div>
             </div>
             <div class="rd-msg">
@@ -140,9 +140,9 @@
             duration: 1400,
             easing: 'easeInOut',
             strokeWidth: 3,
-            from: { color: '#f60', a: 0 },
+            from: { color: '#d41e25', a: 0 },
             //to: {color: '#3478F6', a:1},
-            to: { color: '#f26b34', a: 1 },
+            to: { color: '#d41e25', a: 1 },
             // Set default step function for all animate calls 
             step: function(state, circle) {
                 circle.path.setAttribute('stroke', state.color);

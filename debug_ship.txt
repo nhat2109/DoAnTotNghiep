@@ -1,0 +1,14 @@
+Array
+(
+    [status] => Error
+    [message] => Trường weight không được lớn hơn 20000.
+    [errors] => Array
+        (
+            [weight] => Array
+                (
+                    [0] => Trường weight không được lớn hơn 20000.
+                )
+
+        )
+
+)

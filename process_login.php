@@ -1,7 +1,7 @@
 <?php
 $web=$_SERVER['HTTP_HOST'];
 $web=str_replace('www.', '', $web);
-$web_root=array('tongkho.vn','socdo.vn','socmoi.vn','soc.vn','beta.socdo.vn');
+$web_root=array('doantotnghiep.vn','socdo.vn','socmoi.vn','soc.vn','beta.socdo.vn');
 function token_login($user_id,$password){
     $pass_1=substr($password, 0,8);
     $pass_2=substr($password, 8,8);
@@ -15,4 +15,45 @@ if(in_array($web, $web_root)==false){
     include('./shop/process_login.php');
     exit();
 }
+include('./includes/config.php');
+$email=addslashes(strip_tags($_REQUEST['email']));
+$password=addslashes(strip_tags($_REQUEST['password']));
+$thongtin=mysqli_query($conn,"SELECT *,count(*) AS total FROM user_info WHERE (email='$email' OR username='$email' OR mobile='$email') AND shop='0'");
+$r_tt=mysqli_fetch_assoc($thongtin);
+if($r_tt['total']>0){
+    $pass=md5($password);
+    if($pass!=$r_tt['password']){
+		$ok=0;
+		$thongbao='Mật khẩu không đúng';
+    }else if($r_tt['active']==0){
+		$ok=0;
+		$thongbao='Tài khoản của bạn chưa kích hoạt';
+    }else if($r_tt['active']==2){
+		$ok=0;
+		$thongbao='Tài khoản của bạn đang tạm khóa';
+    }else if($r_tt['active']==3){
+		$ok=0;
+		$thongbao='Tài khoản của bạn đã khóa vĩnh viễn';
+    }else{
+        $hientai=time();
+        setcookie("user_id",token_login($r_tt['user_id'],$r_tt['password']),time() + 2593000,'/');
+		$ok=1;
+		$thongbao='Đăng nhập thành công';
+        if($r_tt['dropship']=='1'){
+            $link='/dropship/';
+        }else{
+            $link='/tai-khoan.html';
+
+        }
+    }
+}else{
+	$ok=0;
+	$thongbao='Tài khoản không tồn tại';
+}
+$info=array(
+	'ok'=>$ok,
+    'link'=>$link,
+	'thongbao'=>$thongbao
+);
+echo json_encode($info);
 ?>

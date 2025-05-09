@@ -1,0 +1,167 @@
+.popup-sapo {
+    position: fixed;
+    bottom: 140px;
+    left: 17px;
+    margin: 0;
+    z-index: 999;
+    top: auto !important;
+}
+
+.popup-sapo .icon {
+    position: relative;
+    z-index: 4;
+    height: 48px;
+    width: 48px;
+    text-align: center;
+    border-radius: 50%;
+    border: 1px solid #ffffff;
+    cursor: pointer;
+    background: var(--color-primary);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    cursor: pointer;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.popup-sapo .content {
+    background: var(--color-background);
+    color: var(--color-foreground);
+    padding: 20px 10px 20px;
+    border-radius: 10px;
+    width: 300px;
+    position: absolute;
+    bottom: 32px;
+    left: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    -webkit-transform-origin: 100% bottom;
+    transform-origin: 0 bottom;
+    transform: scale(0);
+    -webkit-transform: scale(0);
+    -moz-transform: scale(0);
+    -ms-transform: scale(0);
+    -o-transform: scale(0);
+    transition: -webkit-transform 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+    transition: transform 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+    transition: transform 0.35s cubic-bezier(0.165, 0.84, 0.44, 1),-webkit-transform 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+    -webkit-transition: transform 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.popup-sapo.active .content {
+    -ms-transition-delay: 0.1s;
+    -webkit-transition-delay: 0.15s;
+    transition-delay: 0.1s;
+    transform: scale(1);
+    -webkit-transform: scale(1);
+    -moz-transform: scale(1);
+    -ms-transform: scale(1);
+    -o-transform: scale(1);
+}
+
+.popup-sapo .content .close-popup-sapo {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    cursor: pointer;
+}
+
+@media (max-width: 500px) {
+    .popup-sapo .content {
+        width:250px
+    }
+}
+
+.popup-sapo .content .title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 10px
+}
+
+.popup-sapo .content .close-popup-sapo {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    cursor: pointer
+}
+
+.popup-sapo .content .close-popup-sapo svg {
+    width: 15px;
+    height: 15px
+}
+
+.popup-sapo .content .close-popup-sapo svg path {
+    fill: currentColor
+}
+
+.popup-sapo .content ul {
+    margin-bottom: 10px
+}
+
+.popup-sapo .content ul li {
+    margin-bottom: 0px
+}
+
+.popup-sapo .content ul li svg {
+    margin-right: 10px
+}
+
+.popup-sapo .content ul li svg path {
+    fill: #fff
+}
+
+.popup-sapo .content ul li a {
+     
+	font-size: 13px;
+}
+
+.popup-sapo .content ul li a:hover {
+    opacity: 0.8
+}
+
+.popup-sapo .content .ghichu {
+    font-style: italic;
+    font-size: 13px
+}
+.popup-sapo .icon svg {
+    fill: #ffffff;
+    width: 20px;
+    height: 20px;
+    transition: opacity 0.35s ease-in-out, -webkit-transform 0.35s ease-in-out;
+    transition: opacity 0.35s ease-in-out, transform 0.35s ease-in-out;
+    transition: opacity 0.35s ease-in-out, transform 0.35s ease-in-out, -webkit-transform 0.35s ease-in-out;
+    animation: iconSkew 1s infinite ease-out;
+    min-height: -webkit-fill-available;
+}
+
+@keyframes iconSkew {
+    0% {
+        transform: rotate(0deg) scale(1) skew(1deg)
+    }
+
+    10% {
+        transform: rotate(-25deg) scale(1) skew(1deg)
+    }
+
+    20% {
+        transform: rotate(25deg) scale(1) skew(1deg)
+    }
+
+    30% {
+        transform: rotate(-25deg) scale(1) skew(1deg)
+    }
+
+    40% {
+        transform: rotate(25deg) scale(1) skew(1deg)
+    }
+
+    50% {
+        transform: rotate(0deg) scale(1) skew(1deg)
+    }
+
+    100% {
+        transform: rotate(0deg) scale(1) skew(1deg)
+    }
+}

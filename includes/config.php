@@ -6,7 +6,7 @@ $tlca_data['dbpassword'] = '';
 $tlca_data['dbname'] = 'doantotnghiep';
 date_default_timezone_set('Asia/Saigon');
 //Connect
-$conn = mysqli_connect($tlca_data['server'], $tlca_data['dbuser'], $tlca_data['dbpassword'], $tlca_data['dbname']); 
+$conn = mysqli_connect($tlca_data['server'], $tlca_data['dbuser'], $tlca_data['dbpassword'], $tlca_data['dbname']);
 // Template config
 //@define(skin_name, 'skin');
 //@define(skin_ext, '.tpl');

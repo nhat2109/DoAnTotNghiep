@@ -1,0 +1,25 @@
+
+
+flash_sale : thêm lại mục flash sale và hiển thị list flash đó lên
+Voucher giảm giá : thêm lại voucher 
+
+việc cần hỏi a Lợi:
+
+
+Sửa lại phần +1 sản phẩm thì thay đổi giá tiền trong đơn hàng và xóa sản phẩm
+
+Thêm bảng box_banner_first để chỉnh sửa quảng cáo ưu đãi đặc biệt trên đỉnh nóc trang chủ
+xóa nút live TikTok
+thêm bảng box_banner_left để chỉnh lại ảnh bên trái trang chủ và các trang khác
+sửa lại thông báo bên trái thành dữ liệu khác: thêm bảng thongbao_left
+dưới voucher tại trang chủ cho thêm bảng banner_quangcao_mini
+sửa lại giao diện trang tintuc.tpl
+thêm bảng quảng cáo riêng cho quảng cáo mỗi khi loại lại trang : tên bảng là quangcao_mid
+chỉnh lại search trong mobile
+Sửa lại giao diện các loại mobile
+
+box_banner_first : ID INT 10
+                   TIEU_DE VARCHAR 255
+                   LINK VARCHAR 255
+                   MINH_HOA VARCHAR 255
+

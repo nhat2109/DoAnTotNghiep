@@ -1,13 +1,4 @@
 RewriteEngine on
-<IfModule mod_headers.c>
-    Header set Access-Control-Allow-Origin "*"
-    Header set Access-Control-Allow-Methods "GET, POST, OPTIONS"
-    Header set Access-Control-Allow-Headers "Content-Type, Authorization"
-</IfModule>
-RewriteEngine On
-RewriteCond %{HTTPS} off
-RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
-
 #RewriteBase /
 #RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
 #RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
@@ -16,16 +7,18 @@ RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
 RewriteRule ^index.html index.php
 RewriteRule ^tim-kiem.html timkiem.php
 RewriteRule ^detail/([^/]+).html view_tintuc.php?blank=$1
-RewriteRule ^chungnhan_detail/([^/]+).html view_chungnhan.php?blank=$1
 RewriteRule ^product/([^/]+).html view.php?blank=$1
 RewriteRule ^addon-deal.html addon_deal.php
 RewriteRule ^coupon-detail.html coupon_detail.php
 RewriteRule ^bai-viet/([^/]+).html tintuc.php?blank=$1
 RewriteRule ^san-pham/([^/]+).html sanpham_category.php?blank=$1
+# THêm đường link cho shop
+RewriteRule ^shop/([^/]+)/san-pham.html sanpham_shop.php?username=$1 [L]
 RewriteRule ^v/([^/]+) rut_gon.php?rut_gon=$1
 RewriteRule ^dang-ky.html dangky.php
 RewriteRule ^kichhoat-baohanh.html kichhoat_baohanh.php
 RewriteRule ^dangky-banhang.html dangky_banhang.php
+RewriteRule ^dangky-ncc.html dangky_ncc.php
 RewriteRule ^dang-nhap.html dangnhap.php
 RewriteRule ^tai-khoan.html taikhoan.php
 RewriteRule ^dang-xuat.html process_logout.php
@@ -49,7 +42,7 @@ RewriteRule ^san-pham-noi-bat.html sanpham_noibat.php
 RewriteRule ^san-pham-deal.html sanpham_deal.php
 RewriteRule ^flash-sale.html flash_sale.php
 RewriteRule ^coupon.html coupon.php
-RewriteRule ^gioi-thieu.html gioithieu.php
+RewriteRule ^gioi-thieu.html gioi_thieu.php
 RewriteRule ^gop-don.html gop_don.php
 RewriteRule ^deal-soc.html deal_soc.php
 RewriteRule ^gio-hang.html shopcart.php
@@ -64,32 +57,124 @@ RewriteRule ^page.xml sitemap.php?loai=page
 RewriteRule ^danhmuc-tintuc-([0-9]+).xml sitemap.php?loai=category_tintuc&page=$1
 RewriteRule ^category-([0-9]+).xml sitemap.php?loai=category&page=$1
 
+RewriteRule ^login giaoviec_login.php
+RewriteRule ^logout giaoviec_logout.php
+RewriteRule ^forgot-password giaoviec_forgot_password.php
+RewriteRule ^profile giaoviec_index.php?action=profile
+RewriteRule ^change-password giaoviec_index.php?action=change_password
+RewriteRule ^dashboard giaoviec_index.php?action=dashboard
+RewriteRule ^sms-detail giaoviec_index.php?action=sms_detail
+RewriteRule ^contact-detail giaoviec_index.php?action=contact_detail
+RewriteRule ^print-detail giaoviec_index.php?action=print_detail
+RewriteRule ^post giaoviec_index.php?action=post
+
+RewriteRule ^add-(.*) giaoviec_index.php?action=add_$1
+RewriteRule ^copy-(.*) giaoviec_index.php?action=copy_$1
+RewriteRule ^edit-(.*) giaoviec_index.php?action=edit_$1
+RewriteRule ^view-(.*) giaoviec_index.php?action=view_$1
+RewriteRule ^list-(.*) giaoviec_index.php?action=list_$1
+RewriteRule ^thongke-(.*) giaoviec_index.php?action=thongke_$1
+RewriteRule ^adanhsachnhansu giaoviec_index.php?action=adanhsachnhansu
+RewriteRule ^aaddphongban giaoviec_index.php?action=aaddphongban
+RewriteRule ^congviec_cuanhansu giaoviec_index.php?action=congviec_cuanhansu
+
+RewriteRule ^admincp/login admincp/login.php
+RewriteRule ^admincp/logout admincp/logout.php
+RewriteRule ^admincp/forgot-password admincp/forgot_password.php
+RewriteRule ^admincp/profile admincp/index.php?action=profile
+RewriteRule ^admincp/change-password admincp/index.php?action=change_password
+RewriteRule ^admincp/dashboard admincp/index.php?action=dashboard
+RewriteRule ^admincp/sms-detail admincp/index.php?action=sms_detail
+RewriteRule ^admincp/contact-detail admincp/index.php?action=contact_detail
+RewriteRule ^admincp/print-detail admincp/index.php?action=print_detail
+RewriteRule ^admincp/post admincp/index.php?action=post
+
+RewriteRule ^admincp/add-(.*) admincp/index.php?action=add_$1
+RewriteRule ^admincp/copy-(.*) admincp/index.php?action=copy_$1
+RewriteRule ^admincp/edit-(.*) admincp/index.php?action=edit_$1
+RewriteRule ^admincp/view-(.*) admincp/index.php?action=view_$1
+RewriteRule ^admincp/list-(.*) admincp/index.php?action=list_$1
+RewriteRule ^admincp/thongke-(.*) admincp/index.php?action=thongke_$1
+RewriteRule ^admincp/$ admincp/index.php
+RewriteRule ^admincp/adanhsachnhansu admincp/index.php?action=adanhsachnhansu
+RewriteRule ^admincp/aaddphongban admincp/index.php?action=aaddphongban
+RewriteRule ^admincp/congviec_cuanhansu admincp/index.php?action=congviec_cuanhansu
 
 
+RewriteRule ^dropship/login dropship/login.php
+RewriteRule ^dropship/logout dropship/logout.php
+RewriteRule ^dropship/forgot-password dropship/forgot_password.php
+RewriteRule ^dropship/profile dropship/index.php?action=profile
+RewriteRule ^dropship/change-password dropship/index.php?action=change_password
+RewriteRule ^dropship/dashboard dropship/index.php?action=dashboard
+RewriteRule ^dropship/sms-detail dropship/index.php?action=sms_detail
+RewriteRule ^dropship/contact-detail dropship/index.php?action=contact_detail
+RewriteRule ^dropship/print-detail dropship/index.php?action=print_detail
+RewriteRule ^dropship/post dropship/index.php?action=post
+RewriteRule ^dropship/domain dropship/index.php?action=domain
+RewriteRule ^dropship/dangky-leader dropship/index.php?action=dangky_leader
 
-RewriteRule ^admin/login admin/login.php
-RewriteRule ^admin/logout admin/logout.php
-RewriteRule ^admin/forgot-password admin/forgot_password.php
-RewriteRule ^admin/profile admin/index.php?action=profile
-RewriteRule ^admin/change-password admin/index.php?action=change_password
-RewriteRule ^admin/dashboard admin/index.php?action=dashboard
-RewriteRule ^admin/sms-detail admin/index.php?action=sms_detail
-RewriteRule ^admin/contact-detail admin/index.php?action=contact_detail
-RewriteRule ^admin/print-detail admin/index.php?action=print_detail
-RewriteRule ^admin/post admin/index.php?action=post
-RewriteRule ^admin/domain admin/index.php?action=domain
-RewriteRule ^admin/dangky-leader admin/index.php?action=dangky_leader
+RewriteRule ^dropship/add-(.*) dropship/index.php?action=add_$1
+RewriteRule ^dropship/copy-(.*) dropship/index.php?action=copy_$1
+RewriteRule ^dropship/edit-(.*) dropship/index.php?action=edit_$1
+RewriteRule ^dropship/view-(.*) dropship/index.php?action=view_$1
+RewriteRule ^dropship/list-(.*) dropship/index.php?action=list_$1
+RewriteRule ^dropship/danh-muc-video/(.*) dropship/index.php?action=category_video&link=$1
+RewriteRule ^dropship/thongke-(.*) dropship/index.php?action=thongke_$1
+RewriteRule ^dropship/video dropship/index.php?action=video
+RewriteRule ^dropship/nhiemvu-nguoimoi dropship/index.php?action=nhiemvu
+RewriteRule ^dropship/$ dropship/index.php
 
-RewriteRule ^admin/add-(.*) admin/index.php?action=add_$1
-RewriteRule ^admin/copy-(.*) admin/index.php?action=copy_$1
-RewriteRule ^admin/edit-(.*) admin/index.php?action=edit_$1
-RewriteRule ^admin/view-(.*) admin/index.php?action=view_$1
-RewriteRule ^admin/list-(.*) admin/index.php?action=list_$1
-RewriteRule ^admin/danh-muc-video/(.*) admin/index.php?action=category_video&link=$1
-RewriteRule ^admin/thongke-(.*) admin/index.php?action=thongke_$1
-RewriteRule ^admin/video admin/index.php?action=video
-RewriteRule ^admin/nhiemvu-nguoimoi admin/index.php?action=nhiemvu
-RewriteRule ^admin/$ admin/index.php
+RewriteRule ^ctv/login ctv/login.php
+RewriteRule ^ctv/logout ctv/logout.php
+RewriteRule ^ctv/forgot-password ctv/forgot_password.php
+RewriteRule ^ctv/profile ctv/index.php?action=profile
+RewriteRule ^ctv/change-password ctv/index.php?action=change_password
+RewriteRule ^ctv/dashboard ctv/index.php?action=dashboard
+RewriteRule ^ctv/sms-detail ctv/index.php?action=sms_detail
+RewriteRule ^ctv/contact-detail ctv/index.php?action=contact_detail
+RewriteRule ^ctv/print-detail ctv/index.php?action=print_detail
+RewriteRule ^ctv/post ctv/index.php?action=post
+RewriteRule ^ctv/video ctv/index.php?action=video
+RewriteRule ^ctv/domain ctv/index.php?action=domain
+
+RewriteRule ^ctv/add-(.*) ctv/index.php?action=add_$1
+RewriteRule ^ctv/copy-(.*) ctv/index.php?action=copy_$1
+RewriteRule ^ctv/edit-(.*) ctv/index.php?action=edit_$1
+RewriteRule ^ctv/view-(.*) ctv/index.php?action=view_$1
+RewriteRule ^ctv/list-(.*) ctv/index.php?action=list_$1
+RewriteRule ^ctv/thongke-(.*) ctv/index.php?action=thongke_$1
+RewriteRule ^ctv/$ ctv/index.php
+
+
+RewriteRule ^ncc/login ncc/login.php
+RewriteRule ^ncc/logout ncc/logout.php
+RewriteRule ^ncc/forgot-password ncc/forgot_password.php
+RewriteRule ^ncc/profile ncc/index.php?action=profile
+RewriteRule ^ncc/change-password ncc/index.php?action=change_password
+RewriteRule ^ncc/dashboard ncc/index.php?action=dashboard
+RewriteRule ^ncc/sms-detail ncc/index.php?action=sms_detail
+RewriteRule ^ncc/contact-detail ncc/index.php?action=contact_detail
+RewriteRule ^ncc/print-detail ncc/index.php?action=print_detail
+RewriteRule ^ncc/post ncc/index.php?action=post
+RewriteRule ^ncc/domain ncc/index.php?action=domain
+RewriteRule ^dropship/dangky-leader dropship/index.php?action=dangky_leader
+
+RewriteRule ^ncc/add-(.*) ncc/index.php?action=add_$1
+RewriteRule ^ncc/copy-(.*) ncc/index.php?action=copy_$1
+RewriteRule ^ncc/edit-(.*) ncc/index.php?action=edit_$1
+RewriteRule ^ncc/view-(.*) ncc/index.php?action=view_$1
+RewriteRule ^ncc/list-(.*) ncc/index.php?action=list_$1
+RewriteRule ^ncc/danh-muc-video/(.*) ncc/index.php?action=category_video&link=$1
+RewriteRule ^ncc/thongke-(.*) ncc/index.php?action=thongke_$1
+RewriteRule ^ncc/video ncc/index.php?action=video
+RewriteRule ^ncc/nhiemvu-nguoimoi ncc/index.php?action=nhiemvu
+RewriteRule ^ncc/$ ncc/index.php
+# nhatthem54
+RewriteRule ^ncc/transport ncc/index.php?action=transport
+RewriteRule ^ncc/payment ncc/index.php?action=payment
+RewriteRule ^ncc/welcome-setup ncc/welcome_setup.php
+# end nhatthem54
 
 RewriteRule ^404.html 404.php
 ErrorDocument 404 /404.html

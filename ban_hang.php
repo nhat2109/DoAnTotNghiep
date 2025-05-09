@@ -1,9 +1,158 @@
 <?php
 $web=$_SERVER['HTTP_HOST'];
 $web=str_replace('www.', '', $web);
-$web_root=array('tongkho.vn','socdo.vn','socmoi.vn','soc.vn','beta.socdo.vn');
+$web_root=array('doantotnghiep.vn','socdo.vn','socmoi.vn','soc.vn','beta.socdo.vn');
 if(in_array($web, $web_root)==false){
 	include('./shop/ban_hang.php');
 	exit();
+}
+include('./includes/tlca_world.php');
+$check=$tlca_do->load('class_check');
+$class_index=$tlca_do->load('class_index');
+$param_url = parse_url($_SERVER['REQUEST_URI']);
+parse_str($param_url['query'], $url_query);
+$page=addslashes($url_query['page']);
+$page=intval($page);
+if($page>1){
+	$page=$page;
+	$title_page=' - Page '.$page;
+}else{
+	$page=1;
+	$title_page='';
+}
+$sort=addslashes($url_query['sort']);
+$setting=mysqli_query($conn,"SELECT * FROM index_setting ORDER BY name ASC");
+while ($r_s=mysqli_fetch_assoc($setting)) {
+	$index_setting[$r_s['name']]=$r_s['value'];
+}
+$limit=48;
+if(!isset($_COOKIE['user_id'])){
+	$thongbao="Bạn hiện chưa đăng nhập.";
+	$replace=array(
+		'title'=>'Bạn chưa đăng nhập tài khoản',
+		'thongbao'=>$thongbao,
+		'link'=>'/dang-nhap.html'
+	);
+	echo $skin->skin_replace('skin/chuyenhuong',$replace);
+	exit();
+}else{
+	$box_header=$skin->skin_normal('skin/box_header_login');
+	$mobile_menu=$skin->skin_normal('skin/mobile_menu_login');
+	$class_member=$tlca_do->load('class_member');
+	$tach_token=json_decode($check->token_login_decode($_COOKIE['user_id']),true);
+	$user_id=$tach_token['user_id'];
+	$user_info=$class_member->user_info($conn,$_COOKIE['user_id']);
+	if($user_info['dropship']==1){
+		$thongbao="Hệ thống đang chuyển hướng.";
+		$replace=array(
+			'title'=>'Đang chuyển hướng tới trang bán hàng',
+			'thongbao'=>$thongbao,
+			'link'=>'/dropship/'
+		);
+		echo $skin->skin_replace('skin/chuyenhuong',$replace);
+		exit();		
+	}else if($user_info['ctv']==1){
+		$thongbao="Hệ thống đang chuyển hướng.";
+		$replace=array(
+			'title'=>'Đang chuyển hướng tới trang bán hàng',
+			'thongbao'=>$thongbao,
+			'link'=>'/ncc/'
+		);
+		echo $skin->skin_replace('skin/chuyenhuong',$replace);
+		exit();		
+	}/*else if($user_info['dropship']<1 AND $user_info['ctv']<1){
+		$thongbao="Hệ thống đang chuyển hướng.";
+		$replace=array(
+			'title'=>'Bạn đang đăng nhập tài khoản mua hàng',
+			'thongbao'=>$thongbao,
+			'link'=>'/'
+		);
+		echo $skin->skin_replace('skin/chuyenhuong',$replace);
+		exit();	
+	}*/
+}
+if($user_info['dropship']==2){
+	$text_dropship=$skin->skin_normal('skin/dropship_wait');
+}else if($user_info['dropship']==3){
+	$text_dropship=$skin->skin_normal('skin/dropship_tuchoi');
+}else if($user_info['dropship']==4){
+	$text_dropship=$skin->skin_normal('skin/dropship_tamkhoa');
+}else{
+	$text_dropship=$skin->skin_normal('skin/dropship_reg');
+}
+if($user_info['ctv']==2){
+	$text_ctv=$skin->skin_normal('skin/ctv_wait');
+}else if($user_info['ctv']==3){
+	$text_ctv=$skin->skin_normal('skin/ctv_tuchoi');
+}else if($user_info['ctv']==4){
+	$text_ctv=$skin->skin_normal('skin/ctv_tamkhoa');
+}else{
+	$text_ctv=$skin->skin_normal('skin/ctv_reg');
+}
+if($user_info['dropship']==2){
+	$text_dropship=$skin->skin_normal('skin/dropship_wait');
+}else{
+	$text_dropship=$skin->skin_normal('skin/dropship_reg');
+}
+$list_danhmuc_top=json_decode($class_index->list_category_danhmuc_top($conn),true);
+$box_header=$skin->skin_normal('skin/box_header_login');
+$tach_menu=json_decode($class_index->list_menu($conn),true);
+$tach_banner=json_decode($class_index->list_banner($conn),true);
+$tach_list_category=json_decode($class_index->list_category($conn),true);
+$link_xem=(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+$replace=array(
+	'list_danhmuc_noibat_timkiem'=>$class_index->list_category_noibat_timkiem($conn), // chức năng tìm kiếm nâng cao
+	'list_danhmuc'=>$list_danhmuc_top['list_top'],
+	'header'=>$skin->skin_normal('skin/header'),
+	'box_header'=>$box_header,
+	'footer'=>$skin->skin_normal('skin/footer'),
+	'script_footer'=>$skin->skin_normal('skin/script_footer'),
+	'mobile_menu'=>$mobile_menu,
+	'title'=>'Đăng ký tài khoản bán hàng',
+	'description'=>$index_setting['description'],
+	'site_name'=>$index_setting['site_name'],
+	'limit'=>$limit,
+	'logo'=>$index_setting['logo'],
+	'text_footer'=>$index_setting['text_footer'],
+	'text_contact_footer'=>$index_setting['text_contact_footer'],
+	'text_about'=>$index_setting['text_about'],
+	'link_xem'=>$link_xem,
+	'link_facebook'=>$index_setting['link_facebook'],
+	'link_youtube'=>$index_setting['link_youtube'],
+	'link_twitter'=>$index_setting['link_twitter'],
+	'link_instagram'=>$index_setting['link_instagram'],
+	'text_hotline'=>$index_setting['text_hotline'],
+	'hotline'=>$index_setting['hotline'],
+	'hotline_number'=>preg_replace('/[^0-9]/', '', $index_setting['hotline']),
+	'menu_chinhsach'=>$tach_menu['chinhsach'],
+	'menu_huongdan'=>$tach_menu['huongdan'],
+	'menu_left'=>$tach_menu['left'],
+	'list_category'=>$tach_list_category['list'],
+	'list_category_top'=>$tach_list_category['list_top'],
+	'list_category_mobile'=>$tach_list_category['list_mobile'],
+	'photo'=>$index_setting['photo'],
+	'phantrang'=>$phantrang,
+	'name'=>$user_info['name'],
+	'avatar'=>$user_info['avatar'],
+	'email'=>$user_info['email'],
+	'ngay_sinh'=>$user_info['ngaysinh'],
+	'dien_thoai'=>$user_info['mobile'],
+	'username'=>$user_info['username'],
+	'date_reg'=>date('d/m/Y',$user_info['created']),
+	'dia_chi'=>$user_info['dia_chi'],
+	'ngay'=>date('d'),
+	'thang'=>date('m'),
+	'nam'=>date('Y'),
+	'text_dropship'=>$text_dropship,
+	'text_ctv'=>$text_ctv,
+	'banner_top'=>$tach_banner['top'],
+	'gioithieu_dropship'=>$index_setting['gioithieu_dropship'],
+	'gioithieu_ctv'=>$index_setting['gioithieu_ctv'],
+	'dropship'=>$user_info['dropship'],
+	);
+if($user_info['dropship']>0 OR $user_info['ctv']>0){
+	echo $skin->skin_replace('skin/ban_hang_dropship',$replace);
+}else{
+	echo $skin->skin_replace('skin/ban_hang',$replace);
 }
 ?>

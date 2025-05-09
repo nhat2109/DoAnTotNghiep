@@ -1,5 +1,4 @@
 <?php
-
 class class_shop extends class_manage{
     function list_menu($conn,$shop){
         $skin=$this->load('class_skin');

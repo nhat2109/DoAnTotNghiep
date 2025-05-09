@@ -26,8 +26,6 @@ if($total_setting<1){
 	echo $skin->skin_replace('skin_shop/skin_1/tpl/chuyenhuong',$replace);
 	exit();	
 }
-
 $s=$index_setting['skin_folder'];
-
 include('skin_shop/'.$s.'/view_tintuc.php');
 ?>

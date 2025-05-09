@@ -49,6 +49,46 @@
         return implode("\n", $resultLines);
 
     }
+    function rounter() {
+        // Lấy URL hiện tại
+        $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https" : "http";
+        $host = $_SERVER['HTTP_HOST'];
+        $requestUri = $_SERVER['REQUEST_URI'];
+        $fullUrl = $protocol . "://" . $host . $requestUri;
+    
+        // Phân tích URL
+        $parsedUrl = parse_url($fullUrl);
+    
+        // Lấy domain (host)
+        $domain = $parsedUrl['host'] ?? '';
+    
+        // Lấy path (đường dẫn sau domain)
+        $path = $parsedUrl['path'] ?? '';
+    
+        // Tách path thành mảng các phần
+        $pathParts = array_values(array_filter(explode('/', $path)));
+    
+        // Lấy query string (chuỗi sau dấu ?)
+        $queryString = $parsedUrl['query'] ?? '';
+    
+        // Chuyển query string thành mảng
+        parse_str($queryString, $queryParams);
+    
+        return [
+            'full_url' => $fullUrl,
+            'domain' => $domain,
+            'path' => $path,
+            'path_parts' => $pathParts,
+            'query_string' => $queryString,
+            'query_params' => $queryParams
+        ];
+    }
+    function get_link_xem() {
+        $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https" : "http";
+        $host = $_SERVER['HTTP_HOST']; // Lấy tên miền (ví dụ: example.com)
+        $uri = $_SERVER['REQUEST_URI']; // Lấy đường dẫn và tham số (ví dụ: /path/page.php?query=1)
+        return $protocol . "://" . $host . $uri;
+    }
     function check_link($url=NULL){
         if($url == NULL) return false;
         $ch = curl_init($url);
@@ -152,6 +192,19 @@
         $info=array('user_id'=>$user_id,'password'=>$password);
         return json_encode($info);
     }
+	function cookie_encode($string) {
+	    $ivLength = openssl_cipher_iv_length('AES-256-CBC');
+	    $iv = openssl_random_pseudo_bytes($ivLength); // Tạo một IV ngẫu nhiên
+	    $encrypted = openssl_encrypt($string, 'AES-256-CBC', 'LOIDHK', 0, $iv);
+	    return base64_encode($iv . $encrypted); // Gắn IV vào chuỗi mã hóa
+	}
+    function cookie_decode($string) {
+	    $data = base64_decode($string);
+	    $ivLength = openssl_cipher_iv_length('AES-256-CBC');
+	    $iv = substr($data, 0, $ivLength); // Lấy IV
+	    $encrypted = substr($data, $ivLength); // Lấy phần mã hóa
+	    return openssl_decrypt($encrypted, 'AES-256-CBC', 'LOIDHK', 0, $iv);
+	}
     /////////////////////////////////
     function date_update($time){
         $thoigian=time() - $time;

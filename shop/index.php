@@ -1,8 +1,6 @@
 <?php
-
 include('./includes/tlca_world.php');
 $check=$tlca_do->load('class_check');
-
 $param_url = parse_url($_SERVER['REQUEST_URI']);
 parse_str($param_url['query'], $url_query);
 $page=addslashes($url_query['page']);
@@ -14,24 +12,34 @@ if($page>1){
 	$page=1;
 	$title_page='';
 }
+
 $sort=addslashes($url_query['sort']);
 $thongtin_shop=mysqli_query($conn,"SELECT *,count(*) AS total FROM user_info WHERE domain='$web' ORDER BY user_id DESC LIMIT 1");
 $r_shop=mysqli_fetch_assoc($thongtin_shop);
 $shop=$r_shop['user_id'];
 if($r_shop['total']==0){
-	$thongbao="Tên miền không tồn tại.";
-	$replace=array(
-		'title'=>'Tên miền không tồzn tại',
-		'thongbao'=>$thongbao,
-		'link'=>'https://socdo.vn'
-	);
-	echo $skin->skin_replace('skin_shop/skin_1/tpl/chuyenhuong',$replace);
-	exit();
+	$thongtin_domain_giaoviec=mysqli_query($conn,"SELECT * FROM domain_giaoviec WHERE domain='$web' ORDER BY id DESC LIMIT 1");
+	$total_domain_giaoviec=mysqli_num_rows($thongtin_domain_giaoviec);
+	if($total_domain_giaoviec>0){
+		include('skin_shop/giaoviec/index.php');
+		exit();
+	}else{
+		$thongbao="Tên miền không tồn tại.";
+		$replace=array(
+			'title'=>'Tên miền không tồn tại',
+			'thongbao'=>$thongbao,
+			'link'=>'https://socdo.vn'
+		);
+		echo $skin->skin_replace('skin_shop/skin_1/tpl/chuyenhuong',$replace);
+		exit();
+	}
 }
+
 $setting=mysqli_query($conn,"SELECT * FROM shop_setting WHERE shop='{$r_shop['user_id']}' ORDER BY name ASC");
 while ($r_s=mysqli_fetch_assoc($setting)) {
 	$index_setting[$r_s['name']]=$r_s['value'];
 }
+
 $total_setting=mysqli_num_rows($setting);
 if($total_setting<1){
 	$ref=$_SERVER["HTTP_REFERER"];
