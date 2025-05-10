@@ -1,7 +1,7 @@
 <div class="box_flash_sale">
     <div class="container container_title">
         <div class="box_title">
-            <h2><i class="fas fa-bolt"></i> <span>FLASH SALE GIÓ VẮNG GIÁM GIÁ!</span></h2>
+            <h2><i class="fas fa-bolt"></i> <span>FLASH SALE - GIÁ SỐC!</span></h2>
             <div class="flash_sale_countdown" time="{flash_sale_expired}">
                 <span class="time_unit days">00</span> Ngày
                 <span class="time_unit hours">00</span> Giờ

@@ -107,7 +107,7 @@ class class_shop extends class_manage{
     
                 // Khởi tạo biến giảm giá và nhãn
                 $giam = 0;
-                $r_sp['label_sale'] = '';
+                 $r_sp['label_sale'] = '<div class="icon_label"></div>';
     
                 // Chuyển giá thành số để tính toán
                 $max_price = floatval(preg_replace('/[^0-9]/', '', $max_price));
@@ -116,7 +116,22 @@ class class_shop extends class_manage{
                 // Logic giảm giá cho sản phẩm flash sale
                 if (in_array($r_sp['id'], $tach_list_flashsale_id) == true) {
                     $r_sp['loai'] = 'flash_sale';
-                    $r_sp['icon_label'] = '<div class="icon_label text">Sản phẩm flash sale</div>';
+                    // $r_sp['icon_label'] = '<div class="icon_label text">Sản phẩm flash sale</div>';
+                    $deal_query = mysqli_query($conn, "SELECT sub_product FROM deal WHERE main_product LIKE '%$id_sp%' AND loai = 'flash_sale' AND shop = '$shop' LIMIT 1");
+                    $total_quantity = 0;
+                    
+                    if ($deal_query && mysqli_num_rows($deal_query) > 0) {
+                        $deal = mysqli_fetch_assoc($deal_query);
+                        $sub_product = json_decode($deal['sub_product'], true);
+                        if (is_array($sub_product) && isset($sub_product[$id_sp]) && is_array($sub_product[$id_sp])) {
+                            foreach ($sub_product[$id_sp] as $variant) {
+                                $total_quantity += (int)$variant['so_luong'];
+                            }
+                        }
+                    } else {
+                        error_log("No deal found for product $id_sp with shop $shop and type flash_sale (list_box_index)");
+                    }
+                    $r_sp['icon_label'] = '<div class="icon_label flash-sale"><span class="flash-icon"><i class="fa fa-bolt"></i></span><span class="flash-quantity">' . $total_quantity . '</span></div>';
     
                     if (isset($list_c[$id_sp])) {
                         $max_price = floatval(preg_replace('/[^0-9]/', '', $list_c[$id_sp]['gia_cu_max']));
@@ -278,8 +293,8 @@ class class_shop extends class_manage{
              $min_price = $list_prices['min_gia_moi'] ?? $r_tt['gia_moi'];
 
              $giam = 0;
-            $r_tt['label_sale'] = '';
-
+            // $r_tt['label_sale'] = '';
+            $r_tt['icon_label'] = '<div class="icon_label"></div>';
             // Chuyển giá thành số để tính toán
             $max_price = floatval(preg_replace('/[^0-9]/', '', $max_price));
             $min_price = floatval(preg_replace('/[^0-9]/', '', $min_price));
@@ -302,8 +317,23 @@ class class_shop extends class_manage{
                 $r_tt['loai'] = 'tang';
                 $r_tt['icon_label'] = '<div class="icon_label text">Mua hàng nhận quà tặng</div>';
             }else if(in_array($r_tt['id'], $tach_list_flashsale_id)==true){
-                $r_tt['loai'] = 'flash_sale';
-                $r_tt['icon_label'] = '<div class="icon_label text">Sản phẩm flash sale</div>';
+                 $r_tt['loai'] = 'flash_sale';
+                // $r_tt['icon_label'] = '<div class="icon_label text">Sản phẩm flash sale</div>';
+                $deal_query = mysqli_query($conn, "SELECT sub_product FROM deal WHERE main_product LIKE '%$id_sp%' AND loai = 'flash_sale' AND shop = '$shop' LIMIT 1");
+                $total_quantity = 0;
+                
+                if ($deal_query && mysqli_num_rows($deal_query) > 0) {
+                    $deal = mysqli_fetch_assoc($deal_query);
+                    $sub_product = json_decode($deal['sub_product'], true);
+                    if (is_array($sub_product) && isset($sub_product[$id_sp]) && is_array($sub_product[$id_sp])) {
+                        foreach ($sub_product[$id_sp] as $variant) {
+                            $total_quantity += (int)$variant['so_luong'];
+                        }
+                    }
+                } else {
+                    error_log("No deal found for product $id_sp with shop $shop and type flash_sale (list_box_index)");
+                }
+                $r_tt['icon_label'] = '<div class="icon_label flash-sale"><span class="flash-icon"><i class="fa fa-bolt"></i></span><span class="flash-quantity">' . $total_quantity . '</span></div>';
 
                 if (isset($list_c[$id_sp])) {
                     $max_price = floatval(preg_replace('/[^0-9]/', '', $list_c[$id_sp]['gia_cu_max']));
@@ -732,24 +762,30 @@ class class_shop extends class_manage{
             $r_tt['date_post'] = date('d/m/Y', $r_tt['date_post']);
             
             if (isset($list_c[$id_sp])) {
-                $r_tt['gia_cu'] = number_format(preg_replace('/[^0-9]/', '', $list_c[$id_sp]['gia_cu_max'])). 'đ';
-                $r_tt['gia_moi'] = number_format(preg_replace('/[^0-9]/', '', $list_c[$id_sp]['gia'])) . 'đ';
+                $gia_cu_raw = (int)preg_replace('/[^0-9]/', '', $list_c[$id_sp]['gia_cu_max']);
+                $gia_moi_raw = (int)preg_replace('/[^0-9]/', '', $list_c[$id_sp]['gia']);
             } 
             else{
-                $r_tt['gia_cu'] = number_format($r_tt['gia_cu']) . 'đ';
-                $r_tt['gia_moi'] = number_format($r_tt['gia_moi']) . 'đ';
+                $gia_cu_raw = (int)$r_tt['gia_cu'];
+                $gia_moi_raw = (int)$r_tt['gia_moi'];
             }
+            $r_tt['gia_cu'] = number_format($gia_cu_raw) . 'đ';
+            $r_tt['gia_moi'] = number_format($gia_moi_raw) . 'đ';
+
+            // if ($r_tt['gia_cu'] > $r_tt['gia_moi']) {
+            //     $giam = ceil((($r_tt['gia_cu'] - $r_tt['gia_moi']) / $r_tt['gia_cu']) * 100);
+            //     $r_tt['discount_percent'] = $giam;
+            // } else {
+            //     $r_tt['discount_percent'] = 0;
+            // }
 
 
-            if ($r_tt['gia_cu'] > $r_tt['gia_moi']) {
-                $giam = ceil((($r_tt['gia_cu'] - $r_tt['gia_moi']) / $r_tt['gia_cu']) * 100);
-                $r_tt['discount_percent'] = $giam;
+            if ($gia_cu_raw > $gia_moi_raw && $gia_cu_raw > 0) {
+                $giam = ceil((($gia_cu_raw - $gia_moi_raw) / $gia_cu_raw) * 100);
+                $r_tt['discount_percent'] = '<span class="fl-discount label-product label-sale">-' . $giam . '</span>';
             } else {
-                $r_tt['discount_percent'] = 0;
+                $r_tt['discount_percent'] = '';
             }
-
-
-            
             $r_tt['gia_drop'] = number_format($r_tt['gia_drop']);
             $r_tt['origin'] = !empty($r_tt['origin']) ? $r_tt['origin'] : 'Không xác định';
             // Điều chỉnh sold_out_text để khớp với hình ảnh
@@ -826,7 +862,12 @@ class class_shop extends class_manage{
             $list_prices = $this->getMaxMinPriceFromClassification($conn, $id_sp);
             $max_price = $list_prices['max_gia_cu'] ?? $r_tt['gia_cu'];
             $min_price = $list_prices['min_gia_moi'] ?? $r_tt['gia_moi'];
-            
+            $giam = 0;
+            // $r_tt['label_sale'] = '';
+            $r_tt['icon_label'] = '<div class="icon_label"></div>';
+            // Chuyển giá thành số để tính toán
+            $max_price = floatval(preg_replace('/[^0-9]/', '', $max_price));
+            $min_price = floatval(preg_replace('/[^0-9]/', '', $min_price));
             
             if (in_array($r_tt['id'], $tach_list_muakem_id) == true) {
                 if (isset($list_c[$id_sp])) {
@@ -840,12 +881,28 @@ class class_shop extends class_manage{
                 $r_tt['loai'] = 'tang';
                 $r_tt['icon_label'] = '<div class="icon_label text">Mua hàng nhận quà</div>';
             } else if (in_array($r_tt['id'], $tach_list_flashsale_id) == true) {
-                if (isset($list_c[$id_sp])) {
-                    $max_price = $list_c[$id_sp]['gia_cu_max'];
-                    $min_price = $list_c[$id_sp]['gia'];
-                }
                 $r_tt['loai'] = 'flash_sale';
-                $r_tt['icon_label'] = '<div class="icon_label text">Sản phẩm flash sale</div>';
+                // $r_tt['icon_label'] = '<div class="icon_label text">Sản phẩm flash sale</div>';
+                $deal_query = mysqli_query($conn, "SELECT sub_product FROM deal WHERE main_product LIKE '%$id_sp%' AND loai = 'flash_sale' AND shop = '$shop' LIMIT 1");
+                $total_quantity = 0;
+                
+                if ($deal_query && mysqli_num_rows($deal_query) > 0) {
+                    $deal = mysqli_fetch_assoc($deal_query);
+                    $sub_product = json_decode($deal['sub_product'], true);
+                    if (is_array($sub_product) && isset($sub_product[$id_sp]) && is_array($sub_product[$id_sp])) {
+                        foreach ($sub_product[$id_sp] as $variant) {
+                            $total_quantity += (int)$variant['so_luong'];
+                        }
+                    }
+                } else {
+                    error_log("No deal found for product $id_sp with shop $shop and type flash_sale (list_box_index)");
+                }
+                $r_tt['icon_label'] = '<div class="icon_label flash-sale"><span class="flash-icon"><i class="fa fa-bolt"></i></span><span class="flash-quantity">' . $total_quantity . '</span></div>';
+
+                if (isset($list_c[$id_sp])) {
+                    $max_price = floatval(preg_replace('/[^0-9]/', '', $list_c[$id_sp]['gia_cu_max']));
+                    $min_price = floatval(preg_replace('/[^0-9]/', '', $list_c[$id_sp]['gia']));
+                }
             } else {
                 $r_tt['loai'] = '';
                 $r_tt['icon_label'] = '<div class="icon_label"></div>';
@@ -881,12 +938,16 @@ class class_shop extends class_manage{
         while($r_tt=mysqli_fetch_assoc($thongtin_sanpham)){
             $i++;
             $list_prices = $this->getMaxMinPriceFromClassification($conn, $r_tt['id']);
-            $r_tt['gia_cu'] = $list_prices['max_gia_cu'] ?? $r_tt['gia_cu'];
-            $r_tt['gia_moi']= $list_prices['min_gia_moi'] ?? $r_tt['gia_moi'];
+            $max_price = $list_prices['max_gia_cu'] ?? $r_tt['gia_cu'];
+            $min_price = $list_prices['min_gia_moi'] ?? $r_tt['gia_moi'];
             $id_sp=$r_tt['id'];
             $r_tt['i']=$i;
+            $giam = 0;
             $r_tt['date_post']=date('d/m/Y',$r_tt['date_post']);
-               
+            $r_tt['icon_label'] = '<div class="icon_label"></div>';
+            // Chuyển giá thành số để tính toán
+            $max_price = floatval(preg_replace('/[^0-9]/', '', $max_price));
+            $min_price = floatval(preg_replace('/[^0-9]/', '', $min_price));
             if(in_array($r_tt['id'], $tach_list_muakem_id)==true){
                 if(isset($list_c[$id_sp])){
                     $r_tt['gia_moi']=preg_replace('/[^0-9]/', '', $list_c[$id_sp]['gia']);
@@ -899,32 +960,41 @@ class class_shop extends class_manage{
                 $r_tt['loai']='tang';
                 $r_tt['icon_label']='<div class="icon_label text">Mua hàng nhận quà</div>';
             }else if(in_array($r_tt['id'], $tach_list_flashsale_id)==true){
-                // if(isset($list_c[$id_sp])){
-                //     $r_tt['gia_moi']=preg_replace('/[^0-9]/', '', $list_c[$id_sp]['gia']);
-                // }
-                // var_dump($list_c[$id_sp]);
-                // die;
-                if(isset($list_c[$id_sp])){
-                    $r_tt['gia_cu'] =preg_replace('/[^0-9]/', '', $list_c[$id_sp]['gia_cu_max']);
-                    $r_tt['gia_moi'] = preg_replace('/[^0-9]/', '', $list_c[$id_sp]['gia']);
-                }else{
-                    
+                $r_tt['loai'] = 'flash_sale';
+                // $r_tt['icon_label'] = '<div class="icon_label text">Sản phẩm flash sale</div>';
+                $deal_query = mysqli_query($conn, "SELECT sub_product FROM deal WHERE main_product LIKE '%$id_sp%' AND loai = 'flash_sale' AND shop = '$shop' LIMIT 1");
+                $total_quantity = 0;
+                
+                if ($deal_query && mysqli_num_rows($deal_query) > 0) {
+                    $deal = mysqli_fetch_assoc($deal_query);
+                    $sub_product = json_decode($deal['sub_product'], true);
+                    if (is_array($sub_product) && isset($sub_product[$id_sp]) && is_array($sub_product[$id_sp])) {
+                        foreach ($sub_product[$id_sp] as $variant) {
+                            $total_quantity += (int)$variant['so_luong'];
+                        }
+                    }
+                } else {
+                    error_log("No deal found for product $id_sp with shop $shop and type flash_sale (list_box_index)");
                 }
-                $r_tt['loai']='flash_sale';
-                $r_tt['icon_label']='<div class="icon_label text">Sản phẩm flash sale</div>';
+                $r_tt['icon_label'] = '<div class="icon_label flash-sale"><span class="flash-icon"><i class="fa fa-bolt"></i></span><span class="flash-quantity">' . $total_quantity . '</span></div>';
+
+                if (isset($list_c[$id_sp])) {
+                    $max_price = floatval(preg_replace('/[^0-9]/', '', $list_c[$id_sp]['gia_cu_max']));
+                    $min_price = floatval(preg_replace('/[^0-9]/', '', $list_c[$id_sp]['gia']));
+                }
             }else{
                 $r_tt['loai']='';
                 $r_tt['icon_label']='<div class="icon_label"></div>';
             }
-            $r_tt['gia_cu']=number_format($r_tt['gia_cu']);
-            $r_tt['gia_moi']=number_format($r_tt['gia_moi']);
-            if($r_tt['gia_cu']>$r_tt['gia_moi']){
-            $giam=ceil((($r_tt['gia_cu'] - $r_tt['gia_moi'])/$r_tt['gia_cu'])*100);
-                $r_tt['label_sale']='<span class="label-product label-sale">-'.$giam.'%</span>';
-            }else{
-                $r_tt['label_sale']='';
+            if ( $max_price > $min_price) {
+                $giam = ceil((( $max_price - $min_price) /  $max_price) * 100);
+                $r_tt['label_sale'] = '<span class="label-product label-sale">-' . $giam . '%</span>';
+            } else {
+                $r_tt['label_sale'] = '';
             }
-            $r_tt['gia_drop']=number_format($r_tt['gia_drop']);
+            $r_tt['gia_cu'] = number_format($max_price);
+            $r_tt['gia_moi'] = number_format($min_price);
+            $r_tt['gia_drop'] = number_format($r_tt['gia_drop']);
             if(strpos($where, 'tieu_de')!==false){
                 if($r_tt['link_aff']!=''){
                     $list.=$skin->skin_replace('skin_shop/'.$s.'/tpl/box_li/li_sanpham_timkiem_aff',$r_tt);

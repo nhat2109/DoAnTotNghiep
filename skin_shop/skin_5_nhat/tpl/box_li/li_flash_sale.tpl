@@ -1,6 +1,6 @@
 <div class="li_flash_sale">
     <div class="li_flash_sale_content">
-        <div class="sale_badge">-{discount_percent}%</div>
+        <div class="sale_badge">{discount_percent}%</div>
         <!-- <div class="favorite_icon"><i class="fas fa-heart"></i></div> -->
         <div class="hot_badge">BÁN CHẠY</div>
         <div class="minh_hoa">
