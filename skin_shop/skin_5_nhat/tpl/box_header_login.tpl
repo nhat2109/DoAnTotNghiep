@@ -62,6 +62,7 @@
                         <div class="header_search search_form">
                             <form class="input-group search-bar search_form" action="/tim-kiem.html" method="get" role="search">
                                 <input type="search" name="key" value="" placeholder="Tìm kiếm sản phẩm..." class="input-group-field st-default-search-input search-text" autocomplete="off" id="search-input">
+                                <button type="button" id="voiceSearchBtn"><i class="fa fa-microphone"></i></button>
                                 <span class="input-group-btn">
                                     <button class="btn icon-fallback-text">
                                         <i class="fa fa-search"></i>
@@ -92,12 +93,6 @@
                                     <div class="icon_hotline">
                                         <i class="fa fa-shopping-basket" aria-hidden="true"></i>
                                     </div>
-                                    <!-- <div class="content_cart_header">
-                                        <a class="bg_cart" href="/gio-hang.html" title="Giỏ hàng">
-                                            (<span class="count_item count_item_pr"><?php echo count($_SESSION['cart']);?></span>) Sản phẩm
-                                            <span class="text-giohang">Giỏ hàng</span>
-                                        </a>
-                                    </div> -->
                                     <div class="content_cart_header">
                                         <a class="bg_cart" href="/gio-hang.html" title="Giỏ hàng">
                                             (<span class="count_item count_item_pr"><?php echo count((array)$_SESSION['cart']);?></span>) Sản phẩm
@@ -186,5 +181,81 @@
             $('.subcate2').css('min-height', divHeight + 'px');
         });
     }
+
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+		const voiceBtn = document.getElementById("voiceSearchBtn");
+		const searchInput = document.getElementById("search-input");
+		let isListening = false;
+
+		if ('webkitSpeechRecognition' in window) {
+			const recognition = new webkitSpeechRecognition();
+			recognition.continuous = false;
+			recognition.interimResults = false;
+			recognition.lang = "vi-VN";
+
+			voiceBtn.addEventListener("click", function () {
+				if (!isListening) {
+					try {
+						recognition.start();
+						isListening = true;
+						voiceBtn.classList.add('listening');
+						voiceBtn.innerHTML = '<i class="fa fa-microphone"></i>';
+					} catch (e) {
+						console.error("Error starting recognition:", e);
+					}
+				} else {
+					recognition.stop();
+					isListening = false;
+					voiceBtn.classList.remove('listening');
+					voiceBtn.innerHTML = '<i class="fa fa-microphone"></i>';
+				}
+			});
+
+			recognition.onresult = function (event) {
+				const transcript = event.results[0][0].transcript;
+				searchInput.value = transcript;
+				
+				// Trigger input event to show search suggestions
+				const inputEvent = new Event('input', {
+					bubbles: true,
+					cancelable: true,
+				});
+				searchInput.dispatchEvent(inputEvent);
+			};
+
+			recognition.onend = function() {
+				isListening = false;
+				voiceBtn.classList.remove('listening');
+				voiceBtn.innerHTML = '<i class="fa fa-microphone"></i>';
+			};
+
+			recognition.onerror = function (event) {
+				console.error("Lỗi nhận diện giọng nói:", event.error);
+				isListening = false;
+				voiceBtn.classList.remove('listening');
+				voiceBtn.innerHTML = '<i class="fa fa-microphone"></i>';
+				
+				switch(event.error) {
+					case 'no-speech':
+						//alert('Không phát hiện giọng nói. Vui lòng thử lại.');
+						break;
+					case 'audio-capture':
+						//alert('Không thể truy cập microphone. Vui lòng kiểm tra quyền truy cập.');
+						break;
+					case 'not-allowed':
+						//alert('Quyền truy cập microphone bị từ chối. Vui lòng cấp quyền và thử lại.');
+						break;
+					default:
+						//alert('Có lỗi xảy ra khi nhận diện giọng nói. Vui lòng thử lại.');
+				}
+			};
+		} else {
+			voiceBtn.style.display = 'none';
+			console.log("Trình duyệt không hỗ trợ nhận diện giọng nói");
+		}
+	});
+
     </script>
 </header>

@@ -2333,7 +2333,6 @@ $(document).ready(function () {
 
   // Load featured products on focus
   searchInput.on("focus", function () {
-    console.log("OK");
     if (!searchInput.val().trim()) {
       $.ajax({
         url: "/process.php",

@@ -832,10 +832,10 @@
 
 			recognition.onerror = function (event) {
 				console.error("Lỗi nhận diện giọng nói:", event.error);
-				alert("Chỉ hỗ trợ file WAV hoặc WebM. Vui lòng thử lại.");
+			//	alert("Chỉ hỗ trợ file WAV hoặc WebM. Vui lòng thử lại.");
 			};
 		} else {
-			alert("Trình duyệt của bạn không hỗ trợ ghi âm giọng nói.");
+			//alert("Trình duyệt của bạn không hỗ trợ ghi âm giọng nói.");
 		}
 	});
 
