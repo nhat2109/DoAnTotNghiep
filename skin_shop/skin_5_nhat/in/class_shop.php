@@ -1159,6 +1159,45 @@ class class_shop extends class_manage{
 
         return $list;
     }
+    // 
+    function get_search_suggestions($conn, $s, $shop, $keyword = '') {
+        $skin = $this->load('class_skin');
+        $result = array(
+            'featured' => '',
+            'search' => ''
+        );
+
+        // Get featured products (most viewed)
+        $featured_query = "SELECT * FROM sanpham_shop 
+                          WHERE shop='$shop' 
+                          ORDER BY view DESC 
+                          LIMIT 4";
+        $featured = mysqli_query($conn, $featured_query);
+        
+        while ($r_tt = mysqli_fetch_assoc($featured)) {
+            $r_tt['gia_cu'] = number_format($r_tt['gia_cu']);
+            $r_tt['gia_moi'] = number_format($r_tt['gia_moi']);
+            $result['featured'] .= $skin->skin_replace('skin_shop/' . $s . '/tpl/box_li/li_search_product', $r_tt);
+        }
+
+        if (!empty($keyword)) {
+            $keyword = mysqli_real_escape_string($conn, $keyword);
+            $search_query = "SELECT * FROM sanpham_shop 
+                            WHERE shop='$shop' 
+                            AND tieu_de LIKE '%$keyword%'
+                            LIMIT 4";
+            $search = mysqli_query($conn, $search_query);
+            
+            while ($r_tt = mysqli_fetch_assoc($search)) {
+                $r_tt['gia_cu'] = number_format($r_tt['gia_cu']);
+                $r_tt['gia_moi'] = number_format($r_tt['gia_moi']);
+                $result['search'] .= $skin->skin_replace('skin_shop/' . $s . '/tpl/box_li/li_search_product', $r_tt);
+            }
+        }
+
+        return $result;
+    }
+
 }
 ?>
 

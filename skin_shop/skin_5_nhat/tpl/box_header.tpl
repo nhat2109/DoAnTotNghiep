@@ -71,14 +71,26 @@
                     <div class="search">
                         <div class="header_search search_form">
                             <form class="input-group search-bar search_form" action="/tim-kiem.html" method="get" role="search">
-                                <input type="search" name="key" value="" placeholder="Tìm kiếm sản phẩm... " class="input-group-field st-default-search-input search-text" autocomplete="off">
+                                <input type="search" name="key" value="" placeholder="Tìm kiếm sản phẩm..." class="input-group-field st-default-search-input search-text" autocomplete="off" id="search-input">
                                 <span class="input-group-btn">
-                                    <button class="btn icon-fallback-text" style="width: 90px;left: -45px;top: 0px; display: flex;align-items: center;justify-content: center;" type="submit" title="Tìm kiếm">
+                                    <button class="btn icon-fallback-text">
                                         <i class="fa fa-search"></i>
-                                       
                                     </button>
                                 </span>
                             </form>
+                            <div class="search-dropdown" style="display:none;">
+                                <div class="search-result">
+                                    <button type="button" style="position: absolute; top: 4px; right: 10px; width: 25px; height: 25px; background: #ff4747; border: none; border-radius: 50%; font-size: 18px; line-height: 1; color: #fff; cursor: pointer; padding: 0px 0 3px 0; display: flex; align-items: center; justify-content: center; z-index: 1001; box-shadow: 0 2px 4px rgba(0,0,0,0.2); transition: all 0.2s ease;" onmouseover="this.style.background='#ff3333'; this.style.transform='scale(1.1)'" onmouseout="this.style.background='#ff4747'; this.style.transform='scale(1)'">×</button>
+                                    <div class="featured-products">
+                                        <h3>Sản phẩm nổi bật</h3>
+                                        <div class="featured-list"></div>
+                                    </div>
+                                    <div class="search-products">
+                                        <h3>Kết quả tìm kiếm</h3>
+                                        <div class="search-list"></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -127,6 +139,7 @@
             </div>
         </div>
     </nav>
+
     <script>
     if ($(window).width() > 1100) {
 

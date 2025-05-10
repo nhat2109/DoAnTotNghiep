@@ -1742,6 +1742,12 @@ else if ($action == 'fee_ship') {
 	// 	'fee'=> $data_ship
 	// ]);
 }
+else if ($action == 'search_suggestions') {
+    $keyword = addslashes(strip_tags($_REQUEST['keyword'] ?? ''));
+    $class_index = $tlca_do->load_skin($s, 'class_shop');
+    $suggestions = $class_index->get_search_suggestions($conn, $s, $shop, $keyword);
+    echo json_encode($suggestions);
+}
 
 else {
 	echo "Không có hành động nào được xử lý";

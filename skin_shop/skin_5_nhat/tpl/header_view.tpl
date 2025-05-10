@@ -155,6 +155,11 @@
         footer .site-footer h3{
             color: {color_text_title_top_footer} !important;
         }
+        .search-item .search-item-info .price-box{
+            display: inline-block;
+            margin: 0px;
+            padding: 0px;
+        }
     </style>
     <link rel="stylesheet" type="text/css" href="/slick/slick.css">
     <link rel="stylesheet" type="text/css" href="/slick/slick-theme.css">

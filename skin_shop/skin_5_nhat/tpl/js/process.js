@@ -73,7 +73,7 @@ function removeURLParameter(url, parameter) {
     var pars = urlparts[1].split(/[&;]/g);
 
     //reverse iteration as may be destructive
-    for (var i = pars.length; i-- > 0; ) {
+    for (var i = pars.length; i-- > 0;) {
       //idiom for string.startsWith
       if (pars[i].lastIndexOf(prefix, 0) !== -1) {
         pars.splice(i, 1);
@@ -893,8 +893,8 @@ $(document).ready(function () {
     var thanhtoan = $("input[name=thanhtoan]:checked").val();
     var ghi_chu = $("textarea[name=ghi_chu]").val().trim();
     var shop = $("input[name=shop]").val();
-    var phi_ship = $('.phi_ship[name="phi_ship"]').val(); 
-      parseInt($("input[name=phi_ship_raw]").val()) ||
+    var phi_ship = $('.phi_ship[name="phi_ship"]').val();
+    parseInt($("input[name=phi_ship_raw]").val()) ||
       parseInt(
         $("#phi_ship")
           .text()
@@ -1279,7 +1279,7 @@ $(document).ready(function () {
           gia_moi: gia_moi,
         },
 
-        
+
         success: function (kq) {
           try {
             var info = JSON.parse(kq);
@@ -2317,4 +2317,119 @@ $(document).ready(function () {
     } else {
     }
   });
+   /////////////////
 });
+
+$(document).ready(function () {
+
+   
+  const searchInput = $("#search-input");
+  const searchDropdown = $(".search-dropdown");
+  const featuredProducts = $(".featured-products");
+  const searchProducts = $(".search-products");
+  const featuredList = $(".featured-list");
+  const searchList = $(".search-list");
+  let searchTimeout;
+
+  // Load featured products on focus
+  searchInput.on("focus", function () {
+    console.log("OK");
+    if (!searchInput.val().trim()) {
+      $.ajax({
+        url: "/process.php",
+        type: "POST",
+        data: {
+          action: "search_suggestions",
+        },
+        success: function (response) {
+          const data = JSON.parse(response);
+          featuredList.html(data.featured);
+          featuredProducts.show();
+          searchProducts.hide();
+          searchDropdown.show();
+        },
+      });
+    }
+  });
+
+  // Handle search input
+  searchInput.on("input", function () {
+    const keyword = $(this).val().trim();
+
+    // Clear previous timeout
+    clearTimeout(searchTimeout);
+
+    // Set new timeout to prevent too many requests
+    searchTimeout = setTimeout(function () {
+      if (keyword) {
+        $.ajax({
+          url: "/process.php",
+          type: "POST",
+          data: {
+            action: "search_suggestions",
+            keyword: keyword,
+          },
+          success: function (response) {
+            const data = JSON.parse(response);
+            searchList.html(data.search);
+            featuredProducts.hide();
+            searchProducts.show();
+            searchDropdown.show();
+          },
+        });
+      } else {
+        // If search is empty, show featured products
+        $.ajax({
+          url: "/process.php",
+          type: "POST",
+          data: {
+            action: "search_suggestions",
+          },
+          success: function (response) {
+            const data = JSON.parse(response);
+            featuredList.html(data.featured);
+            featuredProducts.show();
+            searchProducts.hide();
+            searchDropdown.show();
+          },
+        });
+      }
+    }, 300); // Delay 
+    // 300ms
+  });
+
+  // Hide dropdown when clicking outside
+  $(document).on("click", function (e) {
+    if (!$(e.target).closest(".header_search").length) {
+      searchDropdown.hide();
+    }
+  });
+  // Thêm nút đóng vào dropdown tìm kiếm
+  if ($(".search-dropdown .close-search").length === 0) {
+    $(".search-dropdown .search-result").prepend(
+      '<div class="close-search"></div>'
+    );
+  }
+
+  // Xử lý sự kiện click nút đóng
+  $(document).on("click", ".close-search", function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    $(".search-dropdown").hide();
+  });
+
+  // Ẩn dropdown khi click ra ngoài
+  $(document).on("click", function (e) {
+    if (!$(e.target).closest(".header_search").length) {
+      $(".search-dropdown").hide();
+    }
+  });
+
+  // nút x dropdow tìm kiếm gợi ý
+  $(document).on("click", ".search-dropdown button", function () {
+    $(this).closest(".search-dropdown").hide();
+    $(".featured-list").empty();
+    $(".search-list").empty();
+  });
+ });
+
