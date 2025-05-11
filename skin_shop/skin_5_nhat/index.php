@@ -273,4 +273,4 @@ $replace = array(
 );
 
 echo $skin->skin_replace('skin_shop/' . $s . '/tpl/index', $replace);
-?>
+?>  

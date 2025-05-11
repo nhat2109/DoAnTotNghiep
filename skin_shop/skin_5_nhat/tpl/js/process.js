@@ -2138,7 +2138,7 @@ $(document).ready(function () {
     }
   });
   ////////////////////////
-  $("button[name=button_lienhe]").on("click", function () {
+  $("body").on("click", "button[name=button_lienhe]", function () {
     ho_ten = $("input[name=ho_ten]").val();
     email = $("input[name=email]").val();
     tieu_de = $("input[name=tieu_de]").val();
@@ -2367,6 +2367,11 @@ $(document).ready(function () {
           data: {
             action: "search_suggestions",
             keyword: keyword,
+            list_muakem_id: window.SEARCH_CONTEXT.list_muakem_id,
+            list_tang_id: window.SEARCH_CONTEXT.list_tang_id,
+            list_flashsale_id: window.SEARCH_CONTEXT.list_flashsale_id,
+            list_c: window.SEARCH_CONTEXT.list_c,
+            shop: window.SEARCH_CONTEXT.shop
           },
           success: function (response) {
             const data = JSON.parse(response);

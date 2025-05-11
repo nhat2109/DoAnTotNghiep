@@ -130,6 +130,7 @@ if(strlen($where)<5){
 }else{
 	$thongke=mysqli_query($conn,"SELECT count(*) AS total FROM sanpham_shop WHERE ".$where." AND shop='{$r_shop['user_id']}'");
 }
+$limit = 12;
 $r_tk=mysqli_fetch_assoc($thongke);
 $total_page=ceil($r_tk['total']/$limit);
 $phantrang=$class_index->phantrang_sanpham($page,$total_page,'/san-pham.html');

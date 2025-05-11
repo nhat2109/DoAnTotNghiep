@@ -96,14 +96,14 @@
                                         </div>
                                     </div>
                                     <!-- ./filter color -->
-                                    <div class="group-filter" aria-expanded="true">
+                                    <!-- <div class="group-filter" aria-expanded="true">
                                         <div class="layered_subtitle dropdown-filter"><span>Màu sắc</span></div>
                                         <div class="layered-content filter-color s-filter">
                                             <ul class="check-box-list">
                                             	{list_color}
                                             </ul>
                                         </div>
-                                    </div>
+                                    </div> -->
                                     <!-- ./filter size -->
                                     <div class="group-filter" aria-expanded="true">
                                         <div class="layered_subtitle dropdown-filter"><span>Kích thước</span></div>

@@ -177,7 +177,7 @@ $link_xem = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : 
 //     $list_id = "";
 // }
 $list_id = isset($_SESSION['daxem']) && is_array($_SESSION['daxem']) ? implode(',', $_SESSION['daxem']) : '0';
-
+$limit = 12;
 $google_analytics = str_replace('<script>// <![CDATA[', '<script>', $index_setting['google_analytics']);
 $google_analytics = str_replace('// ]]>', '', $google_analytics);
 $script_chat = str_replace('<script>// <![CDATA[', '<script>', $index_setting['script_footer']);

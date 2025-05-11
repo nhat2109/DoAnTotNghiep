@@ -121,11 +121,6 @@
     }
 }
     /*Banner styles for the banner slider nhatthem214/*/
-
-
-    .button_top {
-        background: #000000 !important;
-    }
    /* Scoped container for the layout */
 
 .container-sub {

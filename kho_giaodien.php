@@ -48,7 +48,7 @@ $tach_list_category = json_decode($class_index->list_category($conn), true);
 $link_xem = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 $thongtin_giaodien = mysqli_query($conn, "SELECT * FROM giaodien WHERE gia_moi>'0'");
 $total_giaodien = mysqli_num_rows($thongtin_giaodien);
-$tach_list = json_decode($class_index->list_skin($conn, $total_giaodien, 'vip', 1, $limit), true);
+$tach_list = json_decode($class_index->list_skin($conn, $total_giaodien, 'all', 1, $limit), true);
 $tach_list_video = json_decode($class_index->list_video_skin($conn), true);
 $replace = array(
 	'header' => $skin->skin_normal('skin/header'),

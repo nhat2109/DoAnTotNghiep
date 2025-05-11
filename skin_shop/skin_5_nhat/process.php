@@ -1518,7 +1518,6 @@ else if ($action == 'add_to_cart') {
 	);
 	echo json_encode($info);
 }
-// minhthem24
 else if ($action == 'quick_view') {
 	global $skin, $s;
 	$sp_id = (int) $_REQUEST['sp_id'];
@@ -1705,7 +1704,7 @@ else if ($action == 'quick_view') {
 
 	echo $skin->skin_replace('skin_shop/' . $s . '/tpl/quick_view', $replace);
 }
- else if ($action == 'load_sp_more_index') {
+else if ($action == 'load_sp_more_index') {
 	$limit = (int) $_REQUEST['limit'];
 	$list_sp = $class_index->list_home_goiy($conn, $s, $shop, $limit);
 	echo json_encode(
@@ -1744,9 +1743,111 @@ else if ($action == 'fee_ship') {
 }
 else if ($action == 'search_suggestions') {
     $keyword = addslashes(strip_tags($_REQUEST['keyword'] ?? ''));
+    $list_muakem_id = $_REQUEST['list_muakem_id'] ?? ''; // Giả sử dữ liệu được gửi qua request
+    $list_tang_id = $_REQUEST['list_tang_id'] ?? '';
+    $list_flashsale_id = $_REQUEST['list_flashsale_id'] ?? '';
+    $list_c = $_REQUEST['list_c'] ?? []; // Giả sử list_c là mảng, cần xử lý phù hợp
+    
     $class_index = $tlca_do->load_skin($s, 'class_shop');
-    $suggestions = $class_index->get_search_suggestions($conn, $s, $shop, $keyword);
+    $suggestions = $class_index->get_search_suggestions($conn, $s, $shop, $list_muakem_id, $list_tang_id, $list_flashsale_id, $list_c, $keyword);
     echo json_encode($suggestions);
+}
+else if ($action == 'show_cart') {
+	global $tongtien, $total_price;
+	$list_shopcart = '';
+	$list_shopcart_mobile = '';
+	$list_cart = '';
+	$tongtien = 0;
+	$total_price = 0;
+
+	// Check if cart is empty
+	if (empty($_SESSION['cart'])) {
+		echo json_encode(array(
+			'ok' => 0,
+			'list_shopcart' => '',
+			'list_shopcart_mobile' => '',
+			'list_cart' => '',
+			'total_cart' => 0,
+			'tongtien' => '0 đ',
+			'thongbao' => 'Giỏ hàng của bạn đang trống'
+		));
+		exit;
+	}
+
+	// Get all product IDs from cart and escape them
+	$product_ids = array_keys($_SESSION['cart']);
+	$escaped_ids = array();
+	foreach ($product_ids as $id) {
+		$escaped_ids[] = mysqli_real_escape_string($conn, $id);
+	}
+	$product_ids_str = "'" . implode("','", $escaped_ids) . "'";
+
+	// Get product information using prepared statement
+	$query = "SELECT * FROM sanpham_shop WHERE id IN ($product_ids_str) AND shop=? ORDER BY FIELD(id,$product_ids_str)";
+	$stmt = mysqli_prepare($conn, $query);
+	mysqli_stmt_bind_param($stmt, "s", $shop);
+	mysqli_stmt_execute($stmt);
+	$thongtin_cart = mysqli_stmt_get_result($stmt);
+	
+	if (!$thongtin_cart) {
+		echo json_encode(array(
+			'ok' => 0,
+			'thongbao' => 'Lỗi truy vấn cơ sở dữ liệu: ' . mysqli_error($conn)
+		));
+		exit;
+	}
+
+	while ($r_cart = mysqli_fetch_assoc($thongtin_cart)) {
+		$id_sp = $r_cart['id'];
+		$quantity = $_SESSION['cart'][$id_sp]['quantity'];
+		
+		// Handle gift products
+		if (isset($_SESSION['cart'][$id_sp]['tang']) && $_SESSION['cart'][$id_sp]['tang'] == 1) {
+			$r_cart['ten_sanpham'] = '<span class="color_red">[Quà tặng]</span> ' . $r_cart['tieu_de'];
+			$r_cart['thanhtien'] = 0;
+			$r_cart['gia_moi'] = 0;
+			$r_cart['quantity'] = 1;
+			
+			$list_shopcart .= $skin->skin_replace('skin_shop/' . $s . '/tpl/box_li/li_shopcart_tang', $r_cart);
+			$list_cart .= $skin->skin_replace('skin_shop/' . $s . '/tpl/box_li/li_cart_tang', $r_cart);
+			$list_shopcart_mobile .= $skin->skin_replace('skin_shop/' . $s . '/tpl/box_li/li_shopcart_mobile_tang', $r_cart);
+			continue;
+		}
+
+		// Handle flash sale products
+		if (isset($_SESSION['cart'][$id_sp]['flash_sale']) && $_SESSION['cart'][$id_sp]['flash_sale'] == 1) {
+			$r_cart['ten_sanpham'] = '<span class="color_red">[Flash Sale]</span> ' . $r_cart['tieu_de'];
+			$flash_price = $r_cart['gia_moi'] * 0.8; // 20% discount for flash sale
+			$tongtien += $flash_price * $quantity;
+			$r_cart['thanhtien'] = number_format($flash_price * $quantity);
+			$r_cart['gia_moi'] = number_format($flash_price);
+		} else {
+			// Regular products
+			$r_cart['ten_sanpham'] = $r_cart['tieu_de'];
+			$tongtien += $r_cart['gia_moi'] * $quantity;
+			$r_cart['thanhtien'] = number_format($r_cart['gia_moi'] * $quantity);
+			$r_cart['gia_moi'] = number_format($r_cart['gia_moi']);
+		}
+
+		$r_cart['quantity'] = $quantity;
+		
+		// Add to cart lists
+		$list_shopcart .= $skin->skin_replace('skin_shop/' . $s . '/tpl/box_li/li_shopcart', $r_cart);
+		$list_cart .= $skin->skin_replace('skin_shop/' . $s . '/tpl/box_li/li_cart', $r_cart);
+		$list_shopcart_mobile .= $skin->skin_replace('skin_shop/' . $s . '/tpl/box_li/li_shopcart_mobile', $r_cart);
+	}
+
+	$total_price = number_format($tongtien) . ' đ';
+	
+	echo json_encode(array(
+		'ok' => 1,
+		'list_shopcart' => $list_shopcart,
+		'list_shopcart_mobile' => $list_shopcart_mobile,
+		'list_cart' => $list_cart,
+		'total_cart' => count($_SESSION['cart']),
+		'tongtien' => $total_price,
+		'thongbao' => 'Cập nhật giỏ hàng thành công'
+	));
 }
 
 else {

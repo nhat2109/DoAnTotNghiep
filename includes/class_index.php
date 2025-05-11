@@ -328,7 +328,7 @@ class class_index extends class_manage
 		} else if ($loai == 'free') {
 			$thongtin = mysqli_query($conn, "SELECT * FROM giaodien WHERE gia_moi='0' ORDER BY thu_tu ASC LIMIT $start,$limit");
 		} else {
-			$thongtin = mysqli_query($conn, "SELECT * FROM giaodien ORDER BY thu_tu ASC LIMIT $start,$limit");
+			$thongtin = mysqli_query($conn, "SELECT * FROM giaodien  WHERE is_new='1' ORDER BY thu_tu ASC LIMIT $start,$limit");
 		}
 		$i = 0;
 		$end = $start;

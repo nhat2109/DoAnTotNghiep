@@ -149,10 +149,10 @@
         </div>
         <div class="container">
             <div class="list_tab_skin">
-                <div class="li_tab bg_orange active" loai="vip" total="{total_giaodien}" end="{end_giaodien}">
+                <!-- <div class="li_tab bg_orange active" loai="vip" total="{total_giaodien}" end="{end_giaodien}">
                     <span>Khuyên dùng</span>
                 </div>
-                <div class="li_tab bg_green" loai="free"><span>Miễn phí</span></div>
+                <div class="li_tab bg_green" loai="free"><span>Miễn phí</span></div> -->
                 <div class="li_tab bg_violet" loai="all"><span>Tất cả</span></div>
             </div>
             <div class="list_skin" page="2">
