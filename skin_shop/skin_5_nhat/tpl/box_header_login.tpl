@@ -1,3 +1,127 @@
+<style>
+.cart-dropdown {
+    z-index: 999 !important;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 320px;
+    background: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 15px;
+    font-family: Arial, sans-serif;
+    display: none; /* Ensure initially hidden */
+}
+
+.cart-dropdown-inner {
+    max-height: 400px;
+    overflow-y: auto; /* Giữ khả năng cuộn dọc */
+    scrollbar-width: none; /* Ẩn thanh cuộn trên Firefox */
+    -ms-overflow-style: none; /* Ẩn thanh cuộn trên IE/Edge */
+}
+
+.cart-dropdown-inner::-webkit-scrollbar {
+    display: none; /* Ẩn thanh cuộn trên Chrome, Safari */
+}
+
+.cart-dropdown .cart-header-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.cart-dropdown .cart-header-info .icon_hotline {
+    color: #007bff;
+}
+
+.cart-dropdown .cart-header-info .content_hotline a {
+    font-size: 16px;
+    font-weight: bold;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.cart-dropdown .cart-header-info .content_hotline span {
+    font-size: 12px;
+    color: #666;
+}
+
+.cart-dropdown .cart-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #dc3545;
+    margin-bottom: 15px;
+}
+
+.cart-dropdown .cart-footer {
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+    margin-top: 15px;
+}
+
+.cart-dropdown .cart-total {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.cart-dropdown .cart-total span:first-child {
+    color: #333;
+}
+
+.cart-dropdown .cart-total .total-price {
+    color: #333;
+}
+
+.cart-dropdown .cart-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+}
+
+.cart-dropdown .btn-view-cart,
+.btn-checkout {
+    flex: 1;
+    padding: 10px;
+    text-align: center;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: background 0.2s ease;
+}
+
+.cart-dropdown .btn-view-cart {
+    background: #f8f9fa;
+    color: #333;
+    border: 1px solid #ddd;
+}
+
+.cart-dropdown .btn-view-cart:hover {
+    background: #e9ecef;
+}
+
+.cart-dropdown .btn-checkout {
+    background: #007bff;
+    color: #fff;
+    border: none;
+}
+
+.cart-dropdown .btn-checkout:hover {
+    background: #0056b3;
+}
+
+.cart-dropdown .empty-cart {
+    text-align: center;
+    color: #666;
+    padding: 20px;
+    font-size: 14px;
+}
+</style>
+
 <header class="header">
     <div class="topbar">
         <div class="container">
@@ -94,10 +218,27 @@
                                         <i class="fa fa-shopping-basket" aria-hidden="true"></i>
                                     </div>
                                     <div class="content_cart_header">
-                                        <a class="bg_cart" href="/gio-hang.html" title="Giỏ hàng">
+                                        <a class="bg_cart cart-count" href="/gio-hang.html" title="Giỏ hàng">
                                             (<span class="count_item count_item_pr"><?php echo count((array)$_SESSION['cart']);?></span>) Sản phẩm
                                             <span class="text-giohang">Giỏ hàng</span>
                                         </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cart-dropdown">
+                            <div class="cart-dropdown-inner">
+                                <div class="cart-items list-item-cart">
+                                    <!-- Cart items will be loaded dynamically here -->
+                                </div>
+                                <div class="cart-footer">
+                                    <div class="cart-total">
+                                        <span>Tổng tiền:</span>
+                                        <span class="total-price">0 đ</span>
+                                    </div>
+                                    <div class="cart-buttons">
+                                        <a href="/gio-hang.html" class="btn-view-cart">Xem giỏ hàng</a>
+                                        <a href="/checkout.html?step=1" class="btn-checkout">Thanh toán</a>
                                     </div>
                                 </div>
                             </div>
@@ -257,5 +398,92 @@
 		}
 	});
 
+
+    $(document).ready(function () {
+    let cartTimeout;
+
+    // Handle cart hover
+    $('.cart_header').on('mouseenter', function () {
+        clearTimeout(cartTimeout);
+        loadCartItems();
+    });
+
+    $('.mini-cart').on('mouseleave', function () {
+        cartTimeout = setTimeout(function () {
+            $('.cart-dropdown').fadeOut(200);
+        }, 300);
+    });
+
+    $('.cart-dropdown').on('mouseenter', function () {
+        clearTimeout(cartTimeout);
+    });
+
+    $('.cart-dropdown').on('mouseleave', function () {
+        cartTimeout = setTimeout(function () {
+            $('.cart-dropdown').fadeOut(200);
+        }, 300);
+    });
+
+    // Function to load cart items
+    function loadCartItems() {
+        $.ajax({
+            url: '/process.php',
+            type: 'POST',
+            data: {
+                action: 'show_cart'
+            },
+            success: function (response) {
+                try {
+                    var info = JSON.parse(response);
+                    if (info.ok === 1) {
+                        $(".list-item-cart").html(info.list_cart);
+                        $(".total-price").text(info.tongtien);
+                        $(".count_item_pr").text(info.total_cart);
+                        $(".cart-dropdown").fadeIn(200);
+                    } else {
+                        $(".list-item-cart").html('<div class="empty-cart">' + info.thongbao + '</div>');
+                        $(".total-price").text('0 đ');
+                        $(".count_item_pr").text('0');
+                        $(".cart-dropdown").fadeIn(200);
+                    }
+                } catch (e) {
+                    console.error('Error parsing cart data:', e);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error loading cart:', error);
+            }
+        });
+    }
+
+    // Handle remove item from cart
+    $(document).on('click', '.remove-item-cart', function (e) {
+        e.preventDefault();
+        const productId = $(this).data('id');
+
+        $.ajax({
+            url: '/process.php',
+            type: 'POST',
+            data: {
+                action: 'remove_cart',
+                id: productId
+            },
+            success: function (response) {
+                try {
+                    var info = JSON.parse(response);
+                    if (info.ok === 1) {
+                        loadCartItems(); // Reload cart items
+                        $(".count_item_pr").text(info.total_cart); // Update cart count
+                    }
+                } catch (e) {
+                    console.error('Error parsing remove cart response:', e);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error removing item:', error);
+            }
+        });
+    });
+});
     </script>
 </header>

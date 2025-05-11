@@ -1,6 +1,7 @@
 <?php
 $class_index = $tlca_do->load_skin($s, 'class_shop');
 $giaodien = json_decode($index_setting['giaodien'], true);
+
 if (count((array)$_SESSION['cart']) == 0) {
     $thongbao = "Giỏ hàng trống.";
     $replace = array(
@@ -11,7 +12,17 @@ if (count((array)$_SESSION['cart']) == 0) {
     echo $skin->skin_replace('skin_shop/' . $s . '/tpl/chuyenhuong', $replace);
     exit();
 }
-
+if(isset($_COOKIE['user_id'])){
+	$box_header=$skin->skin_normal('skin_shop/'.$s.'/tpl/box_header_login');
+	$header_menu_mobile=$skin->skin_normal('skin_shop/'.$s.'/tpl/header_menu_mobile_login');
+	$class_member=$tlca_do->load('class_member');
+	$tach_token=json_decode($check->token_login_decode($_COOKIE['user_id']),true);
+	$user_id=$tach_token['user_id'];
+	$user_info=$class_member->user_info($conn,$_COOKIE['user_id']);
+}else{
+	$box_header=$skin->skin_normal('skin_shop/'.$s.'/tpl/box_header');
+	$header_menu_mobile=$skin->skin_normal('skin_shop/'.$s.'/tpl/header_menu_mobile');
+}
 $hientai = time();
 $tongtien = 0;
 $list_shopcart = '';
@@ -230,17 +241,8 @@ if (isset($_SESSION['muakem'])) {
 }
 
 $limit = 10;
-if (isset($_COOKIE['user_id'])) {
-    $box_header = $skin->skin_normal('skin_shop/' . $s . '/tpl/box_header_login');
-    $header_menu_mobile = $skin->skin_normal('skin_shop/' . $s . '/tpl/header_menu_mobile_login');
-    $class_member = $tlca_do->load('class_member');
-    $tach_token = json_decode($check->token_login_decode($_COOKIE['user_id']), true);
-    $user_id = $tach_token['user_id'];
-    $user_info = $class_member->user_info($conn, $_COOKIE['user_id']);
-} else {
-    $box_header = $skin->skin_normal('skin_shop/' . $s . '/tpl/box_li/box_header');
-    $header_menu_mobile = $skin->skin_normal('skin_shop/' . $s . '/tpl/header_menu_mobile');
-}
+
+
 
 $tach_menu = json_decode($class_index->list_menu($conn, $s, $r_shop['user_id']), true);
 $tach_category = json_decode($class_index->list_category($conn, $r_shop['user_id']), true);

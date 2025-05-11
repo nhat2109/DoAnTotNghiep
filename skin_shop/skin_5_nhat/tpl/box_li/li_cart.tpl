@@ -67,11 +67,12 @@
 
 .remove-item-cart {
     position: absolute;
-    top: 0;
+    top: -40px;
     right: 0;
     color: #666;
     font-size: 16px;
     padding: 5px;
+    cursor: pointer;
     transition: color 0.2s ease;
 }
 

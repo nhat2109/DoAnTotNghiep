@@ -1,7 +1,7 @@
 {header}
 
 <body>
-    <header class="header">
+    <!-- <header class="header">
         <div class="topbar">
             <div class="container">
                 <div class="row">
@@ -183,7 +183,8 @@
                 });
             }
         </script>
-    </header>
+    </header> -->
+    {box_header}
     <section class="bread-crumb margin-bottom-10">
         <div class="container">
             <div class="row">
