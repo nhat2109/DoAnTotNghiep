@@ -28,7 +28,7 @@
 </div>
 
 <!-- Box số dư và nút kích hoạt -->
-<div class="box_sodu">
+<!-- <div class="box_sodu">
 	<div style="margin-bottom: 2px;">
 		<button style="margin-bottom: 5px;">
 			Số dư: <span>{user_money} đ</span><br><br>
@@ -38,20 +38,20 @@
 	<div style="padding: 2px; margin-top: 2px;">
 		<span style="{display_kh};" class="open_modal">Kích hoạt tài khoản tại đây</span>
 	</div>
-</div>
+</div> -->
 
 <!-- Các menu khác -->
 <div class="main_menu_box">
 	<div class="title_box">Liên kết</div>
 	<div class="list_menu">
-		<div class="li_menu"><a href="/" style="font-weight: bolder !important;"><span class="left"><i
-						class="icon icon-link2"></i>SOCDO.VN</span></a></div>
+		<!-- <div class="li_menu"><a href="/" style="font-weight: bolder !important;"><span class="left"><i
+						class="icon icon-link2"></i>SOCDO.VN</span></a></div> -->
 		<div class="li_menu"><a style="font-weight: bolder !important;" href="{gianhang}" target="_blank"><span
 					class="left"><i class="icon icon-link2"></i>WEBSITE CỦA BẠN</span></a></div>
-		<div class="li_menu">
+		<!-- <div class="li_menu">
 			<a class="btn-domain" style="font-weight: bolder !important;" href="{domain_giaoviec}" target="_blank"><span
 					class="left"><i class="icon icon-link2"></i>QUẢN LÝ CÔNG VIỆC </span></a>
-		</div>
+		</div> -->
 		<!-- <div class="li_menu"><a href="#" class="lo_trinh_btn" target="_blank"><span class="left">
 					<p>LỘ TRÌNH CHO NHÀ BÁN HÀNG</p>
 				</span><span class="right">🔑</span></a></div> -->
@@ -74,7 +74,7 @@
 	</div>
 </div> -->
 
-<div class="main_menu">
+<!-- <div class="main_menu">
 	<div class="title" id="menu_title_2">Dịch vụ hỗ trợ bán hàng</div>
 	<div class="list_menu">
 		<div class="li_menu"><a href="/ncc/list-dichvu#bo-template"><span class="left"><i
@@ -85,12 +85,12 @@
 				style="color: #f0f0f0 !important;"><span class="left color_livestream"><i class="fa fa-star-o"></i>Book
 					lịch LiveStream</span></a></div>
 	</div>
-</div>
+</div> -->
 
 <div class="main_menu">
 	<div class="title" id="menu_title_3">Quản lý tài chính</div>
 	<div class="list_menu">
-		<div class="li_menu">
+		<!-- <div class="li_menu">
 			<a href="javascript:;" class="a_main"><span class="left"><i class="icon icon-credit-card"></i>Quản lý nạp
 					tiền</span><span class="right"><i class="fa fa-plus-square-o"></i></span></a>
 			<div class="list_menu_sub">
@@ -101,16 +101,16 @@
 				<div class="li_menu_sub"><a href="/ncc/list-chitieu"><i class="icon icon-coins"></i>Lịch sử chi tiêu</a>
 				</div>
 			</div>
-		</div>
+		</div> -->
 		<div class="li_menu">
 			<a href="javascript:;" class="a_main"><span class="left"><i class="icon icon-basket"></i>Quản lý đơn
 					hàng</span><span class="right"><i class="fa fa-plus-square-o"></i></span></a>
 			<div class="list_menu_sub">
 				
-				<div class="li_menu_sub"><a href="/ncc/list-donhang-socdo"><i class="fa fa-angle-double-right"></i>Danh
+				<!-- <div class="li_menu_sub"><a href="/ncc/list-donhang-socdo"><i class="fa fa-angle-double-right"></i>Danh
 						sách đơn hàng</a></div>
 				<div class="li_menu_sub"><a href="/ncc/list-donhang-ncc"><i class="fa fa-angle-double-right"></i>Danh
-						sách đơn hàng sàn TMĐT</a></div>
+						sách đơn hàng sàn TMĐT</a></div> -->
 				<div class="li_menu_sub"><a href="/ncc/list-donhang"><i class="fa fa-angle-double-right"></i>Đơn hàng
 						website</a></div>
 				
@@ -125,12 +125,11 @@
 	<div class="title" id="menu_title_4">Bán hàng trên Website</div>
 	<div class="list_menu">
 		<div class="li_menu">
-			<a href="javascript:;" class="a_main"><span class="left"><i class="fa fa-cogs"></i>Giao diện & Tên
-					miền</span><span class="right"><i class="fa fa-plus-square-o"></i></span></a>
+			<a href="javascript:;" class="a_main"><span class="left"><i class="fa fa-cogs"></i>Giao diện</span><span class="right"><i class="fa fa-plus-square-o"></i></span></a>
 			<div class="list_menu_sub">
-				<div class="li_menu_sub"><a href="/ncc/list-giaodien"><i class="icon icon-stack"></i>Thay đổi giao
+				<!-- <div class="li_menu_sub"><a href="/ncc/list-giaodien"><i class="icon icon-stack"></i>Thay đổi giao
 						diện</a></div>
-				<div class="li_menu_sub"><a href="/ncc/domain"><i class="fa fa-globe"></i>Đăng ký tên miền</a></div>
+				<div class="li_menu_sub"><a href="/ncc/domain"><i class="fa fa-globe"></i>Đăng ký tên miền</a></div> -->
 				<div class="li_menu_sub"><a href="/ncc/list-setting"><i class="icofont-gear-alt"></i>Cài đặt chung</a>
 				</div>
 			</div>
@@ -170,7 +169,7 @@
 								voucher</a></div>
 					</div>
 				</div>
-				<div class="li_menu_sub"><a href="javascript:;" class="space-between a_sub"><span class="left"><i
+				<!-- <div class="li_menu_sub"><a href="javascript:;" class="space-between a_sub"><span class="left"><i
 								class="icon icon-piggy-bank"></i>Tích điểm</span><span class="right"><i
 								class="fa fa-plus-square-o"></i></span></a>
 					<div class="list_menu_sub_sub">
@@ -179,11 +178,11 @@
 						<div class="li_menu_sub_sub"><a href="/ncc/list-tichdiem"><i class="icofont-ui-file"></i>Lịch sử
 								tích điểm</a></div>
 					</div>
-				</div>
+				</div> -->
 				<!-- <div class="li_menu_sub"><a href="add-remarketing"><i class="icon icon-target"></i>Remarketing</a></div>
 				<div class="li_menu_sub"><a href="/ncc/list-sanpham-trend"><i class="fa fa-question-circle"></i>Gợi ý
 						sản phẩm trend</a></div> -->
-				<div class="li_menu_sub"><a href="javascript:;" class="space-between a_sub"><span class="left"><i
+				<!-- <div class="li_menu_sub"><a href="javascript:;" class="space-between a_sub"><span class="left"><i
 								class="icofont-world"></i>Book lịch livestream</span><span class="right"><i
 								class="fa fa-plus-square-o"></i></span></a>
 					<div class="list_menu_sub_sub">
@@ -192,7 +191,7 @@
 						<div class="li_menu_sub_sub"><a href="/ncc/list-dat-live"><i class="icofont-ui-file"></i>Lịch sử
 								livestream</a></div>
 					</div>
-				</div>
+				</div> -->
 			</div>
 		</div>
 		<div class="li_menu"><a href="javascript:;" class="a_main"><span class="left"><i class="icofont-papers"></i>Danh
@@ -208,12 +207,12 @@
 						class="icon icon-store2"></i>Quản lý sản phẩm</span><span class="right"><i
 						class="fa fa-plus-square-o"></i></span></a>
 			<div class="list_menu_sub">
-				<div class="li_menu_sub"><a href="/ncc/add-sanpham"><i class="fa fa-plus-circle"></i>Đăng bán sản phẩm
-						socdo.vn</a></div>
+				<!-- <div class="li_menu_sub"><a href="/ncc/add-sanpham"><i class="fa fa-plus-circle"></i>Đăng bán sản phẩm
+						socdo.vn</a></div> -->
 				<div class="li_menu_sub"><a href="/ncc/add-sanpham-ngoai"><i class="fa fa-plus-circle"></i>Đăng bán sản
-						phẩm của bạn</a></div>
-				<div class="li_menu_sub"><a href="/ncc/add-sanpham-affiliate"><i class="fa fa-plus-circle"></i>Thêm sản
-						phẩm affiliate</a></div>
+						phẩm mới</a></div>
+				<!-- <div class="li_menu_sub"><a href="/ncc/add-sanpham-affiliate"><i class="fa fa-plus-circle"></i>Thêm sản
+						phẩm affiliate</a></div> -->
 				<div class="li_menu_sub"><a href="/ncc/list-sanpham"><i class="icofont-ui-file"></i>Danh sách sản
 						phẩm</a></div>
 			</div>
@@ -293,8 +292,8 @@
 					tin</span></a></div>
 		<div class="li_menu"><a href="/ncc/transport"><span class="left"><i class="icon icon-truck"></i>Cài đặt vận
 					chuyển</span></a></div>
-		<div class="li_menu"><a href="/ncc/payment"><span class="left"><i class="fas icon-credit-card"></i>Cài đặt thanh
-					toán</span></a></div>
+		<!-- <div class="li_menu"><a href="/ncc/payment"><span class="left"><i class="fas icon-credit-card"></i>Cài đặt thanh
+					toán</span></a></div> -->
 		<div class="li_menu"><a href="/ncc/change-password"><span class="left"><i class="icon icon-lock2"></i>Đổi mật
 					khẩu</span></a></div>
 		<div class="li_menu"><a href="/ncc/logout"><span class="left"><i class="icon icon-switch"></i>Đăng

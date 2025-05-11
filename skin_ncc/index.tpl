@@ -143,7 +143,7 @@
     <div class="box_left">
       <div class="box_menu_left scroll">
         <div class="logo">
-          <a href="/ncc/dashboard"><img src="/skin_ncc/css/images/logo_white.png" alt="logo"></a>
+          <a href="/ncc/dashboard"><img src="/skin_ncc/css/images/logo_white_mina.png" alt="logo"></a>
         </div>
         <div class="box_left_content">
           <!-- đây là menu trái  -->
