@@ -1749,7 +1749,7 @@ else if ($action == 'search_suggestions') {
     $list_c = $_REQUEST['list_c'] ?? []; // Giả sử list_c là mảng, cần xử lý phù hợp
     
     $class_index = $tlca_do->load_skin($s, 'class_shop');
-    $suggestions = $class_index->get_search_suggestions($conn, $s, $shop, $list_muakem_id, $list_tang_id, $list_flashsale_id, $list_c, $keyword);
+  $suggestions = $class_index->get_search_suggestions($conn, $s, $shop, $keyword);
     echo json_encode($suggestions);
 }
 else if ($action == 'show_cart') {
@@ -1951,8 +1951,8 @@ else if ($action == 'remove_cart' && isset($_POST['id'])) {
             ]);
         }
         exit;
-    }
-
+}
 else {
 	echo "Không có hành động nào được xử lý";
 }
+

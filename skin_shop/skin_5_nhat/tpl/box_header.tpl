@@ -208,7 +208,7 @@
                             </form>
                             <div class="search-dropdown" style="display:none;">
                                 <div class="search-result">
-                                    <button type="button" style="position: absolute; top: 4px; right: 10px; width: 25px; height: 25px; background: #ff4747; border: none; border-radius: 50%; font-size: 18px; line-height: 1; color: #fff; cursor: pointer; padding: 0px 0 3px 0; display: flex; align-items: center; justify-content: center; z-index: 1001; box-shadow: 0 2px 4px rgba(0,0,0,0.2); transition: all 0.2s ease;" onmouseover="this.style.background='#ff3333'; this.style.transform='scale(1.1)'" onmouseout="this.style.background='#ff4747'; this.style.transform='scale(1)'">×</button>
+                                    <button class="close-search-btn" type="button" style="position: absolute; top: 4px; right: 10px; width: 25px; height: 25px; background: #ff4747; border: none; border-radius: 50%; font-size: 18px; line-height: 1; color: #fff; cursor: pointer; padding: 0px 0 3px 0; display: flex; align-items: center; justify-content: center; z-index: 1001; box-shadow: 0 2px 4px rgba(0,0,0,0.2); transition: all 0.2s ease;" onmouseover="this.style.background='#ff3333'; this.style.transform='scale(1.1)'" onmouseout="this.style.background='#ff4747'; this.style.transform='scale(1)'">×</button>
                                     <div class="featured-products">
                                         <h3>Sản phẩm nổi bật</h3>
                                         <div class="featured-list"></div>

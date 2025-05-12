@@ -102,7 +102,8 @@ foreach ($list_check_product as $product_id => $deals) {
         $list_c[$product_id] = $latest_deal;
     }
 }
-
+//  var_dump($list_c);
+//         die;
 $list_muakem_id = substr($list_muakem_id, 0, -1);
 $list_flashsale_id = substr($list_flashsale_id, 0, -1);
 $list_tang_id = substr($list_tang_id, 0, -1);
