@@ -162,18 +162,18 @@
 				} else {
 					$thongtin = mysqli_query($conn, "SELECT * FROM slide WHERE shop='{$r_tv['user_id']}'");
 					while ($r_tt = mysqli_fetch_assoc($thongtin)) {
-						$duoi = $check->duoi_file($r_tt['minh_hoa']);
-						$minh_hoa = '/uploads/minh-hoa/' . $check->blank($r_tt['tieu_de']) . '-' . time() . '.' . $duoi;
-						copy('..' . $r_tt['minh_hoa'], '..' . $minh_hoa);
-						mysqli_query($conn, "INSERT INTO slide(shop,tieu_de,minh_hoa,link,target,thu_tu)VALUES('$user_id','{$r_tt['tieu_de']}','$minh_hoa','{$r_tt['link']}','{$r_tt['target']}','{$r_tt['thu_tu']}')");
+						// $duoi = $check->duoi_file($r_tt['minh_hoa']);
+						// $minh_hoa = '/uploads/minh-hoa/' . $check->blank($r_tt['tieu_de']) . '-' . time() . '.' . $duoi;
+						// copy('..' . $r_tt['minh_hoa'], '..' . $minh_hoa);
+						// mysqli_query($conn, "INSERT INTO slide(shop,tieu_de,minh_hoa,link,target,thu_tu)VALUES('$user_id','{$r_tt['tieu_de']}','$minh_hoa','{$r_tt['link']}','{$r_tt['target']}','{$r_tt['thu_tu']}')");
 						$list .= 'Đã thêm slide: ' . $r_tt['tieu_de'] . '<br>';
 					}
 					$data_banner = mysqli_query($conn, "SELECT * FROM banner WHERE shop_id=0");
 					while ($r_banner = mysqli_fetch_assoc($data_banner)) {
-						$duoi = $check->duoi_file($r_banner['minh_hoa']);
-						$minh_hoa = '/uploads/minh-hoa/' . $check->blank($r_banner['tieu_de']) . '-' . time() . '.' . $duoi;
-						copy('..' . $r_banner['minh_hoa'], '..' . $minh_hoa);
-						mysqli_query($conn, "INSERT INTO banner(tieu_de,minh_hoa,link,bg_banner,target,thu_tu,vi_tri,shop_id)VALUES('{$r_banner['tieu_de']}','$minh_hoa','#','#fff','_blank','{$r_banner['thu_tu']}','{$r_banner['vi_tri']}','$user_id')");
+						// $duoi = $check->duoi_file($r_banner['minh_hoa']);
+						// $minh_hoa = '/uploads/minh-hoa/' . $check->blank($r_banner['tieu_de']) . '-' . time() . '.' . $duoi;
+						// copy('..' . $r_banner['minh_hoa'], '..' . $minh_hoa);
+						// mysqli_query($conn, "INSERT INTO banner(tieu_de,minh_hoa,link,bg_banner,target,thu_tu,vi_tri,shop_id)VALUES('{$r_banner['tieu_de']}','$minh_hoa','#','#fff','_blank','{$r_banner['thu_tu']}','{$r_banner['vi_tri']}','$user_id')");
 						$list .= 'Đã thêm banner: ' . $r_banner['tieu_de'] . '<br>';
 					}
 					$tieptuc = 1;
@@ -273,26 +273,26 @@
 					while ($r_tt = mysqli_fetch_assoc($thongtin)) {
 						$thongtin_seo = mysqli_query($conn, "SELECT *,count(*) AS total FROM seo_shop WHERE loai='category' AND link='{$r_tt['cat_blank']}' AND shop='$user_id'");
 						$r_seo = mysqli_fetch_assoc($thongtin_seo);
-						if ($r_seo['total'] == 0) {
-							$duoi = $check->duoi_file($r_tt['cat_img']);
-							if (in_array($duoi, array('jpg', 'jpeg', 'png', 'gif', 'webp')) == true) {
-								$minh_hoa = '/uploads/minh-hoa/' . $check->blank($r_tt['cat_tieude']) . '-' . time() . '.' . $duoi;
-								copy('..' . $r_tt['cat_img'], '..' . $minh_hoa);
-							} else {
-								$minh_hoa = '';
-							}
-							mysqli_query($conn, "INSERT INTO category_sanpham_shop(shop,cat_tieude,cat_icon,cat_blank,cat_link,cat_img,cat_noidung,cat_main,cat_index,cat_title,cat_description,cat_thutu)VALUES('$user_id','{$r_tt['cat_tieude']}','{$r_tt['cat_icon']}','{$r_tt['cat_blank']}','{$r_tt['cat_link']}','$minh_hoa','{$r_tt['cat_noidung']}','{$r_tt['cat_main']}','{$r_tt['cat_index']}','{$r_tt['cat_title']}','{$r_tt['cat_description']}','{$r_tt['cat_thutu']}')");
-							mysqli_query($conn, "INSERT INTO seo_shop(shop,loai,link)VALUES('$user_id','category','{$r_tt['cat_blank']}')");
-						} else {
-							$duoi = $check->duoi_file($r_tt['cat_img']);
-							if (in_array($duoi, array('jpg', 'jpeg', 'png', 'gif', 'webp')) == true) {
-								$minh_hoa = '/uploads/minh-hoa/' . $check->blank($r_tt['cat_tieude']) . '-' . time() . '.' . $duoi;
-								copy('..' . $r_tt['cat_img'], '..' . $minh_hoa);
-								mysqli_query($conn, "UPDATE category_sanpham_shop SET cat_tieude='{$r_tt['cat_tieude']}',cat_index='{$r_tt['cat_index']}',cat_main='{$r_tt['cat_main']}',cat_thutu='{$r_tt['cat_thutu']}',cat_link='{$r_tt['cat_link']}',cat_img='$minh_hoa',cat_title='{$r_tt['cat_title']}',cat_description='{$r_tt['cat_description']}' WHERE cat_blank='{$r_tt['cat_blank']}' AND shop='$user_id'");
-							} else {
-								mysqli_query($conn, "UPDATE category_sanpham_shop SET cat_tieude='{$r_tt['cat_tieude']}',cat_index='{$r_tt['cat_index']}',cat_main='{$r_tt['cat_main']}',cat_thutu='{$r_tt['cat_thutu']}',cat_link='{$r_tt['cat_link']}',cat_title='{$r_tt['cat_title']}',cat_description='{$r_tt['cat_description']}' WHERE cat_blank='{$r_tt['cat_blank']}' AND shop='$user_id'");
-							}
-						}
+						// if ($r_seo['total'] == 0) {
+						// 	$duoi = $check->duoi_file($r_tt['cat_img']);
+						// 	if (in_array($duoi, array('jpg', 'jpeg', 'png', 'gif', 'webp')) == true) {
+						// 		$minh_hoa = '/uploads/minh-hoa/' . $check->blank($r_tt['cat_tieude']) . '-' . time() . '.' . $duoi;
+						// 		copy('..' . $r_tt['cat_img'], '..' . $minh_hoa);
+						// 	} else {
+						// 		$minh_hoa = '';
+						// 	}
+						// 	mysqli_query($conn, "INSERT INTO category_sanpham_shop(shop,cat_tieude,cat_icon,cat_blank,cat_link,cat_img,cat_noidung,cat_main,cat_index,cat_title,cat_description,cat_thutu)VALUES('$user_id','{$r_tt['cat_tieude']}','{$r_tt['cat_icon']}','{$r_tt['cat_blank']}','{$r_tt['cat_link']}','$minh_hoa','{$r_tt['cat_noidung']}','{$r_tt['cat_main']}','{$r_tt['cat_index']}','{$r_tt['cat_title']}','{$r_tt['cat_description']}','{$r_tt['cat_thutu']}')");
+						// 	mysqli_query($conn, "INSERT INTO seo_shop(shop,loai,link)VALUES('$user_id','category','{$r_tt['cat_blank']}')");
+						// } else {
+						// 	$duoi = $check->duoi_file($r_tt['cat_img']);
+						// 	if (in_array($duoi, array('jpg', 'jpeg', 'png', 'gif', 'webp')) == true) {
+						// 		$minh_hoa = '/uploads/minh-hoa/' . $check->blank($r_tt['cat_tieude']) . '-' . time() . '.' . $duoi;
+						// 		copy('..' . $r_tt['cat_img'], '..' . $minh_hoa);
+						// 		mysqli_query($conn, "UPDATE category_sanpham_shop SET cat_tieude='{$r_tt['cat_tieude']}',cat_index='{$r_tt['cat_index']}',cat_main='{$r_tt['cat_main']}',cat_thutu='{$r_tt['cat_thutu']}',cat_link='{$r_tt['cat_link']}',cat_img='$minh_hoa',cat_title='{$r_tt['cat_title']}',cat_description='{$r_tt['cat_description']}' WHERE cat_blank='{$r_tt['cat_blank']}' AND shop='$user_id'");
+						// 	} else {
+						// 		mysqli_query($conn, "UPDATE category_sanpham_shop SET cat_tieude='{$r_tt['cat_tieude']}',cat_index='{$r_tt['cat_index']}',cat_main='{$r_tt['cat_main']}',cat_thutu='{$r_tt['cat_thutu']}',cat_link='{$r_tt['cat_link']}',cat_title='{$r_tt['cat_title']}',cat_description='{$r_tt['cat_description']}' WHERE cat_blank='{$r_tt['cat_blank']}' AND shop='$user_id'");
+						// 	}
+						// }
 						$list .= 'Đã thêm danh mục sản phẩm: ' . $r_tt['cat_tieude'] . '<br>';
 					}
 					$tieptuc = 1;
@@ -368,26 +368,26 @@
 						$noidung = addslashes($r_tt['noidung']);
 						$thongtin_seo = mysqli_query($conn, "SELECT *,count(*) AS total FROM seo_shop WHERE loai='baiviet' AND link='{$r_tt['link']}' AND shop='$user_id'");
 						$r_seo = mysqli_fetch_assoc($thongtin_seo);
-						if ($r_seo['total'] == 0) {
-							$duoi = $check->duoi_file($r_tt['minh_hoa']);
-							if (in_array($duoi, array('jpg', 'jpeg', 'png', 'gif', 'webp')) == true) {
-								$minh_hoa = '/uploads/minh-hoa/' . $check->blank($r_tt['tieu_de']) . '-' . time() . '.' . $duoi;
-								copy('..' . $r_tt['minh_hoa'], '..' . $minh_hoa);
-							} else {
-								$minh_hoa = '';
-							}
-							mysqli_query($conn, "INSERT INTO post_shop(shop,tieu_de,minh_hoa,link,cat,noidung,title,description,view,date_post)VALUES('$user_id','{$r_tt['tieu_de']}','$minh_hoa','{$r_tt['link']}','$list_id_cat','$noidung','{$r_tt['title']}','{$r_tt['description']}','0'," . time() . ")");
-							mysqli_query($conn, "INSERT INTO seo_shop(shop,loai,link)VALUES('$user_id','baiviet','{$r_tt['link']}')");
-						} else {
-							$duoi = $check->duoi_file($r_tt['minh_hoa']);
-							if (in_array($duoi, array('jpg', 'jpeg', 'png', 'gif', 'webp')) == true) {
-								$minh_hoa = '/uploads/minh-hoa/' . $check->blank($r_tt['tieu_de']) . '-' . time() . '.' . $duoi;
-								copy('..' . $r_tt['minh_hoa'], '..' . $minh_hoa);
-								mysqli_query($conn, "UPDATE post_shop SET tieu_de='{$r_tt['tieu_de']}',link='{$r_tt['link']}',minh_hoa='$minh_hoa',noidung='$noidung',title='{$r_tt['title']}',description='{$r_tt['description']}' WHERE link='{$r_tt['link']}' AND shop='$user_id'");
-							} else {
-								mysqli_query($conn, "UPDATE post_shop SET tieu_de='{$r_tt['tieu_de']}',link='{$r_tt['link']}',title='{$r_tt['title']}',noidung='$noidung',description='{$r_tt['description']}' WHERE link='{$r_tt['link']}' AND shop='$user_id'");
-							}
-						}
+						// if ($r_seo['total'] == 0) {
+						// 	$duoi = $check->duoi_file($r_tt['minh_hoa']);
+						// 	if (in_array($duoi, array('jpg', 'jpeg', 'png', 'gif', 'webp')) == true) {
+						// 		$minh_hoa = '/uploads/minh-hoa/' . $check->blank($r_tt['tieu_de']) . '-' . time() . '.' . $duoi;
+						// 		copy('..' . $r_tt['minh_hoa'], '..' . $minh_hoa);
+						// 	} else {
+						// 		$minh_hoa = '';
+						// 	}
+						// 	mysqli_query($conn, "INSERT INTO post_shop(shop,tieu_de,minh_hoa,link,cat,noidung,title,description,view,date_post)VALUES('$user_id','{$r_tt['tieu_de']}','$minh_hoa','{$r_tt['link']}','$list_id_cat','$noidung','{$r_tt['title']}','{$r_tt['description']}','0'," . time() . ")");
+						// 	mysqli_query($conn, "INSERT INTO seo_shop(shop,loai,link)VALUES('$user_id','baiviet','{$r_tt['link']}')");
+						// } else {
+						// 	$duoi = $check->duoi_file($r_tt['minh_hoa']);
+						// 	if (in_array($duoi, array('jpg', 'jpeg', 'png', 'gif', 'webp')) == true) {
+						// 		$minh_hoa = '/uploads/minh-hoa/' . $check->blank($r_tt['tieu_de']) . '-' . time() . '.' . $duoi;
+						// 		copy('..' . $r_tt['minh_hoa'], '..' . $minh_hoa);
+						// 		mysqli_query($conn, "UPDATE post_shop SET tieu_de='{$r_tt['tieu_de']}',link='{$r_tt['link']}',minh_hoa='$minh_hoa',noidung='$noidung',title='{$r_tt['title']}',description='{$r_tt['description']}' WHERE link='{$r_tt['link']}' AND shop='$user_id'");
+						// 	} else {
+						// 		mysqli_query($conn, "UPDATE post_shop SET tieu_de='{$r_tt['tieu_de']}',link='{$r_tt['link']}',title='{$r_tt['title']}',noidung='$noidung',description='{$r_tt['description']}' WHERE link='{$r_tt['link']}' AND shop='$user_id'");
+						// 	}
+						// }
 						unset($list_id_cat);
 						$list .= 'Đã thêm bài viết: ' . $r_tt['tieu_de'] . '<br>';
 					}
@@ -477,12 +477,12 @@
 						$can_nang = addslashes($r_tt['can_nang']);
 						$thongtin_seo = mysqli_query($conn, "SELECT *,count(*) AS total FROM seo_shop WHERE loai='sanpham' AND link='{$r_tt['link']}' AND shop='$user_id'");
 						$r_seo = mysqli_fetch_assoc($thongtin_seo);
-						if ($r_seo['total'] == 0) {
-							mysqli_query($conn, "INSERT INTO sanpham_shop(sp_id,shop,tieu_de,minh_hoa,link,link_aff,cat,kho_hang,gia_cu,gia_moi,noi_bat,noi_dung,mau,thuong_hieu,size,thongtin,can_nang,anh,ban,title,description,view,date_post)VALUES('{$r_tt['sp_id']}','$user_id','{$r_tt['tieu_de']}','{$r_tt['minh_hoa']}','{$r_tt['link']}','{$r_tt['link_aff']}','$list_id_cat','0','{$r_tt['gia_cu']}','{$r_tt['gia_moi']}','$noi_bat','$noi_dung','{$r_tt['mau']}','{$r_tt['thuong_hieu']}','{$r_tt['size']}','{$r_tt['thongtin']}','$can_nang','{$r_tt['anh']}','0','$title','$description','0'," . time() . ")");
-							mysqli_query($conn, "INSERT INTO seo_shop(shop,loai,link)VALUES('$user_id','sanpham','{$r_tt['link']}')");
-						} else {
-							mysqli_query($conn, "UPDATE sanpham_shop SET tieu_de='$tieu_de',minh_hoa='$minh_hoa',cat='$list_id_cat',gia_cu='$gia_cu',gia_moi='$gia_moi',noi_bat='$noi_bat',noi_dung='$noi_dung',mau='$mau',thuong_hieu='$thuong_hieu',size='$size',thongtin='$info',can_nang='$can_nang',anh='$anh',title='$title',description='$description' WHERE link='{$r_tt['link']}' AND shop='$user_id'");
-						}
+						// if ($r_seo['total'] == 0) {
+						// 	mysqli_query($conn, "INSERT INTO sanpham_shop(sp_id,shop,tieu_de,minh_hoa,link,link_aff,cat,kho_hang,gia_cu,gia_moi,noi_bat,noi_dung,mau,thuong_hieu,size,thongtin,can_nang,anh,ban,title,description,view,date_post)VALUES('{$r_tt['sp_id']}','$user_id','{$r_tt['tieu_de']}','{$r_tt['minh_hoa']}','{$r_tt['link']}','{$r_tt['link_aff']}','$list_id_cat','0','{$r_tt['gia_cu']}','{$r_tt['gia_moi']}','$noi_bat','$noi_dung','{$r_tt['mau']}','{$r_tt['thuong_hieu']}','{$r_tt['size']}','{$r_tt['thongtin']}','$can_nang','{$r_tt['anh']}','0','$title','$description','0'," . time() . ")");
+						// 	mysqli_query($conn, "INSERT INTO seo_shop(shop,loai,link)VALUES('$user_id','sanpham','{$r_tt['link']}')");
+						// } else {
+						// 	mysqli_query($conn, "UPDATE sanpham_shop SET tieu_de='$tieu_de',minh_hoa='$minh_hoa',cat='$list_id_cat',gia_cu='$gia_cu',gia_moi='$gia_moi',noi_bat='$noi_bat',noi_dung='$noi_dung',mau='$mau',thuong_hieu='$thuong_hieu',size='$size',thongtin='$info',can_nang='$can_nang',anh='$anh',title='$title',description='$description' WHERE link='{$r_tt['link']}' AND shop='$user_id'");
+						// }
 						unset($list_id_cat);
 						$list .= 'Đã thêm sản phẩm: ' . $r_tt['tieu_de'] . '<br>';
 					}

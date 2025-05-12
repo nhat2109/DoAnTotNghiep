@@ -1,6 +1,6 @@
 <div class="li_photo" data-src="{src}">
     <div class="li_photo_content">
         <i class="fa fa-close"></i>
-        <img src="{src}">
+        <img src="{src}" name_pt="{name}">
     </div>
 </div>

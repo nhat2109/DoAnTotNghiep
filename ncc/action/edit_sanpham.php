@@ -28,7 +28,7 @@
 			$tach_anh = explode(",", $r_tt['anh']);
 			foreach ($tach_anh as $key => $value) {
 				$pt['src'] = $value;
-				$list_anh .= $skin->skin_replace('skin_cpanel/box_action/li_photo', $pt);
+				$list_anh .= $skin->skin_replace('skin_ncc/box_action/li_photo', $pt);
 			}
 		}
 	}
@@ -36,7 +36,7 @@
 		$tach_info = explode('|', $r_tt['thongtin']);
 		foreach ($tach_info as $key => $value) {
 			$tach_value = explode('&&', $value);
-			$list_info .= $skin->skin_replace('skin_cpanel/box_action/li_info', $tach_value);
+			$list_info .= $skin->skin_replace('skin_ncc/box_action/li_info', $tach_value);
 		}
 		$r_tt['list_info'] = $list_info;
 	} else {
@@ -64,9 +64,15 @@
 	$thaythe['box_right'] = $skin->skin_replace('skin_ncc/box_action/add_sanpham_ngoai', $r_tt);
 	$r_tt['list_photo'] = $list_anh;
 	$r_tt['option_category'] = $class_index->list_div_category_sanpham($conn, $user_id, $r_tt['cat']);
+	// huyphuc24/04/2025
 	$tach_main_category = json_decode($class_index->list_div_main_category_sanpham($conn, $user_id, $r_tt['cat']), true);
-	$tach_sub_category = json_decode($class_index->list_div_sub_category_sanpham($conn, $user_id, $tach_main_category['list_id'], $r_tt['cat']), true);
-	$tach_sub_sub_category = json_decode($class_index->list_div_sub_sub_category_sanpham($conn, $user_id, $tach_sub_category['list_id'], $r_tt['cat']), true);
+	if($tach_main_category['list_id']){
+		$tach_sub_category = json_decode($class_index->list_div_sub_category_sanpham($conn, $user_id, $tach_main_category['list_id'], $r_tt['cat']), true);
+	}
+	if($tach_sub_category['list_id']){
+		$tach_sub_sub_category = json_decode($class_index->list_div_sub_sub_category_sanpham($conn, $user_id, $tach_sub_category['list_id'], $r_tt['cat']), true);
+	}
+	// 
 	$r_tt['option_main_category'] = $tach_main_category['list'];
 	$r_tt['option_sub_category'] = $tach_sub_category['list'];
 	$r_tt['option_sub_sub_category'] = $tach_sub_sub_category['list'];
@@ -78,7 +84,7 @@
 		$r_tt['drop_min'] = number_format($r_sp['drop_min']);
 		$r_tt['drop_max'] = number_format($r_sp['drop_max']);
 		$r_tt['option_size'] = $class_index->list_div_size_sanpham($conn, $user_id, $r_tt['size']);
-	;	$thaythe['box_right'] = $skin->skin_replace('skin_ncc/box_action/edit_sanpham', $r_tt);
+		$thaythe['box_right'] = $skin->skin_replace('skin_ncc/box_action/edit_sanpham_ngoai', $r_tt);
 	} else if ($r_tt['link_aff'] != '') {
 		$r_tt['option_size'] = $class_index->list_option_size($conn, $user_id, $r_tt['size']);
 		$thaythe['box_right'] = $skin->skin_replace('skin_ncc/box_action/edit_sanpham_affiliate', $r_tt);

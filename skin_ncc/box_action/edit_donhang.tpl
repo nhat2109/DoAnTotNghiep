@@ -61,6 +61,10 @@
                             <td class="fix-width-200">Tạm tính:</td>
                             <td class="total money right">{tamtinh}₫</td>
                         </tr>
+                         <tr class="order_summary ">
+                            <td class="fix-width-200">Giảm:</td>
+                            <td class="total money right">{giam}₫</td>
+                        </tr>
                         <tr class="order_summary ">
                             <td class="fix-width-200" colspan="">Phí vận chuyển (Giao hàng tận nơi):</td>
                             <td class="total money right">{phi_ship}</td>

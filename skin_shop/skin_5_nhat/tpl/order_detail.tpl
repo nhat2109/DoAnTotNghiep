@@ -3,7 +3,7 @@
     {box_header}
     <section class="bread-crumb margin-bottom-10">
         <div class="container">
-            <div class="row">
+            <div class="row" style="background-color: #fff; box-shadow: 0 1px 2px 0 rgba(60, 64, 67, .1), 0 2px 6px 2px rgba(60, 64, 67, .15); border-radius: 4px;padding-right: 20px; padding-left: 20px;">
                 <div class="col-xs-12">
                     <ul class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
                         <li class="home" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
@@ -31,7 +31,8 @@
     </section>
     <section class="login panel-login account-page  margin-bottom-20">
         <div class="container">
-            <div class="row">
+            <div class="row" style="background-color: #fff; box-shadow: 0 1px 2px 0 rgba(60, 64, 67, .1), 0 2px 6px 2px rgba(60, 64, 67, .15); border-radius: 4px;     padding-right: 20px;
+    padding-left: 20px;">
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <h1 class="title-head widget-title">Đơn hàng #{ma_don}
                     </h1>
@@ -61,7 +62,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="table-responsive-block margin-top-20">
                         <table id="order_details" class="table table-cart">
-                            <thead class="thead-default">
+                            <thead class="thead-default" style="border-top: 1px solid #ddd;">
                                 <tr>
                                     <th>Sản phẩm</th>
                                     <th>Giá</th>

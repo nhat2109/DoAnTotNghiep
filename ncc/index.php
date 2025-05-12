@@ -16,17 +16,39 @@ $user_id = $tach_token['user_id'];
 $user_info = $class_member->user_info($conn, $_COOKIE['user_id']);
 $query_follow = "SELECT sanpham FROM sanpham_follow WHERE user_id='$user_id' LIMIT 1";
 $result_follow = mysqli_query($conn, $query_follow);
-if ($user_info['ctv'] != 1) {
-    // Không phải CTV cấp 1 - chuyển hướng
-    $thongbao = "Tài khoản của bạn không phải ncc...";
-    $replace = array(
-        'title' => 'Tài khoản của bạn không phải ncc...',
-        'description' => $index_setting['description'],
-        'thongbao' => $thongbao,
-        'link_chuyen' => '/'
-    );
-    echo $skin->skin_replace('skin_ncc/chuyenhuong', $replace);
-    exit();
+// if ($user_info['ctv'] != 1) {
+//     // Không phải CTV cấp 1 - chuyển hướng
+//     $thongbao = "Tài khoản của bạn không phải khiem...";
+//     $replace = array(
+//         'title' => 'Tài khoản của bạn không phải khiem...',
+//         'description' => $index_setting['description'],
+//         'thongbao' => $thongbao,
+//         'link_chuyen' => '/'
+//     );
+//     echo $skin->skin_replace('skin_ncc/chuyenhuong', $replace);
+//     exit();
+// }
+
+if ($user_info['ctv'] != 1 and $user_info['ctv'] != 4 and $user_info['ctv'] != 2) {
+	$thongbao = "Tài khoản của bạn không phải ncc...";
+	$replace = array(
+		'title' => 'Tài khoản của bạn không phải ncc...',
+		'description' => $index_setting['description'],
+		'thongbao' => $thongbao,
+		'link_chuyen' => '/',
+	);
+	echo $skin->skin_replace('skin_ncc/chuyenhuong', $replace);
+	exit();
+} else if ($user_info['ctv'] == 4) {
+	$thongbao = "Tài khoản của bạn đang bị tạm khóa...";
+	$replace = array(
+		'title' => 'Tài khoản của bạn đang bị tạm khóa...',
+		'description' => $index_setting['description'],
+		'thongbao' => $thongbao,
+		'link_chuyen' => '/',
+	);
+	echo $skin->skin_replace('skin_ncc/chuyenhuong', $replace);
+	exit();
 }
 // Thêm mã kiểm tra setup với NCC mới // nhatthem94
 if (isset($_COOKIE['user_id'])) {
@@ -133,7 +155,7 @@ if ($user_info['ctv'] == 4) {
 
 	$check_user = mysqli_query($conn, "SELECT user_id FROM user_gh WHERE user_id='$user_id'");
 	$is_activated = mysqli_num_rows($check_user) > 0;
-	if ($user_info['ctv'] == 1) {
+	if ($user_info['ctv'] == 1  || $user_info['ctv'] == 2) {
 		$check_user = mysqli_query($conn, "SELECT user_id, date_active, date_expired FROM user_gh WHERE user_id='$user_id'");
 		$is_activated = mysqli_num_rows($check_user) > 0;
 
@@ -181,9 +203,7 @@ if ($user_info['ctv'] == 4) {
             opacity: 1 !important;
             z-index: 9999;
             position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            
         }
         .box_kichhoat * {
             pointer-events: auto !important;
@@ -610,7 +630,6 @@ if (file_exists($file_action)) {
 	echo $skin->skin_replace('skin_ncc/chuyenhuong', $replace);
 	exit();
 }
-
 $box_menu = $skin->skin_replace('skin_ncc/box_menu', $thaythe);
 
 $thaythe['box_menu'] = $box_menu;

@@ -7,7 +7,7 @@
 		display: flex;
 		justify-content: end;
 		align-items: flex-start;
-		margin: 20px 0;
+		margin:0px;
 		gap: 20px;
 	}
 
@@ -153,11 +153,16 @@
 			display: none;
 		}
 	}
+	.list_baiviet tr:first-child {
+		position: initial; /* Ghi đè thuộc tính cũ */
+		top: auto;
+		background: white;
+	}
 </style>
 <div class="box_right">
   <div class="box_right_content">
   	<div class="box_profile" style="width: 100%;padding: 10px;">
-	    <div class="page_title page_title_2" style="margin-top: 40px;">
+	    <div class="page_title page_title_2" style="justify-content: center;margin-top: 40px;">
 			<h1 class="undefined">Đơn hàng trên sàn</h1>
 		</div>
 		<form id="search_donhang_socdo" onsubmit="return false;">
@@ -172,7 +177,7 @@
 					<div class="filter_item">
 						<select id="status_filter" name="status_filter">
 							<option value="">Tất cả trạng thái</option>
-							<option value="0">Chưa xử lý</option>
+							<option value="0">Chờ xử lý</option>
 							<option value="1">Đã tiếp nhận đơn</option>
 							<option value="2">Đã giao đơn vị vận chuyển</option>
 							<option value="3">Yêu cầu hủy đơn</option>
@@ -193,16 +198,18 @@
 		</form>
 		<div id="list_donhang_content">
 				<table class="list_baiviet">
-					<tr>
-						<th style="text-align: center;width: 50px;" class="hide_mobile">STT</th>
-						<th style="text-align: left;" class="hide_mobile">Mã đơn</th>
-						<th style="text-align: left;" class="hide_mobile">Ngày</th>
-						<th style="text-align: center;">Sản phẩm</th>
-						<th style="text-align: right;" width="150" class="hide_mobile">Giá trị</th>
-						<th style="text-align: right;" width="150" class="hide_mobile">Hoa hồng</th>
-						<th style="text-align: center;" width="150" class="hide_mobile">Tình trạng</th>
-						<th style="text-align: center;width: 150px;">Hành động</th>
-					</tr>
+			        <thead  style="position: sticky;z-index: 1000;top: 10px;">
+						<tr>
+							<th style="text-align: center;width: 50px;" class="hide_mobile">STT</th>
+							<th style="text-align: left;" class="hide_mobile">Mã đơn</th>
+							<th style="text-align: left;" class="hide_mobile">Ngày</th>
+							<th style="text-align: left;">Sản phẩm</th>
+							<th style="text-align: right;" width="150" class="hide_mobile">Tổng tiền</th>
+							<th style="text-align: right;" width="150" class="hide_mobile">Thanh toán</th>
+							<th style="text-align: center;" width="150" class="hide_mobile">Tình trạng</th>
+							<th style="text-align: center;width: 150px;">Hành động</th>
+						</tr>
+					</thead>
 					<tbody id="list_donhang_body">
 						{list_donhang}
 					</tbody>
@@ -250,6 +257,7 @@ document.addEventListener('DOMContentLoaded', function() {
             contentType: false,
             success: function(response) {
 				var info = JSON.parse(response);
+				console.log(info);
 				var tbody = document.getElementById('list_donhang_body');
 				console.log(info);
 				tbody.innerHTML = ''; 
@@ -257,7 +265,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         $('.load_process').hide();
                         $('.load_note').html('Hệ thống đang xử lý');
                         $('.load_overlay').hide();
-                    }, 3000);
+                    }, 1000);
 				if (tbody) {
 					tbody.innerHTML = info.list;
     			}

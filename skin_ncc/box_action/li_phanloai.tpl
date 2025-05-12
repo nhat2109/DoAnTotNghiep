@@ -39,6 +39,6 @@
     <div class="info_trongluongtinhship">
         <input type="text" name="trongluongtinhship[]" class="price_format" readonly value="{can_nang_tinhship}">
     </div>
-    <div class="info_action"><i class="fa fa-trash-o"></i> Xóa</div>
-    <div class="info_action_copy"><i class="fa fa-files-o"></i> Sao chép</div>
+    <div class="info_action"><i class="fa fa-trash-o"></i></div>
+    <div class="info_action_copy"><i class="fa fa-files-o"></i></div>
 </div>

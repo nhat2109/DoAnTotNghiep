@@ -2,6 +2,74 @@
 <script type="text/javascript" src="/tinymce_4.4.3/tinymce.min.js"></script>
 <!-- <script type="text/javascript" src="/tinymce_4.4.3/jquery.tinymce.min.js"></script> -->
 <script type="text/javascript">
+// Hàm loại bỏ thẻ HTML, giữ lại ký tự tiếng Việt
+function stripHtml(html) {
+        const div = document.createElement("div");
+        div.innerHTML = html;
+        let text = div.textContent || div.innerText || "";
+        text = text
+            .replace(/[\n\r]+/g, " ") // Thay thế xuống dòng bằng khoảng trắng
+            .replace(/\s+/g, " ") // Chuẩn hóa khoảng trắng
+            .trim();
+        return text;
+    }
+
+    // Hàm cập nhật bộ đếm ký tự
+    function updateCharCount(editor, counterId, maxLength) {
+        const content = editor.getContent();
+        const cleanText = stripHtml(content);
+        const charCount = cleanText.length;
+        $(`#${counterId}`).text(`Ký tự: ${charCount}/${maxLength}`);
+        if (charCount > maxLength) {
+            $(`#${counterId}`).css("color", "red");
+        } else {
+            $(`#${counterId}`).css("color", "black");
+        }
+    }
+
+    $(document).ready(function () {
+        // Title
+        $("input[name=title]").on("input", function () {
+            const text = $(this).val().trim();
+            const charCount = text.length;
+            $("#title-counter").text(`Ký tự: ${charCount}/150`);
+            if (charCount > 150) {
+                $("#title-counter").css("color", "red");
+            } else {
+                $("#title-counter").css("color", "black");
+            }
+        });
+
+        // Description
+        $("textarea[name=description]").on("input", function () {
+            const text = $(this).val().trim();
+            const charCount = text.length;
+            $("#description-counter").text(`Ký tự: ${charCount}/150`);
+            if (charCount > 150) {
+                $("#description-counter").css("color", "red");
+            } else {
+                $("#description-counter").css("color", "black");
+            }
+        });
+
+        // Tự động tạo mã cho hàng phân loại đầu tiên khi trang được tải
+        function generateRandomCode() {
+            const now = new Date();
+            const day = String(now.getDate()).padStart(2, '0');
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const year = now.getFullYear();
+            const dateStr = `${day}${month}${year}`;
+            const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const numbers = '0123456789';
+            const randomLetter1 = letters.charAt(Math.floor(Math.random() * letters.length));
+            const randomLetter2 = letters.charAt(Math.floor(Math.random() * letters.length));
+            const randomNumber = numbers.charAt(Math.floor(Math.random() * numbers.length));
+            return `${randomLetter1}${randomNumber}${randomLetter2}${dateStr}`;
+        }
+        const randomCode = generateRandomCode();
+        $('.list_phanloai .li_phanloai input[name^=ma]').val(randomCode);
+    });
+
 tinymce.init({
     selector: '#edit_textarea',
     mode: "exact",
@@ -15,9 +83,31 @@ tinymce.init({
     forced_root_block: false,
     entity_encoding:"raw",
     content_css : "/tinymce_4.4.3/content.css",
-    fontsize_formats: "8pt 10pt 12pt 14pt 16pt 18pt 20pt 22pt 24pt 36pt",
+    // fontsize_formats: "8pt 10pt 12pt 14pt 16pt 18pt 20pt 22pt 24pt 36pt",
     plugins: "advlist autolink code lists link image hr wordcount fullscreen media emoticons textcolor searchreplace",
-    toolbar1: "undo redo forecolor fontselect | fontsizeselect | bold italic | alignleft aligncenter | link unlink | bullist numlist | image searchreplace code | removeformat fullscreen",
+    toolbar1: "undo redo forecolor | bold italic | alignleft aligncenter | bullist numlist | image",
+    setup: function (editor) {
+            editor.on("init change keyup", function () {
+                updateCharCount(editor, "noidung-counter", 5000);
+            });
+            editor.on('init', function () {
+                editor.getContainer().style.position = 'relative';
+            });
+            editor.on('BeforeRenderMenu', function (e) {
+                var menu = e.target;
+                if (menu && menu.control && menu.control.parent()) {
+                    var button = menu.control.parent().control;
+                    if (button) {
+                        var buttonRect = button.getEl().getBoundingClientRect();
+                        var editorRect = editor.getContainer().getBoundingClientRect();
+                        menu.moveTo(
+                            buttonRect.left - editorRect.left,
+                            buttonRect.bottom - editorRect.top
+                        );
+                    }
+                }
+            });
+        },
     file_picker_callback: function(callback, value, meta) {
         
         // File type
@@ -72,9 +162,31 @@ tinymce.init({
     forced_root_block: false,
     entity_encoding:"raw",
     content_css : "/tinymce_4.4.3/content.css",
-    fontsize_formats: "8pt 10pt 12pt 14pt 16pt 18pt 20pt 22pt 24pt 36pt",
+    // fontsize_formats: "8pt 10pt 12pt 14pt 16pt 18pt 20pt 22pt 24pt 36pt",
     plugins: "advlist autolink code lists link image hr wordcount fullscreen media emoticons textcolor searchreplace",
-    toolbar1: "forecolor fontselect | fontsizeselect | bold italic | alignleft aligncenter | link unlink | bullist numlist | removeformat",
+    toolbar1: "forecolor | bold italic | alignleft aligncenter | bullist numlist",
+    setup: function (editor) {
+            editor.on("init change keyup", function () {
+                updateCharCount(editor, "noibat-counter", 600);
+            });
+            editor.on('init', function () {
+                editor.getContainer().style.position = 'relative';
+            });
+            editor.on('BeforeRenderMenu', function (e) {
+                var menu = e.target;
+                if (menu && menu.control && menu.control.parent()) {
+                    var button = menu.control.parent().control;
+                    if (button) {
+                        var buttonRect = button.getEl().getBoundingClientRect();
+                        var editorRect = editor.getContainer().getBoundingClientRect();
+                        menu.moveTo(
+                            buttonRect.left - editorRect.left,
+                            buttonRect.bottom - editorRect.top
+                        );
+                    }
+                }
+            });
+        },
     file_picker_callback: function(callback, value, meta) {
         
         // File type
@@ -296,7 +408,7 @@ tinymce.init({
     <div class="box_right_content">
         <div class="box_profile">
             <div class="page_title">
-                <h1 class="undefined">Đăng sản phẩm ngoài</h1>
+                <h1 class="undefined">Đăng sản phẩm mới</h1>
                 <div class="line"></div>
                 <hr>
             </div>
@@ -351,7 +463,7 @@ tinymce.init({
             <div class="col_100">
                 <div style="clear: both;"></div>
                 <div class="form_group">
-                    <label for="">Ảnh sản phẩm</label>
+                    <label for="">Ảnh đa chiều mô tả sản phẩm (tối đa 8 ảnh kích thước 600 x 600px)</label>
                     <button class="button_select_photo">Chọn ảnh</button>
                     <div class="list_photo"></div>
                 </div>
@@ -365,7 +477,7 @@ tinymce.init({
                         <div class="info_ma">Mã</div>
                         <div class="info_name">Kích cỡ</div>
                         <div class="info_mau">Màu sắc</div>
-                        <div class="info_can_nang">Trọng lượng</div>
+                        <div class="info_can_nang">Trọng lượng (kg)</div>
                         <div class="info_gia">Giá niêm yết</div>
                         <div class="info_gia">Giá bán</div>
                         <div class="info_gia">Giá drop</div>
@@ -381,12 +493,12 @@ tinymce.init({
                             <input type="text" name="ma[]" placeholder="Mã">
                         </div>
                         <div class="info_name">
-                            <input type="text" name="size[]" giatri="" placeholder="Kích cỡ">
+                            <input type="text" name="size[]" giatri="" placeholder="Kích cỡ" autocomplete="off">
                             <input type="hidden" name="ten_size[]">
                             <div class="list_goiy scroll"></div>
                         </div>
                         <div class="info_mau">
-                            <input type="text" name="color[]" giatri="" placeholder="Màu sắc">
+                            <input type="text" name="color[]" giatri="" placeholder="Màu sắc" autocomplete="off">
                             <input type="hidden" name="ten_color[]">
                             <input type="hidden" name="ma_mau[]">
                             <div class="list_goiy scroll"></div>
@@ -456,28 +568,36 @@ tinymce.init({
                 <div style="clear: both;"></div>
                 <div class="form_group">
                     <label for="">Đặc điểm nổi bật</label>
-                    <textarea name="noibat" class="form_control" id="noibat" placeholder="Nhập đặc điểm nổi bật của sản phẩm" style="width: 100%;height: 150px;"></textarea>
+                    <textarea name="noibat" class="form_control" id="noibat"
+                        placeholder="Nhập đặc điểm nổi bật của sản phẩm"
+                        style="width: 100%;height: 150px;"></textarea>
+                    <div id="noibat-counter">Ký tự: 0/600</div>
                 </div>
                 <div style="clear: both;"></div>
                 <div class="form_group">
                     <label for="">Mô tả chi tiết</label>
-                    <textarea name="content" class="form_control" id="edit_textarea" placeholder="Nhập nội dung chi tiết sản phẩm" style="width: 100%;height: 250px;"></textarea>
+                    <textarea name="content" class="form_control" id="edit_textarea"
+                        placeholder="Nhập nội dung chi tiết sản phẩm" style="width: 100%;height: 250px;"></textarea>
+                    <div id="noidung-counter">Ký tự: 0/5000</div>
                     <input type='file' name='fileupload' id='fileupload' style='display: none;'>
                 </div>
                 <div class="form_group">
                     <label for="">Title</label>
-                    <input type="text" class="form_control" name="title" placeholder="Nhập title...">
+                    <input type="text" class="form_control" name="title" value="" placeholder="Nhập title...">
+                    <div id="title-counter">Ký tự: 0/150</div>
                 </div>
                 <div class="form_group">
                     <label for="">Description</label>
-                    <textarea name="description" class="form_control" placeholder="Nhập mô tả bài viết" style="width: 100%;height: 95px;"></textarea>
+                    <textarea name="description" class="form_control" placeholder="Nhập mô tả bài viết"
+                        style="width: 100%;height: 95px;"></textarea>
+                    <div id="description-counter">Ký tự: 0/150</div>
                 </div>
                 <div class="form_group">
                     <label for="">Nơi bán</label>
                     <div style="clear: both;"></div>
-                    <div class="li_input" id="noiban_all"><input type="checkbox" name="noiban[]" value="all"> Tất cả</div>
-                    <div class="li_input" id="noiban_socdo"><input type="checkbox" name="noiban[]" value="socdo"> Trên sàn</div>
-                    <div class="li_input" id="noiban_drop"><input type="checkbox" name="noiban[]" value="shop_ncc"> Website của bạn</div>
+                    <div class="li_input" id="noiban_all"><input type="radio" name="noiban[]" value="all"> Tất cả ( Sàn TMĐT & Website & CTV )</div>
+                    <div class="li_input" id="noiban_drop"><input type="radio" name="noiban[]" value="shop_ncc"> Website của bạn</div>
+                    <div class="li_input" id="noiban_socdo"><input type="radio" name="noiban[]" value="socdo_ctv"> Cộng đồng nhà bán hàng ( CTV )</div>
                 </div>
             </div>
             <div style="clear: both;"></div>

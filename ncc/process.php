@@ -29,7 +29,73 @@ if (!isset($_COOKIE['user_id'])) {
 		);
 		echo json_encode($info);
 	}
+	// Lưu danh sách sản phẩm đã chọn vào session cho add_flash_sale (giữ lại nếu vẫn cần cho add_flash_sale)
+	if ($action == 'save_selected_products') {
+		$products = $_REQUEST['products'];
+		$_SESSION['selected_products'] = $products;
+		echo json_encode(['status' => 'success', 'message' => 'Đã lưu danh sách sản phẩm vào session']);
+		exit;
+	}
+	// Lấy danh sách sản phẩm đã chọn từ session cho add_flash_sale (giữ lại nếu vẫn cần cho add_flash_sale)
+	if ($action == 'get_selected_products') {
+		if (isset($_SESSION['selected_products'])) {
+			echo json_encode(['status' => 'success', 'products' => $_SESSION['selected_products']]);
+		} else {
+			echo json_encode(['status' => 'error', 'message' => 'Không có sản phẩm nào được chọn']);
+		}
+		exit;
+	}
+	if ($action == 'get_product_variants') {
+		$search = isset($_REQUEST['search']) ? mysqli_real_escape_string($conn, $_REQUEST['search']) : '';
+		$where = "shop='$user_id'";
+		if ($search) {
+			$where .= " AND tieu_de LIKE '%$search%'";
+		}
 
+		$result = mysqli_query($conn, "SELECT id,sp_id, tieu_de, gia_cu, gia_moi, minh_hoa FROM sanpham_shop WHERE $where");
+
+		if (!$result) {
+			die('Query Error: ' . mysqli_error($conn));
+		}
+
+		$products = [];
+
+		while ($row = mysqli_fetch_assoc($result)) {
+			$products[] = [
+				'sp_id' => $row['id'],
+				'ten_sp' => $row['tieu_de'],
+				'gia_cu' => number_format($row['gia_cu']) . 'đ',
+				'gia_moi' => number_format($row['gia_moi']) . 'đ',
+				'minh_hoa' => $row['minh_hoa']
+			];
+		}
+
+		echo json_encode($products);
+		exit;
+	}
+	if ($action == 'get_variants_by_product') {
+		$sp_id = mysqli_real_escape_string($conn, $_REQUEST['sp_id']);
+		$variant_result = mysqli_query($conn, "SELECT id, ten_color, ten_size, gia_moi, gia_cu, kho_sanpham_shop FROM phanloai_sanpham_shop WHERE sp_id='$sp_id' AND user_id='$user_id'");
+
+		if (!$variant_result) {
+			die('Variant Query Error: ' . mysqli_error($conn));
+		}
+
+		$variants = [];
+		while ($variant = mysqli_fetch_assoc($variant_result)) {
+			$variants[] = [
+				'variant_id' => $variant['id'],
+				'ten_color' => $variant['ten_color'],
+				'ten_size' => $variant['ten_size'],
+				'gia_cu' => number_format($variant['gia_cu'], 0, ',', '.') . 'đ',
+				'gia_moi' => number_format($variant['gia_moi'], 0, ',', '.') . 'đ',
+				'stock' => intval($variant['kho_sanpham_shop'])
+			];
+		}
+
+		echo json_encode($variants);
+		exit;
+	}
 	if ($_POST['action'] == 'filter_date') {
 		$from_date = isset($_POST['from_date']) ? mysqli_real_escape_string($conn, $_POST['from_date']) : '';
 		$to_date = isset($_POST['to_date']) ? mysqli_real_escape_string($conn, $_POST['to_date']) : '';
@@ -165,66 +231,6 @@ if (!isset($_COOKIE['user_id'])) {
 			]);
 		}
 		exit;
-	} else if ($action == 'sudung_sodu') {
-		// Kiểm tra user đã đăng nhập
-		if (!isset($user_id)) {
-			echo json_encode([
-				'ok' => 0,
-				'thongbao' => 'Vui lòng đăng nhập để thực hiện thao tác này'
-			]);
-			exit;
-		}
-
-		// Kiểm tra số dư
-		$user_money = $class_member->user_money($conn, $user_id);
-		$active_price = 2500000; // Giá kích hoạt tài khoản
-
-		if ($user_money < $active_price) {
-			echo json_encode([
-				'ok' => 0,
-				'thongbao' => 'Số dư không đủ để kích hoạt tài khoản',
-				'step2' => '<div class="payment_info">
-							 <p>Số dư hiện tại: ' . number_format($user_money) . ' VNĐ</p>
-							 <p>Số tiền cần nạp thêm: ' . number_format($active_price - $user_money) . ' VNĐ</p>
-							 <a href="/ncc/nap-tien" class="btn-naptien">Nạp tiền ngay</a>
-						   </div>'
-			]);
-			exit;
-		}
-
-		// Tiến hành kích hoạt tài khoản
-		try {
-			mysqli_begin_transaction($conn);
-
-			// Trừ tiền
-			$new_money = $user_money - $active_price;
-			$update_money = mysqli_query($conn, "UPDATE member SET money = '$new_money' WHERE user_id = '$user_id'");
-
-			// Cập nhật trạng thái kích hoạt
-			$update_status = mysqli_query($conn, "UPDATE member SET activated = 1, activated_date = '$hientai' WHERE user_id = '$user_id'");
-
-			// Lưu lịch sử chi tiêu
-			$noidung = "Kích hoạt tài khoản nhà cung cấp";
-			$insert_history = mysqli_query($conn, "INSERT INTO lichsu_chitieu (user_id, sotien, truoc, sau, noidung, date_post) 
-												 VALUES ('$user_id', '$active_price', '$user_money', '$new_money', '$noidung', '$hientai')");
-
-			if ($update_money && $update_status && $insert_history) {
-				mysqli_commit($conn);
-				echo json_encode([
-					'ok' => 1,
-					'thongbao' => '<div class="success">Kích hoạt tài khoản thành công!</div>'
-				]);
-			} else {
-				throw new Exception("Lỗi cập nhật dữ liệu");
-			}
-		} catch (Exception $e) {
-			mysqli_rollback($conn);
-			echo json_encode([
-				'ok' => 2,
-				'thongbao' => 'Có lỗi xảy ra: ' . $e->getMessage()
-			]);
-		}
-		exit;
 	} else if ($action == 'filter_date') {
 		$where = "user_id = '$user_id'";
 
@@ -272,7 +278,88 @@ if (!isset($_COOKIE['user_id'])) {
 
 		echo json_encode($info);
 		exit;
-	} else if ($action == 'edit_banner') {
+	} else if ($action == 'add_banner') {
+		$tieu_de = addslashes($_POST['tieu_de']);
+		$link = addslashes($_POST['link']);
+		$target = addslashes($_POST['target']);
+		$vi_tri = addslashes($_POST['vi_tri']);
+		$thu_tu = addslashes($_POST['thu_tu']);
+		
+		// Kiểm tra nếu không có ảnh được upload
+		if (!isset($_FILES['minh_hoa']) || $_FILES['minh_hoa']['error'] != 0) {
+			echo json_encode([
+				'ok' => 0,
+				'thongbao' => 'Vui lòng chọn ảnh minh họa'
+			]);
+			exit;
+		}
+		if ($vi_tri === "banner_doitac") {
+			$query_count = "SELECT COUNT(*) AS total FROM banner WHERE vi_tri = 'banner_doitac' AND shop_id = '$user_id'";
+		} elseif ($vi_tri === "banner_giua") {
+			$query_count = "SELECT COUNT(*) AS total FROM banner WHERE vi_tri = 'banner_giua' AND shop_id = '$user_id'";
+		}
+		$result_count = mysqli_query($conn, $query_count);
+		$count = mysqli_fetch_assoc($result_count)['total'];
+
+		// Điều kiện giới hạn số lượng banner
+		if (($vi_tri === "banner_doitac" && $count >= 3) || ($vi_tri === "banner_giua" && $count >= 4)) {
+			echo json_encode([
+				'ok' => 0,
+				'thongbao' => 'Không thể thêm mới. Đã đạt giới hạn banner cho vị trí này.'
+			]);
+			exit;
+		}
+
+		// Kiểm tra nếu không có ảnh được upload
+		if (!isset($_FILES['minh_hoa']) || $_FILES['minh_hoa']['error'] != 0) {
+			echo json_encode([
+				'ok' => 0,
+				'thongbao' => 'Vui lòng chọn ảnh minh họa'
+			]);
+			exit;
+		}
+		$target_dir = "../uploads/minh-hoa/";
+		$file_extension = pathinfo($_FILES["minh_hoa"]["name"], PATHINFO_EXTENSION);
+		$new_filename = uniqid() . '.' . $file_extension;
+		$target_file = $target_dir . $new_filename;
+
+		// Di chuyển file đã upload đến thư mục đích
+		if (move_uploaded_file($_FILES["minh_hoa"]["tmp_name"], $target_file)) {
+			$minh_hoa = "/uploads/minh-hoa/" . $new_filename;
+		} else {
+			echo json_encode([
+				'ok' => 0,
+				'thongbao' => 'Lỗi khi tải lên ảnh minh họa'
+			]);
+			exit;
+		}
+
+		// Thực thi truy vấn để thêm mới banner
+		$query = "INSERT INTO banner (tieu_de, link, minh_hoa, target, vi_tri, thu_tu, shop_id) VALUES (
+			'$tieu_de',
+			'$link',
+			'$minh_hoa',
+			'$target',
+			'$vi_tri',
+			'$thu_tu',
+			'$user_id'
+		)";
+
+		if (mysqli_query($conn, $query)) {
+			echo json_encode([
+				'ok' => 1,
+				'thongbao' => 'Thêm banner thành công!'
+			]);
+		} else {
+			echo json_encode([
+				'ok' => 0,
+				'thongbao' => 'Lỗi: ' . mysqli_error($conn)
+			]);
+		}
+
+		exit();
+	}
+	else if ($action == 'edit_banner') {
 		$id = addslashes($_POST['id']);
 		$tieu_de = addslashes($_POST['tieu_de']);
 		$link = addslashes($_POST['link']);
@@ -300,6 +387,23 @@ if (!isset($_COOKIE['user_id'])) {
 		} else {
 			$minh_hoa = $minh_hoa_cu;
 		}
+		if ($vi_tri === "banner_doitac") {
+			$query_count = "SELECT COUNT(*) AS total FROM banner WHERE vi_tri = 'banner_doitac' AND shop_id = '$user_id'";
+		} elseif ($vi_tri === "banner_giua") {
+			$query_count = "SELECT COUNT(*) AS total FROM banner WHERE vi_tri = 'banner_giua' AND shop_id = '$user_id'";
+		}
+		$result_count = mysqli_query($conn, $query_count);
+		$count = mysqli_fetch_assoc($result_count)['total'];
+
+		// Điều kiện giới hạn số lượng banner
+		if (($vi_tri === "banner_doitac" && $count >= 4) || ($vi_tri === "banner_giua" && $count >= 5)) {
+			echo json_encode([
+				'ok' => 0,
+				'thongbao' => 'Không thể thêm mới. Đã đạt giới hạn banner cho vị trí này.'
+			]);
+			exit;
+		}
+
 		$query = "UPDATE banner SET 
 				  tieu_de = '$tieu_de',
 				  link = '$link',

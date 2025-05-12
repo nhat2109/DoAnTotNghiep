@@ -117,11 +117,159 @@ tinymce.init({
     }
 });
 </script>
+<style>
+/* Responsive styles for mobile devices */
+@media (max-width: 768px) {
+    .box_right {
+        width: 100%;
+        padding: 10px;
+    }
+    
+    .box_right_content {
+        width: 100%;
+    }
+    
+    .box_profile {
+        width: 100%;
+    }
+    
+    .page_title h1 {
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+    
+    .col_50, .col_100 {
+        width: 100%;
+        float: none;
+        padding: 0;
+    }
+    
+    .form_group {
+        margin-bottom: 15px;
+    }
+    
+    .form_control {
+        width: 100%;
+        padding: 8px;
+        font-size: 14px;
+    }
+    
+    /* Box dimensions section */
+    .form_group h3 {
+        margin-bottom: 10px;
+        font-size: 16px;
+    }
+    
+    .form_group > div {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .form_group > div > div {
+        margin-right: 0;
+        margin-bottom: 10px;
+        width: 100%;
+    }
+    
+    /* Product classification section */
+    .list_phanloai {
+        width: 100%;
+        overflow-x: auto;
+    }
+    
+    .th_phanloai, .li_phanloai {
+        display: flex;
+        flex-wrap: nowrap;
+        min-width: 1200px;
+    }
+    
+    .info_ma, .info_name, .info_mau, .info_can_nang, .info_gia, 
+    .info_kho_sanpham_shop, .info_trongluongtinhship, .info_action, .info_action_copy {
+        padding: 5px;
+        min-width: 100px;
+    }
+    
+    .info_action, .info_action_copy {
+        min-width: 80px;
+        text-align: center;
+    }
+    
+    /* Category section */
+    .list_main_category {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .box_category {
+        width: 100%;
+        height: 120px;
+        margin-bottom: 10px;
+    }
+    
+    /* Product images */
+    .list_photo {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .list_photo img {
+        width: calc(50% - 5px);
+        height: auto;
+    }
+    
+    /* Buttons */
+    .button_all {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+    }
+    
+    .button_select_photo, .button_add_phanloai, .button_add_info {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    
+    /* Preview image */
+    .mh {
+        text-align: center;
+    }
+    
+    .mh img {
+        max-width: 100%;
+        height: auto;
+    }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+    .box_right {
+        padding: 5px;
+    }
+    
+    .page_title h1 {
+        font-size: 18px;
+    }
+    
+    .form_control {
+        padding: 8px;
+        font-size: 14px;
+    }
+    
+    .list_photo img {
+        width: 100%;
+    }
+    
+    .button_all {
+        padding: 10px;
+    }
+}
+</style>
 <div class="box_right">
     <div class="box_right_content">
         <div class="box_profile">
             <div class="page_title">
-                <h1 class="undefined">Chỉnh sửa thông tin</h1>
+                <h1 class="undefined">Chỉnh sửa sản phẩm ngoài</h1>
                 <div class="line"></div>
                 <hr>
             </div>
@@ -145,32 +293,58 @@ tinymce.init({
                     <input type="file" name="minh_hoa" id="minh_hoa" style="display: none;">
                 </div>
                 <div class="form_group">
-                    <label for="">Giá niêm yết</label>
-                    <input type="text" class="form_control price_format" name="gia_cu" value="{gia_cu}" placeholder="Nhập giá niêm yết...">
-                </div>
-                <div class="form_group">
-                    <label for="">Giá bán lẻ (Giá bán tổi thiểu: {drop_min})</label>
-                    <input type="text" class="form_control price_format" name="gia_moi" value="{gia_moi}" placeholder="Nhập giá bán lẻ...">
+                    <h3 for="">Kích thước hộp</h3>
+                    <div style="display: flex;">
+                        <div style="margin-right:10px;">
+                            <label for="">Chiều dài (cm)</label>
+                            <input type="text" class="form_control price_format" id="chieudai_shop" placeholder="Nhập chiều dài (cm)..." name="chieudai_shop">
+                        </div>
+                        <div style="margin-right:10px;">
+                            <label for="">Chiều rộng (cm)</label>
+                            <input type="text" class="form_control price_format" id="chieurong_shop" placeholder="Nhập chiều rộng (cm)..." name="chieurong_shop">
+                        </div>
+                        <div style="margin-right:10px;">
+                            <label for="">Chiều cao (cm)</label>
+                            <input type="text" class="form_control price_format" id="chieucao_shop" placeholder="Nhập chiều cao (cm)..." name="chieucao_shop">
+                        </div>
+                    </div>
                 </div>
             </div>
             <div style="clear: both;"></div>
             <div class="col_100">
                 <div style="clear: both;"></div>
                 <div class="form_group">
-                    <label for="">Màu sản phẩm</label>
-                    <div style="clear: both;"></div>
-                    <div class="list_input_post">
-                        {option_color}
-                    </div>
+                    <label for="">Ảnh sản phẩm</label>
+                    <button class="button_select_photo">Chọn ảnh</button>
+                    <div class="list_photo">{list_photo}</div>
                 </div>
-                <div style="clear: both;"></div>
-                <div class="form_group">
-                    <label for="">Kích cỡ sản phẩm</label>
-                    <div style="clear: both;"></div>
-                    <div class="list_input_post">
-                        {option_size}                        
+            </div>
+            <div style="clear: both;"></div>
+            <div class="form_group">
+                <label for="">Phân loại sản phẩm</label>
+                <button class="button_add_phanloai">Thêm phân loại</button>
+                <div class="list_phanloai">
+                    <div class="th_phanloai">
+                        <div class="info_ma">Mã</div>
+                        <div class="info_name">Kích cỡ</div>
+                        <div class="info_mau">Màu sắc</div>
+                        <div class="info_can_nang">Trọng lượng</div>
+                        <div class="info_gia">Giá niêm yết</div>
+                        <div class="info_gia">Giá bán</div>
+                        <div class="info_gia">Giá drop</div>
+                        <div class="info_gia">Giá CTV</div>
+                        <div class="info_gia">Giá trên Sóc đỏ</div>
+                        <div class="info_kho_sanpham_shop">Kho</div>
+                        <div class="info_trongluongtinhship">Trọng lượng tính ship</div>
+                        <div class="info_action"></div>
+                        <div class="info_action_copy"></div>
                     </div>
+                    {list_phanloai}
                 </div>
+            </div>
+            <div style="clear: both;"></div>
+            <div style="clear: both;"></div>
+            <div class="col_100">
                 <div style="clear: both;"></div>
                 <div class="form_group">
                     <label for="">Thông số sản phẩm</label>
@@ -179,19 +353,17 @@ tinymce.init({
                         {list_info}
                     </div>
                 </div>
+                <div style="clear: both;"></div>
             </div>
             <div style="clear: both;"></div>
-            <div class="col_50">
-                <div class="form_group">
-                    <label for="">Trọng lượng (Đơn vị kg)</label>
-                    <input type="text" class="form_control" name="can_nang" value="{can_nang}" placeholder="Nhập trọng lượng bằng số (Ví dụ 5kg thì nhập 5)...">
-                </div>
+            <div class="col_100">
                 <div class="form_group">
                     <label for="">Thương hiệu</label>
                     <select class="form_control" name="thuong_hieu">
                         <option value="">Chọn thương hiệu</option>
                         {option_brand}
                     </select>
+                    <input style="margin-top: 5px;" type="text" class="form_control" name="thuong_hieu_2" value="" placeholder="Hoặc thêm mới...">
                 </div>
             </div>
             <div style="clear: both;"></div>
@@ -204,15 +376,6 @@ tinymce.init({
                         <div class="box_category scroll" id="main_category">{option_main_category}</div>
                         <div class="box_category scroll" id="sub_category">{option_sub_category}</div>
                         <div class="box_category scroll" id="sub_sub_category">{option_sub_sub_category}</div>
-                    </div>
-                </div>
-                <div class="form_group">
-                    <label for="">Danh mục Nhà Cung Cấp</label>
-                    <div style="clear: both;"></div>
-                    <div class="list_main_category">
-                        <div class="box_category scroll" id="main_category_ncc">{option_main_category_ncc}</div>
-                        <div class="box_category scroll" id="sub_category_ncc">{option_sub_category_ncc}</div>
-                        <div class="box_category scroll" id="sub_sub_category_ncc">{option_sub_sub_category_nc}</div>
                     </div>
                 </div>
                 <div style="clear: both;"></div>
@@ -237,8 +400,8 @@ tinymce.init({
             </div>
             <div style="clear: both;"></div>
             <div class="form_group">
-                <input type="hidden" name="sp_id" value="{id}">
-                <button class="button_all" name="edit_sanpham"> Hoàn thành </button>
+                <input type="hidden" name="id" value="{id}">
+                <button class="button_all" name="edit_sanpham_ngoai"> Hoàn thành </button>
             </div>
         </div>
     </div>
@@ -247,3 +410,10 @@ tinymce.init({
 <script src="/js/jquery-3.2.1.min.js"></script>
 <script type="text/javascript" src="/js/jquery.priceformat.min.js"></script>
 <script type="text/javascript" src="/js/demo_price.js"></script>
+<script type="text/javascript">
+        var kich_thuoc ='{kich_thuoc}';  
+        var kichThuocArr = kich_thuoc.split(",");
+        document.getElementById("chieudai_shop").value = kichThuocArr[0] || "";
+        document.getElementById("chieurong_shop").value = kichThuocArr[1] || "";
+        document.getElementById("chieucao_shop").value = kichThuocArr[2] || "";
+</script>

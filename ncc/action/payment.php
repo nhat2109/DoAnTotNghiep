@@ -34,7 +34,7 @@ while ($row = mysqli_fetch_assoc($result)) {
     <div class="bank_item' . $default_class . '" id="bank_' . $row['id'] . '">
         <div class="bank_info">
             <div class="bank_header">
-                ' . $bank_logo . '
+                
                 <div class="bank_details">
                     <div class="bank_name">
                         <strong>' . htmlspecialchars($row['bank_name']) . '</strong>

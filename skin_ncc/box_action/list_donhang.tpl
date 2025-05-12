@@ -7,7 +7,7 @@
 		display: flex;
 		justify-content: end;
 		align-items: flex-start;
-		margin: 20px 0;
+		margin:0px;
 		gap: 20px;
 	}
 
@@ -154,12 +154,17 @@
 			display: none;
 		}
 	}
+	.list_baiviet tr:first-child {
+		position: initial; /* Ghi đè thuộc tính cũ */
+		top: auto;
+		background: white;
+	}
 </style>
 <div class="box_right">
 	<div class="box_right_content">
 		<div class="box_profile" style="width: 100%;padding: 10px;">
-			<div class="page_title page_title_2" style="margin-top: 40px;">
-				<h1 class="undefined">Danh sách đơn hàng shop</h1>
+			<div class="page_title page_title_2" style="justify-content: center; margin-top: 40px;">
+				<h1 class="undefined">Danh sách đơn hàng Website</h1>
 			</div>
 
 			<form id="search_donhang_ncc" onsubmit="return false;">
@@ -196,15 +201,17 @@
 
 			<div id="list_donhang_content">
 				<table class="list_baiviet">
-					<tr>
-						<th style="text-align: center;width: 50px;" class="hide_mobile">STT</th>
-						<th style="text-align: left;">Mã đơn</th>
-						<th style="text-align: left;" class="hide_mobile">Ngày</th>
-						<th style="text-align: center;">Sản phẩm</th>
-						<th style="text-align: left;" class="hide_mobile">Giá trị</th>
-						<th style="text-align: center;" class="hide_mobile">Tình trạng</th>
-						<th style="text-align: center;width: 225px;">Hành động</th>
-					</tr>
+					<thead style="position: sticky;z-index: 1000;top: 10px;">
+						<tr>
+							<th style="text-align: center;width: 50px;" class="hide_mobile">STT</th>
+							<th style="text-align: left;">Mã đơn</th>
+							<th style="text-align: left;" class="hide_mobile">Ngày</th>
+							<th style="text-align: center;">Sản phẩm</th>
+							<th style="text-align: left;" class="hide_mobile">Tổng tiền</th>
+							<th style="text-align: center;" class="hide_mobile">Tình trạng</th>
+							<th style="text-align: center;width: 225px;">Hành động</th>
+						</tr>
+					</thead>
 					<tbody id="list_donhang_body">
 				    	{list_donhang}
 					</tbody>
@@ -246,7 +253,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         $('.load_process').hide();
                         $('.load_note').html('Hệ thống đang xử lý');
                         $('.load_overlay').hide();
-                    }, 3000);
+                    },1000);
 				if (tbody) {
 					tbody.innerHTML = info.list;
     			}

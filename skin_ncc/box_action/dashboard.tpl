@@ -3,13 +3,13 @@
         <div class="box_profile" style="width: 100%;padding: 10px;">
             <div class="box_list_donhang">
                 <div class="box_list_left">
-                    <div class="title">Đơn hàng trên Sóc Đỏ</div>
+                    <div class="title">Đơn hàng sàn Socdo.vn</div>
                     <div class="list_donhang scroll">
                         {list_donhang}
                     </div>
                 </div>
                 <div class="box_list_right">
-                    <div class="title">Đơn hàng trên shop</div>
+                    <div class="title">Đơn hàng trên website</div>
                     <div class="list_donhang scroll">
                         {list_donhang_cuaban}
                     </div>
@@ -210,74 +210,3 @@
         </div>
     </div>
 </div>
-<!-- <script src="/js/process_ncc.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function() {
-        // Đảm bảo chỉ bind event một lần
-        $('body').off('click', '#sudung_sodu').on('click', '#sudung_sodu', function() {
-            console.log("Click sudung_sodu detected"); // Debug log
-            
-            // Hiển thị modal xác nhận
-            $('.box_confirm').css({
-                'display': 'flex',
-                'z-index': '10000',
-                'position': 'fixed',
-                'top': '0',
-                'left': '0', 
-                'width': '100%',
-                'height': '100%',
-                'background-color': 'rgba(0, 0, 0, 0.5)',
-                'justify-content': 'center',
-                'align-items': 'center'
-            });
-    
-            // Xử lý nút xác nhận
-            $('#confirm_yes').off('click').on('click', function() {
-                $('.box_confirm').hide();
-                $('.box_xuly').html('<i class="fa fa-refresh fa-spin"></i> Hệ thống đang xử lý...');
-    
-                // Call API
-                $.ajax({
-                    url: "/ncc/process.php",
-                    type: "post",
-                    data: {
-                        action: 'sudung_sodu'
-                    },
-                    success: function(response) {
-                        console.log("API Response:", response); // Debug log
-                        
-                        try {
-                            const info = JSON.parse(response);
-                            setTimeout(function() {
-                                switch(info.ok) {
-                                    case 1:
-                                        $('.box_xuly').html(info.thongbao);
-                                        setTimeout(() => location.reload(), 2000);
-                                        break;
-                                    case 0:
-                                        $('.box_xuly').html(info.step2);
-                                        break; 
-                                    default:
-                                        $('.box_xuly').html('Có lỗi không xác định');
-                                }
-                            }, 1000);
-                        } catch(e) {
-                            console.error("Parse error:", e); // Debug log
-                            $('.box_xuly').html('Lỗi xử lý dữ liệu');
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("Ajax error:", error); // Debug log
-                        $('.box_xuly').html('Lỗi kết nối máy chủ');
-                    }
-                });
-            });
-    
-            // Xử lý nút hủy
-            $('#confirm_no').off('click').on('click', function() {
-                $('.box_confirm').fadeOut(300);
-            });
-        });
-    });
-    </script> -->

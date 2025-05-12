@@ -61,6 +61,10 @@
                                     <li>2. Tên miền thuộc sở hữu của NCC và Sóc đỏ không được phép sử dụng vì mục đích riêng</li>
                                     <li>3. Sóc đỏ hỗ trợ đăng ký tên miền và cài đặt</li>
                                     <li>4. Tên miền sẽ được gia hạn hằng năm theo yêu cầu của NCC</li>
+                                    <br>
+                                    <li>Chúc mừng bạn đã đăng ký tên miền riêng thành công, bộ phận
+                                        Support Socdo.vn sẽ liên hệ với bạn để xử lý đăng ký tên miền trong vòng 24h. Xin cảm ơn !
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -78,9 +82,9 @@
                         </div>
                     </div>
                     <div class="col_right">
-                        <div class="form_group">
-                            + Nhập tên miền của bạn và trỏ tên miền về địa chỉ ip <b>{ip_server}</b>.<br>
-                            + Nếu bạn chưa biết cách thao tác, hãy yêu cầu hỗ trợ (Phí dịch vụ 100k).<br>
+                        <div class="form_group"> 
+                            <!-- + Nhập tên miền của bạn và trỏ tên miền về địa chỉ ip <b>{ip_server}</b>.<br> -->
+                            + Liên hệ Hotline/zalo : 0943.051.818 để được hỗ trợ.<br>
                             <div style="text-align: center;">
                                 <button class="button_hotro" onclick="confirm_action('hotro_domain', 'Xác nhận yêu cầu hỗ trợ', '');">Yêu cầu hỗ trợ</button>                                
                             </div>

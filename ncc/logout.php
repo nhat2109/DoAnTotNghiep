@@ -13,7 +13,7 @@ if(isset($_COOKIE['user_id'])){
 		'title'=>'Đăng xuất tài khoản...',
 		'description'=>$index_setting['description'],
 		'thongbao'=>$thongbao,
-		'link_chuyen'=>'/ncc/login'
+		'link_chuyen'=>'/'
 	);
 	echo $skin->skin_replace('skin_ncc/chuyenhuong',$replace);
 }else{

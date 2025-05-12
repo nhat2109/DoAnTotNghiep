@@ -45,15 +45,15 @@
                                 </tr>
                                 <tr>
                                     <td class="dt-light dt-center">Bộ Banner Sile</td>
-                                    <td class="dt-light dt-center">3 banner</td>
+                                    <td class="dt-light dt-center">Không giới hạn</td>
                                 </tr>
                                 <tr>
                                     <td class="dt-light dt-center">Bộ banner quảng cáo chính (Nếu có)</td>
-                                    <td class="dt-light dt-center">1 Banner</td>
+                                    <td class="dt-light dt-center">Không giới hạn</td>
                                 </tr>
                                 <tr>
                                     <td class="dt-light dt-center">Banner quảng cáo (Nếu có)</td>
-                                    <td class="dt-light dt-center">4 Banner</td>
+                                    <td class="dt-light dt-center">Không giới hạn</td>
                                 </tr>
                                 <tr>
                                     <td class="dt-light dt-center">Tích hợp kênh Fanpage</td>

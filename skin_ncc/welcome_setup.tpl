@@ -735,7 +735,7 @@ body {
         </div>
         <div class="step <?php echo $current_step == 2 ? 'active' : ''; ?> <?php echo $step2_completed ? 'completed' : ''; ?>" data-step="2">
             <div class="step-number"><?php echo $step2_completed ? '✓' : '2'; ?></div>
-            <div class="step-title">Địa chỉ giao nhận</div>
+            <div class="step-title">Địa chỉ kho hàng</div>
         </div>
         <div class="step <?php echo $current_step == 3 ? 'active' : ''; ?> <?php echo $step3_completed ? 'completed' : ''; ?>" data-step="3">
             <div class="step-number"><?php echo $step3_completed ? '✓' : '3'; ?></div>
@@ -832,14 +832,18 @@ body {
         <form method="POST">
             <input type="hidden" name="action" value="save_step2">
             <div class="form-group">
-                <label>Họ và tên người nhận <span class="text-danger">*</span></label>
+                <label>Tên kho hàng <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" name="ten_kho" value="<?php echo $name; ?>" required>
+            </div>
+            <div class="form-group">
+                <label>Tên người liên hệ <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" name="fullname" value="<?php echo $name; ?>" required>
             </div>
             <div class="form-group">
                 <label>Số điện thoại <span class="text-danger">*</span></label>
                 <input type="tel" class="form-control" name="mobile" value="<?php echo $mobile; ?>" required>
             </div>
-            <h6 class="form-text">Địa chỉ giao nhận</h6>
+            <h6 class="form-text">Địa chỉ kho hàng</h6>
             <div class="form-row">
                 
                 <div class="form-group col-md-4">
@@ -865,7 +869,7 @@ body {
             </div>
             </div>
             <div class="form-group">
-                <label>Địa chỉ chi tiết (địa chỉ giao nhận) <span class="text-danger">*</span></label>
+                <label>Địa chỉ chi tiết (địa chỉ kho hàng) <span class="text-danger">*</span></label>
                 <!-- <input type="text" class="form-control" name="dia_chi" value="<?php echo $dia_chi; ?>" placeholder="Số nhà, tên đường, thôn/xóm..." required> -->
                 <textarea class="form-control" name="dia_chi" rows="3" placeholder="Số nhà, tên đường, thôn/xóm..." required><?php echo $dia_chi; ?></textarea>
             </div>

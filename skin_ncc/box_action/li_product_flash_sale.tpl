@@ -1,18 +1,76 @@
-<div class="li_product li_product_{id}" sp="{id}">
-    <div class="thumbnail">
-        <img src="/thumbnail.php?w=320&img={minh_hoa}" alt="{tieu_de}">
-    </div>
-    <div class="info">
-        <div class="name">{tieu_de}</div>
+<div class="selected-product" sp="{id}">
+    <img src="{minh_hoa}" alt="{ten_sp}">
+    <div class="selected-product-info">
+        <div class="name">{ten_sp}</div>
         <div class="price">
             <div class="price-old">{gia_cu}</div>
             <div class="price-new">{gia_moi}</div>
         </div>
-        <div class="price_deal">
-            <input type="text" name="gia_deal[]" class="price_format" placeholder="Nhập giá khuyến mại" value="{gia_deal}"><span>đ</span>
+        <div class="variant-list" id="variant_list_{id}">
+         
         </div>
     </div>
-    <div class="action">
-        <button sp="{id}">Xóa</button>
-    </div>
+    <button class="remove-product">Xóa</button>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+    // Hàm định dạng số theo kiểu Việt Nam
+    function formatNumberVN(number) {
+        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + 'đ';
+    }
+    var variants = JSON.parse('{variants}');
+    var html = '';
+    variants.forEach(function(variant) {
+        html += '<div class="variant-item" variant_id="' + variant.variant_id + '">';
+        html += '<span class="variant-info" data-variant-color="' + variant.ten_color + '" data-variant-size="' + variant.ten_size + '">' + variant.ten_color + ' - ' + variant.ten_size + '</span>';
+        html += '<div class="variant-price">';
+        html += '<span class="price-old">' + formatNumberVN(variant.gia_cu) + '</span>';
+        // html += '<span class="price-new">' + formatNumberVN(variant.gia_moi) + '</span>';
+        html += '</div>';
+        html += '<div class="stock">Kho: ' + (variant.stock || 0) + ' sản phẩm</div>';
+        html += '<input type="number" class="quantity-input" name="quantity_' + variant.variant_id + '" placeholder="Số lượng flash sale" value="' + (variant.quantity || '') + '" min="0" data-stock="' + (variant.stock || 0) + '">';
+        var giaDealFormatted = variant.gia_deal ? formatNumberVN(variant.gia_deal) : '';
+        html += '<input type="text" name="gia_deal_' + variant.variant_id + '" placeholder="Giá flash sale" value="' + giaDealFormatted + '">';
+        html += '</div>';
+    });
+    var data_flash_sale = [
+        {
+            sp_id: "{id}",
+            name: "{ten_sp}",
+            gia_cu: "{gia_cu}",
+            gia_moi: "{gia_moi}",
+            minh_hoa: "{minh_hoa}",
+            variants: variants 
+        }
+    ];
+    localStorage.setItem('data_flash_sale', JSON.stringify(data_flash_sale));
+    document.getElementById('variant_list_{id}').innerHTML = html;
+    // console.log(html);
+    // debugger;
+    // Gắn sự kiện kiểm tra số lượng kho khi nhập
+    $('#variant_list_{id} .quantity-input').on('input', function() {
+        var stock = parseInt($(this).data('stock')) || 0;
+        var quantity = parseInt($(this).val()) || 0;
+        if (quantity > stock) {
+            $('.load_overlay').show();
+            $('.load_process').fadeIn();
+            $('.load_note').html('Số lượng flash sale vượt quá số lượng kho (' + stock + ' sản phẩm)!');
+            $(this).val(stock);
+            setTimeout(function() {
+                $('.load_process').hide();
+                $('.load_note').html('Hệ thống đang xử lý');
+                $('.load_overlay').hide();
+            }, 3000);
+        }
+    });
+    // Gắn sự kiện để định dạng giá flash sale khi người dùng nhập
+    $('#variant_list_{id} input[name^="gia_deal_"]').on('input', function() {
+        var value = $(this).val().replace(/[^0-9]/g, '');
+        if (value) {
+            $(this).val(formatNumberVN(value));
+        }
+    });
+});
+</script>

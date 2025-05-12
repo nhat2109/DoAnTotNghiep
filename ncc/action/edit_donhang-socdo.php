@@ -2,7 +2,7 @@
 	$thaythe['title'] = 'Chi tiết đơn hàng';
 	$thaythe['title_action'] = 'Chi tiết đơn hàng';
 	$id = preg_replace('/[^0-9]/', '', $url_query['id']);
-	$thongtin = mysqli_query($conn, "SELECT *, count(*) AS total FROM donhang_ncc WHERE id='$id' AND user_id='$user_id'");
+	$thongtin = mysqli_query($conn, "SELECT *, count(*) AS total FROM donhang WHERE id='$id' AND shop_id='$user_id'");
 	$r_tt = mysqli_fetch_assoc($thongtin);
 	if ($r_tt['total'] == 0) {
 		$thongbao = "Đơn hàng không tồn tại...";
@@ -53,19 +53,6 @@
 		$r_tt['ten_tinh'] = $r_h['ten_tinh'];
 		$r_tt['ten_huyen'] = $r_h['tieu_de'];
 	}
-    if($r_tt['status']==1){
-        $r_tt['status']='Đã tiếp nhận đơn';
-    }else if($r_tt['status']==2){
-        $r_tt['status']='Đã giao đơn vị vận chuyển';
-    }else if($r_tt['status']==3){
-        $r_tt['status']='Đã yêu cầu hủy đơn';
-    }else if($r_tt['status']==4){
-        $r_tt['status']='Đã hủy đơn';
-    }else if($r_tt['status']==5){
-        $r_tt['status']='Giao thành công';
-    }else{
-        $r_tt['status']='Chờ xử lý';
-    }
     if($r_tt['chiu_ship']=='shop'){
     	$r_tt['chiu_ship']='Người bán chịu phí';
     	$tong_thu=number_format($r_tt['cod']);

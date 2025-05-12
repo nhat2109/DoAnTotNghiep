@@ -65,10 +65,11 @@ if (empty($list_phanloai) || !is_array($tach_phanloai) || empty($tach_phanloai))
 
 // Kiểm tra nơi bán
 $noiban = is_array($noiban) ? $noiban : [$noiban];
-$insert_socdo = in_array('socdo', $noiban) || in_array('all', $noiban);
-$insert_shop = in_array('shop_ncc', $noiban) || in_array('all', $noiban);
+//=========================7-5
+// $insert_socdo = in_array('socdo', $noiban) || in_array('all', $noiban); 
+$insert_shop = in_array('shop_ncc', $noiban) || in_array('all', $noiban) || in_array('socdo_ctv', $noiban);
 
-if (!$insert_socdo && !$insert_shop) {
+if (!$insert_shop) {
     echo json_encode(['ok' => 0, 'thongbao' => 'Thất bại! Chưa chọn nơi bán']);
     exit();
 }
@@ -131,7 +132,7 @@ $min_phanloai_socdo = array_reduce($tach_phanloai, function ($carry, $item) {
     return ($gia_item < $gia_carry) ? $item : $carry;
 }, ['gia_socdo' => PHP_INT_MAX]);
 
-$gia_socdo_min = (int)preg_replace('/[^0-9]/', '', $min_phanloai_socdo['gia_socdo']);
+$gia_socdo_min = (int)preg_replace('/[^0-9]/', '', $min_phanloai_socdo['gia_moi']);
 
 
 // Tính trọng lượng tính ship cho phân loại đầu tiên
@@ -175,7 +176,22 @@ if ($insert_shop) {
     }
 
     // Xác định status dựa trên nơi bán
-    $status = $insert_socdo ? 0 : 2; // Nếu có đăng lên Sóc Đỏ hoặc tất cả, status = 0, nếu chỉ đăng lên website shop thì status = 2
+    //$status = $insert_socdo ? 0 : 2; // Nếu có đăng lên Sóc Đỏ hoặc tất cả, status = 0, nếu chỉ đăng lên website shop thì status = 2
+    //Nếu nơi bán là All thì status = 0, 
+    //Nếu nơi bán là shop_ncc thì status = 2, 
+    //Nếu nơi bán là socdo_ctv thì status = 1 => đăng lên công đồng ctv
+    if($noiban[0]=='all')
+    {
+        $status =0;
+    } 
+    else if($noiban[0]=='shop_ncc')
+    {
+        $status = 2;
+    }
+    else if($noiban[0]=='socdo_ctv')
+    {
+        $status = 1;
+    }
     $sp_id_temp = 0;
     $ban = 0;
     $view = 0;

@@ -5,7 +5,7 @@
         <div class="title">Kích hoạt tài khoản</div>
         <div style="text-align: left; margin-top: 10px;">
             <div class="box_thongbao"
-                style="max-width: 600px; background: #fff9e6; border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); font-family: Arial, sans-serif;">
+                style="width: 100%; background: #fff9e6; border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); font-family: Arial, sans-serif;">
                 <div style="text-align: center; font-size: 16px; font-weight: bold; color: #d9534f;">
                     🔔 THÔNG BÁO PHÍ KÍCH HOẠT TÀI KHOẢN NHÀ BÁN HÀNG - SÀN TMĐT SOCDO.VN 🔔
                 </div>
@@ -28,14 +28,14 @@
                     Email: <span style="color: #337ab7;">hotro@socdo.vn</span>
                 </p>
             </div>
-        </div>
-        <div style="text-align: center; font-weight: 700;">
-            <div class="list_action">
-                <button id="xacnhan_kichhoat" style="margin-bottom: 10px; display:none;">Nạp tiền</button>
-                <button id="sudung_sodu">Kích hoạt</button>
+            <div style="text-align: center; font-weight: 700;">
+                <div class="list_action">
+                    <button id="xacnhan_kichhoat" style="margin-bottom: 10px; display:none;">Nạp tiền</button>
+                    <button id="sudung_sodu">Kích hoạt</button>
+                </div>
+                <div style="clear: both;"></div>
+                <span style="margin-bottom: 10px; display:none;">Khuyến mại: <span>{user_money2} đ</span></span>
             </div>
-            <div style="clear: both;"></div>
-            <span style="margin-bottom: 10px; display:none;">Khuyến mại: <span>{user_money2} đ</span></span>
         </div>
         <div class="box_confirm" style="display: none;">
             <div class="box_confirm_content">
@@ -63,46 +63,120 @@
 
 <!-- CSS -->
 <style>
-    .box_kichhoat {
-        display: none;
+    .modal-base {
         position: fixed;
         top: 0;
         left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        z-index: 9999;
+        width: 100vw;
+        height: 100vh;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(0, 0, 0, 0.8);
+    }
+
+    .box_kichhoat {
+        display: flex;
+        background-color: rgba(0, 0, 0, 0.8);
+        z-index: 99999;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+        padding: 15px;
+    }
+
+    .box_kichhoat.show {
+        display: flex !important;
         justify-content: center;
         align-items: center;
     }
 
-    .box_kichhoat_content {
+    .box_confirm {
+        composes: modal-base;
+        z-index: 100000;
+    }
+
+    .modal-content-base {
         position: relative;
         background: #fff;
         padding: 20px;
-        border-radius: 5px;
+        border-radius: 8px;
         max-width: 500px;
         width: 90%;
+        margin: 0 auto;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .box_kichhoat_content,
+    .box_confirm_content {
+        composes: modal-content-base;
+    }
+
+    .box_kichhoat.expired {
+        display: flex !important;
+        background-color: rgba(0, 0, 0, 0.8);
+        z-index: 99999;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        margin: 0;
+        padding: 0;
+    }
+
+    .box_kichhoat.expired .box_kichhoat_content {
+        left: 0 !important;
+        top: 2% !important;
+        right: 0 !important;
+        bottom: 2% !important;
+        position: fixed !important;
+        width: 560px;
+        max-width: calc(100% - 20px);
+        background: #fff;
+        max-height: calc(100vh - 10px);
+        border-radius: 5px;
+        padding: 10px;
+        margin: auto;
+        transform: none !important;
+        overflow-y: auto;
+    }
+
+    .box_kichhoat .box_kichhoat_content .list_action {
+        width: 100%;
+        display: flex;
+        margin-top: 10px;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .box_kichhoat_content {
+        transform: none !important;
+        top: auto !important;
     }
 
     .close_modal {
         position: absolute;
-        text-align: center;
-        line-height: 25px;
         top: 10px;
-        right: 14px;
-        font-size: 24px;
-        font-weight: bold;
-        cursor: pointer;
-        color: #fff;
-        background-color: red;
-        border-radius: 50%;
-        width: 25px;
-        height: 25px;
+        right: 15px;
+        padding: 0px 9px;
+        /* width: 25px; */
+        /* height: 25px; */
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: all 0.3sease;
+        font-size: 20px;
+        font-weight: bold;
+        color: #fff;
+        background-color: #ff0000;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: all 0.3s ease;
     }
 
     .close_modal:hover {
@@ -209,14 +283,14 @@
     }
 
     .box_confirm {
-        display: none;
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
         background: rgba(0, 0, 0, 0.5);
-        z-index: 10000;
+        z-index: 100000;
+        display: none;
         justify-content: center;
         align-items: center;
     }
@@ -241,114 +315,6 @@
         background: #004d99;
     }
 </style>
-<!-- JavaScript -->
-<!-- <script>
-
-    $(document).ready(function () {
-        // Khai báo biến toàn cục
-        const $boxKichHoat = $('.box_kichhoat');
-        const $body = $('body');
-
-        // Hàm hiển thị popup (export để có thể gọi từ file khác)
-        window.showKichHoatPopup = function () {
-            $boxKichHoat.fadeIn(300).css({
-                'display': 'flex',
-                'background-color': 'rgba(0, 0, 0, 0.5)',
-                'z-index': '9999'
-            });
-            $body.css('overflow', 'hidden');
-        };
-
-        // Hàm ẩn popup
-        function hideKichHoatPopup() {
-            $boxKichHoat.fadeOut(300);
-            $body.css('overflow', 'auto');
-        }
-
-        // Xử lý click nút đóng
-        $('.close_modal').on('click', function () {
-            hideKichHoatPopup();
-        });
-
-        // Xử lý click ra ngoài popup
-        $boxKichHoat.on('click', function (e) {
-            if ($(e.target).is($boxKichHoat)) {
-                hideKichHoatPopup();
-            }
-        });
-
-        // Ngăn sự kiện click lan ra ngoài content
-        $('.box_kichhoat_content').on('click', function (e) {
-            e.stopPropagation();
-        });
-
-        // Thêm phím tắt ESC để đóng
-        $(document).keyup(function (e) {
-            if (e.key === "Escape") {
-                hideKichHoatPopup();
-            }
-        });
-    });
-</script>
-<script>
-    $(document).ready(function () {
-    const $boxKichHoat = $('.box_kichhoat'); // Lấy phần tử popup
-    const $body = $('body'); // Lấy phần tử body (để khóa cuộn khi popup hiện)
-
-    // Hàm để hiện popup
-    window.showKichHoatPopup = function () {
-        $boxKichHoat.css({
-            'display': 'flex', // Hiện popup
-            'background-color': 'rgba(0, 0, 0, 0.5)', // Lớp phủ mờ
-            'z-index': '9999', // Đảm bảo popup nằm trên cùng
-            'position': 'fixed', // Che toàn màn hình
-            'top': '0',
-            'left': '0',
-            'width': '100%',
-            'height': '100%',
-            'justify-content': 'center',
-            'align-items': 'center'
-        }).fadeIn(300); // Hiệu ứng hiện mượt mà
-        $body.css('overflow', 'hidden'); // Khóa cuộn khi popup hiện
-    };
-
-    // Gắn sự kiện bấm cho nút "Kích hoạt tài khoản"
-    $('.open_modal').off('click').on('click', function (e) {
-        e.preventDefault(); // Ngăn hành vi mặc định của nút
-        e.stopPropagation(); // Ngăn sự kiện lan ra ngoài
-        window.showKichHoatPopup(); // Gọi hàm hiện popup
-    });
-
-    // Đóng popup khi bấm nút "X"
-    $('.close_modal').on('click', function () {
-        $boxKichHoat.fadeOut(300); // Ẩn popup mượt mà
-        $body.css('overflow', 'auto'); // Bật lại cuộn
-    });
-
-    // Đóng popup khi bấm ra ngoài nội dung popup
-    $boxKichHoat.on('click', function (e) {
-        if ($(e.target).is($boxKichHoat)) {
-            $boxKichHoat.fadeOut(300); // Ẩn popup
-            $body.css('overflow', 'auto'); // Bật lại cuộn
-        }
-    });
-
-    // Ngăn bấm trong nội dung popup làm đóng popup
-    $('.box_kichhoat_content').on('click', function (e) {
-        e.stopPropagation(); // Ngăn sự kiện lan ra ngoài
-    });
-
-    // Đóng popup bằng phím ESC
-    $(document).keyup(function (e) {
-        if (e.key === "Escape") {
-            $boxKichHoat.fadeOut(300); // Ẩn popup
-            $body.css('overflow', 'auto'); // Bật lại cuộn
-        }
-    });
-});
-</script> -->
-
-
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         let countdownInterval;
@@ -458,7 +424,12 @@
                 clearInterval(window.countdownInterval);
             }
         }
-
+        function updateModalState() {
+            let now = new Date().getTime();
+            if (now >= endTime) {
+                $('.box_kichhoat').addClass('expired');
+            }
+        }
         // Xử lý đóng popup
         $('.close_modal').on('click', hideKichHoatPopup);
 
@@ -489,79 +460,6 @@
         });
     });
 </script>
-<!-- js của  ẩn hiện menu -->
-<script>
-    $(document).ready(function () {
-        // Nếu chưa có giá trị lưu trong localStorage => mặc định mở tất cả menu
-        var stored = localStorage.getItem('open_menus');
-        if (!stored) {
-            var openMenus = [];
-            $('.main_menu .title').each(function () {
-                var id = $(this).attr('id');
-                if (id) {
-                    $(this).addClass('active');               // Thêm active cho tiêu đề
-                    $(this).next('.list_menu').show();          // Hiển thị danh sách
-                    openMenus.push(id);
-                }
-            });
-            localStorage.setItem('open_menus', JSON.stringify(openMenus));
-        } else {
-            var openMenus = JSON.parse(stored);
-            // Duyệt qua mỗi tiêu đề: nếu id có trong mảng lưu, mở menu tương ứng
-            $('.main_menu .title').each(function () {
-                var id = $(this).attr('id');
-                if (openMenus.indexOf(id) !== -1) {
-                    $(this).addClass('active');
-                    $(this).next('.list_menu').show();
-                }
-            });
-        }
-
-        // Bind sự kiện click để toggle menu
-        $('.main_menu .title').off('click').on('click', function (e) {
-            e.preventDefault();
-            var $this = $(this);
-            $this.toggleClass('active');
-            $this.next('.list_menu').slideToggle(300);
-
-            var titleId = $this.attr('id');
-            if (!titleId) {
-                console.warn("Menu title không có id:", $this);
-                return; // Yêu cầu mỗi menu phải có id để lưu trạng thái
-            }
-
-            var openMenus = JSON.parse(localStorage.getItem('open_menus')) || [];
-            if ($this.hasClass('active')) {
-                // Nếu menu mở, thêm id nếu chưa có
-                if ($.inArray(titleId, openMenus) === -1) {
-                    openMenus.push(titleId);
-                }
-            } else {
-                // Nếu menu đóng, loại bỏ id khỏi mảng
-                openMenus = openMenus.filter(function (id) {
-                    return id !== titleId;
-                });
-            }
-            localStorage.setItem('open_menus', JSON.stringify(openMenus));
-        });
-    });
-
-    document.addEventListener('DOMContentLoaded', function () {
-        if (window.location.hash) {
-            const targetElement = document.querySelector(window.location.hash);
-            if (targetElement) {
-                targetElement.scrollIntoView({ behavior: 'smooth' });
-
-                // Thêm viền đỏ cho thẻ <tbody> bên trong phần tử mục tiêu
-                const tbodyElement = targetElement.querySelector('tbody');
-                if (tbodyElement) {
-                    tbodyElement.style.border = '5px solid red';
-                }
-            }
-        }
-    });
-
-</script>
 <script>
     $(document).ready(function () {
         const modal = $('.box_kichhoat');
@@ -571,37 +469,69 @@
         const endTime = parseInt($countdownTimer.attr('data-time'), 10) * 1000;
         let countdownInterval;
 
-        function showExpiredModal() {
-            // Hiển thị modal với backdrop
-            modal.fadeIn(300).css({
-                'display': 'flex',
-                'background-color': 'rgba(0, 0, 0, 0.8)', // Làm tối nền
-                'z-index': '9999' // Đảm bảo hiển thị trên cùng
+        // Function to block all interactions
+        function blockPageInteraction() {
+            // Create overlay to block all content
+            const $overlay = $('<div id="page-overlay"></div>').css({
+                'position': 'fixed',
+                'top': '0',
+                'left': '0',
+                'width': '100%',
+                'height': '100%',
+                'background': 'rgba(0, 0, 0, 0.5)',
+                'z-index': '9998',
+                'cursor': 'not-allowed'
             });
 
-            // Ẩn nút đóng
+            // Add overlay to body
+            $('body').append($overlay);
+
+            // Prevent scrolling
+            $('body').css('overflow', 'hidden');
+
+            // Show expired modal
+            showExpiredModal();
+        }
+
+        function showExpiredModal() {
+            modal.fadeIn(300).css({
+                'display': 'flex !important',
+                'background-color': 'rgba(0, 0, 0, 0.8)',
+                'z-index': '99999',
+                'position': 'fixed',
+                'top': '0',
+                'left': '0',
+                'width': '100vw',
+                'height': '100vh',
+                'justify-content': 'center',
+                'align-items': 'center',
+                'margin': '0',
+                'padding': '0'
+            });
+
+            modalContent.css({
+                'position': 'relative',
+                'background': '#fff',
+                'max-width': '500px',
+                'width': '90%',
+                'margin': '0 auto',
+                'padding': '20px',
+                'border-radius': '8px',
+                'box-shadow': '0 2px 10px rgba(0,0,0,0.1)',
+                'transform': 'none', // Remove translateY
+                'top': 'auto' // Remove top positioning
+            });
+
+
+            // Hide close button
             closeModal.hide();
 
-
-            // Vô hiệu hóa tất cả tương tác nền
-            $('.box_kichhoat').css({
-                'pointer-events': 'all'
-            });
-
-            // Cho phép tương tác với content modal
-            modalContent.css({
-                'pointer-events': 'auto',
-                'position': 'relative',
-                'z-index': '10000'
-            });
-
-            // Vô hiệu hóa tất cả trừ nút kích hoạt và box_xuly
+            // Only allow interaction with activation button
             modalContent.find('*:not(#sudung_sodu, .box_xuly, .box_xuly *)').css({
-                'pointer-events': 'none',
-                'opacity': '1'
+                'pointer-events': 'none'
             });
 
-            // Làm nổi bật nút kích hoạt
+            // Highlight activation button
             $('#sudung_sodu').css({
                 'pointer-events': 'auto',
                 'opacity': '1',
@@ -611,81 +541,82 @@
                 'transition': 'all 0.3s ease'
             });
 
-            // Thêm thông báo hết hạn
+            // Add warning message
             if (!$('.warning-message').length) {
                 $('.box_thongbao').prepend(`
-            <div class="warning-message" style="background: #fff3cd; color: #856404; padding: 15px; margin-bottom: 15px; border-radius: 4px; text-align: center;">
-                <strong>⚠️ Đã hết thời gian dùng thử!</strong><br>
-                Vui lòng kích hoạt để tiếp tục sử dụng.
-            </div>
-        `);
+                    <div class="warning-message" style="background: #fff3cd; color: #856404; padding: 15px; margin-bottom: 15px; border-radius: 4px; text-align: center;">
+                        <strong>⚠️ Đã hết thời gian dùng thử!</strong><br>
+                        Vui lòng kích hoạt để tiếp tục sử dụng.
+                    </div>
+                `);
             }
 
-            // Thêm handler để chặn click outside
-            modal.off('click').on('click', function (e) {
-                if ($(e.target).is(modal)) {
-                    return false;
-                }
-            });
-        }
-        function updateCountdown() {
-            let now = new Date().getTime();
-            let timeLeft = endTime - now;
-
-            if (timeLeft <= 0) {
-                $countdownTimer.text("Hết thời gian!");
-                showExpiredModal();
-                if (countdownInterval) {
-                    clearInterval(countdownInterval);
-                }
-
-                return;
-            }
-
-            let days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-            let hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            let minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-            let seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-
-            $('.custom_days').text(days.toString().padStart(2, '0'));
-            $('.custom_hours').text(hours.toString().padStart(2, '0'));
-            $('.custom_minutes').text(minutes.toString().padStart(2, '0'));
-            $('.custom_seconds').text(seconds.toString().padStart(2, '0'));
+            // Prevent any closing attempts
+            modal.off('click');
+            $(document).off('keyup.modal');
+            closeModal.off('click');
         }
 
-        // Xử lý các sự kiện click
-        closeModal.on('click', function (e) {
-            e.preventDefault();
+        // Check expired status on page load
+        function checkExpired() {
             let now = new Date().getTime();
-            if (endTime - now > 0) {
-                modal.fadeOut(300);
+            if (now >= endTime) {
+                blockPageInteraction();
+                return true;
             }
-        });
+            return false;
+        }
 
-        // Kiểm tra khi tải trang
-        let now = new Date().getTime();
-        if (endTime && now >= endTime) {
-            showExpiredModal();
-        } else {
-            // Khởi tạo countdown
-            updateCountdown();
-            countdownInterval = setInterval(updateCountdown, 1000);
+        // Initialize on page load
+        if (!isNaN(endTime)) {
+            if (!checkExpired()) {
+                updateCountdown();
+                countdownInterval = setInterval(function () {
+                    let now = new Date().getTime();
+                    let timeLeft = endTime - now;
+
+                    if (timeLeft <= 0) {
+                        clearInterval(countdownInterval);
+                        blockPageInteraction();
+                    } else {
+                        updateCountdown();
+                    }
+                }, 1000);
+            }
         }
     });
 </script>
 <script>
-    $(document).ready(function () {
-        // Xử lý nút "Kích hoạt tài khoản tại đây" (.open_modal)
-        $('.open_modal').off('click').on('click', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log("Nút .open_modal được bấm");
-            window.showKichHoatPopup();
+    function showExpiredModal() {
+        const modal = $('.box_kichhoat');
+
+        // Remove any inline styles first
+        modal.removeAttr('style');
+        $('.box_kichhoat_content').removeAttr('style');
+
+        // Apply our classes
+        modal.addClass('show').css({
+            'display': 'flex',
+            'justify-content': 'center',
+            'align-items': 'center'
         });
 
-        // Xử lý nút "Kích hoạt" (#sudung_sodu)
-        $('body').off('click', '#sudung_sodu').on('click', '#sudung_sodu', function () {
-            console.log("Nút Kích hoạt được bấm");
+        $('.box_kichhoat_content').css({
+            'background': '#fff',
+            'max-width': '500px',
+            'width': '90%',
+            'margin': '0 auto',
+            'padding': '20px',
+            'border-radius': '8px',
+            'box-shadow': '0 2px 10px rgba(0,0,0,0.1)',
+            'position': 'relative'
+        });
+    }
+</script>
+<script>
+    $(document).ready(function () {
+        // Xử lý nút kích hoạt
+        $('#sudung_sodu').on('click', function () {
             $('.box_confirm').css({
                 'display': 'flex',
                 'background-color': 'rgba(0, 0, 0, 0.5)',
@@ -694,69 +625,55 @@
                 'top': '0',
                 'left': '0',
                 'width': '100%',
-                'height': '100%',
-                'justify-content': 'center',
-                'align-items': 'center'
+                'height': '100%'
             });
 
-            // Xử lý nút "Thực hiện"
+            // Xử lý nút xác nhận
             $('#confirm_yes').off('click').on('click', function () {
-                console.log("Nút Thực hiện được bấm");
                 $('.box_confirm').hide();
                 $('.box_xuly').html('<i class="fa fa-refresh fa-spin"></i> Hệ thống đang xử lý...');
 
-                // Gọi API kích hoạt
                 $.ajax({
                     url: "/ncc/process.php",
-                    type: "post",
+                    type: "POST",
                     data: {
                         action: 'sudung_sodu'
                     },
                     success: function (response) {
-                        console.log("Phản hồi từ server:", response);
                         try {
                             const info = JSON.parse(response);
-                            setTimeout(function () {
-                                switch (info.ok) {
-                                    case 1: // Thành công
-                                        $('.box_xuly').html(info.thongbao);
-                                        if ($('#status_button').length) {
-                                            $('#status_button').html(
-                                                '<button style="color: #ffffff; display: block; margin-bottom: 5px;"><p style="text-align: center; margin: 0;">Bạn đã là thành viên chính thức</p></button>'
-                                            );
-                                        }
-                                        setTimeout(() => location.reload(), 2000);
-                                        break;
-                                    case 0: // Cần nạp thêm tiền
-                                        $('.title_note, .box_sotien, .box_thongbao').remove();
-                                        $('.sudung_sodu, #xacnhan_kichhoat, #sudung_sodu').remove();
-                                        if ($('#text_note').length) {
-                                            $('#text_note').html('Chuyển khoản để hoàn thành giao dịch');
-                                        }
-                                        $('.box_xuly').html(info.step2);
-                                        break;
-                                    case 2: // Lỗi xử lý
-                                        $('.box_xuly').html(info.thongbao);
-                                        break;
-                                    default:
-                                        $('.box_xuly').html('Có lỗi không xác định xảy ra');
-                                }
-                            }, 2000);
+                            if (info.ok === 1 && !info.step2) {
+                                // Kích hoạt thành công
+                                $('.box_xuly').html(info.thongbao);
+                                setTimeout(function () {
+                                    location.reload();
+                                }, 2000);
+                            } else if (info.show_step2) {
+                                // Cần nạp thêm tiền - chuyển sang step2
+                                $('.title_note').remove();
+                                $('.box_sotien').remove();
+                                $('.box_thongbao').remove();
+                                $('.sudung_sodu').remove();
+                                $('#xacnhan_kichhoat').remove();
+                                $('#sudung_sodu').remove();
+                                $('#text_note').html('Chuyển khoản để hoàn thành giao dịch');
+                                $('.box_xuly').html(info.step2);
+                            } else {
+                                // Lỗi khác
+                                $('.box_xuly').html(info.thongbao);
+                            }
                         } catch (e) {
-                            console.error("Lỗi phân tích JSON:", e);
-                            $('.box_xuly').html('Lỗi xử lý dữ liệu từ máy chủ');
+                            $('.box_xuly').html('Có lỗi xử lý dữ liệu');
                         }
                     },
-                    error: function (xhr, status, error) {
-                        console.error("Lỗi AJAX:", error);
-                        $('.box_xuly').html('Lỗi kết nối đến máy chủ');
+                    error: function () {
+                        $('.box_xuly').html('Lỗi kết nối máy chủ');
                     }
                 });
             });
 
-            // Xử lý nút "Hủy"
+            // Xử lý nút hủy
             $('#confirm_no').off('click').on('click', function () {
-                console.log("Nút Hủy được bấm");
                 $('.box_confirm').fadeOut(300);
             });
         });

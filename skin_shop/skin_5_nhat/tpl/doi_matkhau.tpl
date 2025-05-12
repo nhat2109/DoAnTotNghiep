@@ -3,8 +3,8 @@
 <body>
     {box_header}
     <section class="bread-crumb margin-bottom-10">
-        <div class="container">
-            <div class="row">
+        <div class="container" >
+            <div class="row" style="background-color: #fff; box-shadow: 0 1px 2px 0 rgba(60, 64, 67, .1), 0 2px 6px 2px rgba(60, 64, 67, .15); border-radius: 4px;padding-right: 20px; padding-left: 20px;">
                 <div class="col-xs-12">
                     <ul class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
                         <li class="home" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
@@ -24,7 +24,7 @@
         </div>
     </section>
     <div class="container mr-bottom-20">
-        <div class="row">
+        <div class="row" style="background-color: #fff; box-shadow: 0 1px 2px 0 rgba(60, 64, 67, .1), 0 2px 6px 2px rgba(60, 64, 67, .15); border-radius: 4px;padding-right: 20px; padding-left: 20px;">
             <div class="container_member">
                 <div class="box_left">
                     <div class="avatar">

@@ -6,6 +6,7 @@ include '../includes/tlca_world.php';
 $check = $tlca_do->load('class_check');
 $class_index = $tlca_do->load('class_ncc');
 $class_viettel = $tlca_do->load('class_viettel');
+$class_supership = $tlca_do->load('class_supership');
 $skin = $tlca_do->load('class_skin_cpanel');
 
 // Kiểm tra đăng nhập
@@ -24,7 +25,11 @@ if (!$check_supplier) {
 }
 $supplier = mysqli_fetch_assoc($check_supplier);
 if (!$supplier) {
-    die('Lỗi: Không tìm thấy user với user_id = ' . $user_id);
+    // Nếu user_id không tồn tại, xóa cookie và chuyển hướng
+    setcookie('user_id', '', time() - 3600, '/');
+    error_log('Invalid user_id: ' . $user_id . '. Cookie cleared. Redirecting to /ncc/login.php');
+    header('Location: /ncc/login.php');
+    exit;
 }
 
 // Lấy thông tin từ user_ncc (nếu đã có)
@@ -48,7 +53,7 @@ if (!$check_bank) {
 }
 $has_bank = mysqli_num_rows($check_bank) > 0;
 
-if ($supplier['ctv'] != 1) {
+if ($supplier['ctv'] != 1 && $supplier['ctv'] != 2) {
     error_log('Redirecting to / from welcome_setup.php');
     header('Location: /');
     exit;
@@ -72,27 +77,29 @@ if (!isset($_GET['step'])) {
     if (!empty($ncc['email']) && !empty($ncc['maso_thue'])) {
         if (!empty($supplier['dia_chi']) && !empty($supplier['tinh'])) {
             if (!$has_bank) {
-                $current_step = 3; // Chuyển đến bước 3 (ngân hàng)
+                $current_step = 3;
             } else {
-                $current_step = 1; // Mặc định nếu tất cả đã hoàn thành
+                $current_step = 1;
             }
         } else {
-            $current_step = 2; // Chuyển đến bước 2 (địa chỉ giao nhận)
+            $current_step = 2;
         }
     } else {
-        $current_step = 1; // Bắt đầu từ bước 1 (thông tin cơ bản)
+        $current_step = 1;
     }
 }
 
 // Kiểm tra giới hạn step
 if ($current_step < 1 || $current_step > 3) $current_step = 1;
 
+// Khởi tạo biến lỗi
+$error = '';
+
 // Xử lý form
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = isset($_POST['action']) ? $_POST['action'] : '';
 
     switch ($action) {
-
         case 'save_step1':
             // Lấy dữ liệu từ form
             $name = strip_tags(addslashes($_POST['name']));
@@ -135,7 +142,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $result = mysqli_query($conn, $check_email_sql);
                 
                 if (mysqli_num_rows($result) > 0) {
-                    $error = "Email đã được sử dụng bởi một người dùng khác";
+                    $error = "Email đã được sử dụng. Vui lòng nhập email khác.";
+                    // Lưu dữ liệu tạm để hiển thị lại trong form
+                    $_SESSION['temp_step1_data'] = [
+                        'name' => $name,
+                        'mobile' => $mobile,
+                        'email' => '', // Xóa email để yêu cầu nhập lại
+                        'maso_thue' => $maso_thue,
+                        'maso_thue_cap' => $maso_thue_cap,
+                        'maso_thue_noicap' => $maso_thue_noicap,
+                        'ten_daidien' => $ten_daidien,
+                        'chucvu' => $chucvu,
+                        'tinh' => $tinh,
+                        'huyen' => $huyen,
+                        'xa' => $xa,
+                        'dia_chi' => $dia_chi
+                    ];
                 } else {
                     // Lưu thông tin vào bảng user_ncc
                     $current_time = strtotime('now');
@@ -167,6 +189,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         WHERE user_id = '$user_id'";
                     
                     if (mysqli_query($conn, $sql) && mysqli_query($conn, $update_user_info)) {
+                        // Xóa dữ liệu tạm sau khi lưu thành công
+                        unset($_SESSION['temp_step1_data']);
                         error_log('Redirecting to /ncc/welcome_setup.php?step=2 from save_step1');
                         header('Location: /ncc/welcome_setup.php?step=2');
                         exit;
@@ -179,6 +203,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         case 'save_step2':
             // Lấy dữ liệu từ form
+            $ten_kho = strip_tags(addslashes($_POST['ten_kho']));
             $fullname = strip_tags(addslashes($_POST['fullname']));
             $mobile = preg_replace('/[^0-9]/', '', $_POST['mobile']);
             $tinh = intval($_POST['tinh']);
@@ -187,7 +212,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $dia_chi = addslashes($_POST['dia_chi']);
 
             // Kiểm tra dữ liệu
-            if (empty($fullname)) {
+            if(empty($ten_kho)){
+                $error = "Vui lòng nhập tên kho hàng";
+            } elseif (empty($fullname)) {
                 $error = "Vui lòng nhập họ tên người nhận";
             } elseif (strlen($mobile) < 10) {
                 $error = "Vui lòng nhập số điện thoại hợp lệ";
@@ -215,6 +242,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     if ($has_transport) {
                         // Cập nhật bản ghi hiện có trong bảng transport
                         $transport_sql = "UPDATE transport SET
+                            ten_kho = '$ten_kho',
                             username = '$username',
                             fullname = '$fullname',
                             mobile = '$mobile',
@@ -230,17 +258,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     } else {
                         // Thêm bản ghi mới vào bảng transport
                         $transport_sql = "INSERT INTO transport (
-                            user_id, username, fullname, mobile, province, district, ward, 
+                            user_id,ma_kho,ten_kho, username, fullname, mobile, province, district, ward, 
                             address_detail, is_default, is_pickup, is_return, 
                             created_at, updated_at
                         ) VALUES (
-                            '$user_id', '$username', '$fullname', '$mobile', '$tinh', '$huyen', '$xa', 
+                            '$user_id', '$ma_kho', '$ten_kho', '$username', '$fullname', '$mobile', '$tinh', '$huyen', '$xa', 
                             '$dia_chi', 1, 1, 1, 
                             '$current_time', '$current_time'
                         )";
+
                     }
 
                     if (mysqli_query($conn, $transport_sql)) {
+                        $thongtin_huyen=mysqli_query($conn,"SELECT huyen_moi.*,tinh_moi.tieu_de AS ten_tinh FROM huyen_moi LEFT JOIN tinh_moi ON huyen_moi.tinh = tinh_moi.id WHERE huyen_moi.id = '$huyen'");
+                        $r_tt_huyen=mysqli_fetch_assoc($thongtin_huyen);
+                        $ten_huyen=$r_tt_huyen['tieu_de'];
+                        $ten_tinh=$r_tt_huyen['ten_tinh'];
+                        $thongtin_xa=mysqli_query($conn,"SELECT xa_moi.*,huyen_moi.tieu_de AS ten_huyen FROM xa_moi LEFT JOIN huyen_moi ON xa_moi.huyen = huyen_moi.id WHERE xa_moi.id = '$xa'");
+                        $r_tt_xa=mysqli_fetch_assoc($thongtin_xa);
+                        $ten_xa=$r_tt_xa['tieu_de'];
+                        $dia_chi_kho=$dia_chi.",".$ten_xa.",".$ten_huyen.",".$ten_tinh;
+                        $ten_kho=$user_id.'.'.$ten_kho;
+                        $kq_taokho=$class_supership->tao_kho($ten_kho, $mobile, $fullname, $dia_chi_kho, $ten_tinh, $ten_huyen, $ten_xa, 2, '');$tach_kq_taokho=json_decode($kq_taokho,true);
+                        $ma_kho=$tach_kq_taokho['results']['code'];
+                        $thongtin_moi=mysqli_query($conn,"SELECT * FROM transport WHERE user_id = '$user_id'");
+                        $r_tt_moi=mysqli_fetch_assoc($thongtin_moi);
+                        mysqli_query($conn,"UPDATE transport SET ma_kho='$ma_kho' WHERE id='{$r_tt_moi['id']}'");
                         error_log('Redirecting to /ncc/welcome_setup.php?step=3 from save_step2');
                         header('Location: /ncc/welcome_setup.php?step=3');
                         exit;
@@ -252,6 +295,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
             break;
+
         case 'save_step3':
             // Lấy dữ liệu từ form
             $bank_id = intval($_POST['bank_id']);
@@ -268,8 +312,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } elseif (empty($account_holder)) {
                 $error = "Vui lòng nhập tên chủ tài khoản";
             } else {
-               // $current_time = date('Y-m-d H:i:s'); // Định dạng chuỗi ngày giờ
-               $current_time = strtotime('now');
+                $current_time = strtotime('now');
                 // Thêm tài khoản ngân hàng
                 $sql = "INSERT INTO bank_accounts (
                     user_id, bank_id, account_name, id_number, account_number, account_holder, is_default, created_at, updated_at
@@ -294,33 +337,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             break;
     }
 }
+
 // Setup variables for the template
-$email = $supplier['email'] ?? '';
-$name = $supplier['name'] ?? '';
-$mobile = $supplier['mobile'] ?? '';
-$maso_thue = $supplier['maso_thue'] ?? '';
-// Setup variables for the template
-$email = $ncc['email'] ?? '';
-// $name = $ncc['name'] ?? '';
-// $mobile = $ncc['mobile'] ?? '';
-// $maso_thue = $ncc['maso_thue'] ?? '';
-$maso_thue_cap = $ncc['maso_thue_cap'] ?? '';
-$maso_thue_noicap = $ncc['maso_thue_noicap'] ?? '';
-$ten_daidien = $ncc['ten_daidien'] ?? '';
-$chucvu = $ncc['chucvu'] ?? '';
-$dia_chi = $ncc['dia_chi'] ?? '';
-$option_tinh = $class_index->list_option_tinh($conn, $ncc['tinh'] ?? $supplier['tinh']);
-$option_huyen = $class_index->list_option_huyen($conn, $ncc['tinh'] ?? $supplier['tinh'], $ncc['huyen'] ?? $supplier['huyen']);
-$option_xa = $class_index->list_option_xa($conn, $ncc['huyen'] ?? $supplier['huyen'], $ncc['xa'] ?? $supplier['xa']);
+// Ưu tiên dữ liệu từ temp_step1_data nếu có (khi email trùng)
+$temp_data = isset($_SESSION['temp_step1_data']) ? $_SESSION['temp_step1_data'] : [];
+$email = isset($temp_data['email']) ? $temp_data['email'] : ($ncc['email'] ?? $supplier['email'] ?? '');
+$name = isset($temp_data['name']) ? $temp_data['name'] : ($ncc['name'] ?? $supplier['name'] ?? '');
+$mobile = isset($temp_data['mobile']) ? $temp_data['mobile'] : ($ncc['mobile'] ?? $supplier['mobile'] ?? '');
+$maso_thue = isset($temp_data['maso_thue']) ? $temp_data['maso_thue'] : ($ncc['maso_thue'] ?? $supplier['maso_thue'] ?? '');
+$maso_thue_cap = isset($temp_data['maso_thue_cap']) ? $temp_data['maso_thue_cap'] : ($ncc['maso_thue_cap'] ?? '');
+$maso_thue_noicap = isset($temp_data['maso_thue_noicap']) ? $temp_data['maso_thue_noicap'] : ($ncc['maso_thue_noicap'] ?? '');
+$ten_daidien = isset($temp_data['ten_daidien']) ? $temp_data['ten_daidien'] : ($ncc['ten_daidien'] ?? '');
+$chucvu = isset($temp_data['chucvu']) ? $temp_data['chucvu'] : ($ncc['chucvu'] ?? '');
+$dia_chi = isset($temp_data['dia_chi']) ? $temp_data['dia_chi'] : ($ncc['dia_chi'] ?? $supplier['dia_chi'] ?? '');
+$tinh = isset($temp_data['tinh']) ? $temp_data['tinh'] : ($ncc['tinh'] ?? $supplier['tinh'] ?? 0);
+$huyen = isset($temp_data['huyen']) ? $temp_data['huyen'] : ($ncc['huyen'] ?? $supplier['huyen'] ?? 0);
+$xa = isset($temp_data['xa']) ? $temp_data['xa'] : ($ncc['xa'] ?? $supplier['xa'] ?? 0);
+
+$option_tinh = $class_index->list_option_tinh($conn, $tinh);
+$option_huyen = $class_index->list_option_huyen($conn, $tinh, $huyen);
+$option_xa = $class_index->list_option_xa($conn, $huyen, $xa);
 $bank_options = get_bank_options($conn);
 $step1_completed = !empty($ncc['email']) && !empty($ncc['maso_thue']);
 $step2_completed = !empty($supplier['dia_chi']) && !empty($supplier['tinh']);
 $step3_completed = $has_bank;
 
-// cho step 1
-$option_tinh_step1 = $class_index->list_option_tinh($conn, $ncc['tinh'] ?? $supplier['tinh']);
-$option_huyen_step1 = $class_index->list_option_huyen($conn, $ncc['tinh'] ?? $supplier['tinh'], $ncc['huyen'] ?? $supplier['huyen']);
-$option_xa_step1 = $class_index->list_option_xa($conn, $ncc['huyen'] ?? $supplier['huyen'], $ncc['xa'] ?? $supplier['xa']);
+// Cho step 1
+$option_tinh_step1 = $class_index->list_option_tinh($conn, $tinh);
+$option_huyen_step1 = $class_index->list_option_huyen($conn, $tinh, $huyen);
+$option_xa_step1 = $class_index->list_option_xa($conn, $huyen, $xa);
 
 // Include the template directly
 include '../skin_ncc/welcome_setup.tpl';
@@ -357,3 +402,4 @@ function remove_accents($str) {
     );
     return strtoupper(strtr($str, $accents));
 }
+?>

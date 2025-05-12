@@ -1,6 +1,6 @@
 <div class="box_right">
     <div class="box_right_content">
-        <div class="box_profile" style="width: calc(100% - 40px);">
+        <div class="box_profile">
             <div class="col_100">
                 <div class="page_title">
                     <h1 class="undefined">Thông tin giao hàng</h1>
@@ -9,13 +9,13 @@
                 </div>
                 <div class="address note">
                     <p><i class="fa fa-user"></i> {ho_ten}</p>
-                    <p><i class="fa fa-map-marker"></i> {dia_chi},{ten_xa},{ten_huyen}, {ten_tinh}</p>
+                    <p><i class="fa fa-map-marker"></i> {dia_chi}, {huyen}, {tinh}</p>
                     <p><i class="fa fa-phone"> </i><a href="tel:{dien_thoai}"> {dien_thoai}</a></p>
                 </div>
             </div>
             <div style="clear: both;"></div>
             <div class="page_title">
-                <h1 class="undefined">Chi tiết đơn hàng</h1>
+                <h1 class="undefined">Chi tiết đơn hàng sàn TMĐT</h1>
                 <div class="line"></div>
                 <hr>
             </div>
@@ -27,7 +27,16 @@
                     <label for="">Ngày tạo: </label>{date_post}
                 </div>
                 <div class="form_group">
-                    <label for="">Tình trạng: <span class="color_red">{status}</span></label>
+                    <label for="">Tình trạng:</label>
+                    <select class="form_control" name="status">
+                        <option value="0">Chờ xử lý</option>
+                        <option value="1">Đã tiếp nhận đơn</option>
+                        <option value="2">Đã giao đơn vị vận chuyển</option>
+                        <option value="3">Yêu cầu hủy đơn</option>
+                        <option value="4">Xác nhận hủy đơn</option>
+                        <option value="5">Giao thành công</option>
+                        <option value="6">Đã hoàn đơn</option>
+                    </select>
                 </div>
             </div>
             <div style="clear: both;"></div>
@@ -35,12 +44,11 @@
                 <table id="order_details" class="table table-cart">
                     <thead class="thead-default">
                         <tr>
-                            <th align="left" width="100">Mã</th>
-                            <th align="left">Sản phẩm</th>
-                            <th width="100">Giá</th>
-                            <th width="100">Giảm</th>
-                            <th width="80">Số lượng</th>
-                            <th width="120">Thành tiền</th>
+                            <th>Minh họa</th>
+                            <th align="left">Tên sản phẩm</th>
+                            <th>Giá</th>
+                            <th>Số lượng</th>
+                            <th>Thành tiền</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -54,31 +62,19 @@
                             <td class="total money right">{tamtinh}₫</td>
                         </tr>
                         <tr class="order_summary ">
-                            <td class="fix-width-200" colspan="">Phí vận chuyển (Giao hàng tận nơi):</td>
+                            <td class="fix-width-200" colspan="">Phí vận chuyển:</td>
                             <td class="total money right">{phi_ship}</td>
-                        </tr>
-                        <tr class="order_summary " style="color: red;">
-                            <td class="fix-width-200" colspan="">Trả tiền ship:</td>
-                            <td class="total money right">{chiu_ship}</td>
                         </tr>
                         <tr class="order_summary order_total">
                             <td class="fix-width-200">Tổng tiền:</td>
                             <td class="right"><strong>{tongtien}₫ </strong></td>
                         </tr>
-                        <tr class="order_summary order_total">
-                            <td class="fix-width-200">Tiền COD:</td>
-                            <td class="right"><strong>{cod}₫ </strong></td>
-                        </tr>
-                        <tr class="order_summary order_total">
-                            <td class="fix-width-200">Tiền thu của khách:</td>
-                            <td class="right"><strong>{tong_thu}₫ </strong></td>
-                        </tr>
-                        <tr class="order_summary order_total" style="color: red;">
-                            <td class="fix-width-200">Hoa hồng:</td>
-                            <td class="right"><strong>{hoahong}₫ </strong></td>
-                        </tr>
                     </tfoot>
                 </table>
+            </div>
+            <div class="form_group">
+                <input type="hidden" name="id" value="{id}">
+                <button name="edit_donhang_socdo" class="button_all"> Lưu thay đổi </button>
             </div>
         </div>
     </div>
@@ -86,17 +82,7 @@
 <script src="/js/jquery-3.2.1.min.js"></script>
 <script type="text/javascript">
     var status = '{status}';
+    console.log(status);
+    
     $('select[name=status]').val(status);
-</script>
-<script type="text/javascript">
-    $(document).ready(function(){
-        total_height=0;
-        $('.box_menu_left .menu_li, .box_menu_left .menu_header').each(function(){
-            total_height+=$(this).outerHeight();
-            if($(this).attr('id')=='menu_donhang'){
-                vitri=total_height - 200;
-            }
-        });
-        $('.box_menu_left').animate({scrollTop: vitri}, 1000);
-    });
 </script>

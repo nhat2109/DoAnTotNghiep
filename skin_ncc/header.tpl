@@ -20,7 +20,7 @@
   <link rel="stylesheet" type="text/css" href="/fonts/icofont/icofont/icofont.min.css">
   <link rel="stylesheet" type="text/css" href="/skin_ncc/css/style.css?t=<?php echo time();?>">
   <script src="/js/jquery-3.2.1.min.js"></script>
-  <script type="text/javascript" src="https://chat.giadungluxury.com/socket.io/socket.io.js"></script>
+  <script type="text/javascript" src="https://chat.socdo.vn/socket.io/socket.io.js"></script>
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-JJTPJMXVXB"></script>
   <script>

@@ -12687,7 +12687,7 @@ textarea.form-control {
 /*11.2 Order*/
 #order_payment,
 #order_shipping {
-    background: #fff;
+    /* background: #fff; */
     padding: 10px 0;
 }
 
@@ -12698,7 +12698,7 @@ textarea.form-control {
 }
 
 .totalorders {
-    background: #fff;
+    /* background: #fff; */
     border-color: #e1e1e1;
 }
 

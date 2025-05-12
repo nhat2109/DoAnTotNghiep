@@ -41,7 +41,7 @@
 				} else {
 					$ok = 1;
 					$thongbao = 'Đã thêm coupon mới thành công';
-					mysqli_query($conn, "INSERT INTO coupon(shop,ma,loai,kieu,sanpham,giam,start,expired,status)VALUES('$user_id','$ma','$loai','$kieu','$sanpham','$giam','$start','$expired','0')");
+					mysqli_query($conn, "INSERT INTO coupon(shop,ma,loai,kieu,sanpham,dieu_kien,giam,start,expired,status,img_loai)VALUES('$user_id','$ma','$loai','$kieu','$sanpham',0,'$giam','$start','$expired','0','')");
 				}
 			}
 			$info = array(
