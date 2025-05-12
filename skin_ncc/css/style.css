@@ -9737,7 +9737,7 @@ input:checked+.slider:before {
 }
 
 .page_body .box_right .box_right_content .box_profile .box_list_donhang .box_list_right {
-    width: calc(50% - 5px);
+    width: calc(100% - 5px);
     border: 1px solid #eee;
     box-shadow: 0 4px 8px rgb(0 0 0 / 10%);
     border-radius: 5px;

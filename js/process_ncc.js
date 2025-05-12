@@ -12,7 +12,7 @@ function scrollSmoothToBottom(id) {
     }, 200);
 }
 //var socket =io("http://localhost:3000");
-var socket = io("https://chat.giadungluxury.com");
+var socket = io("https://chat.socdo.vn");
 function create_cookie(name, value, days2expire, path) {
     var date = new Date();
     date.setTime(date.getTime() + (days2expire * 24 * 60 * 60 * 1000));
@@ -2555,34 +2555,34 @@ $(document).ready(function () {
         }, 1000);
 
     });
-    $('.select_product_sub').on('click', function () {
-        $('.box_select_product .box_list').html('<div class="loading_product"><i class="fa fa-refresh fa-spin"></i> Đang tải dữ liệu...</div>');
-        $('.box_select_product').show();
-        $('.box_select_product .box_bottom button').attr('loai', 'sub_product');
-        var sp_id = '';
-        $('#list_product_main .li_product,#list_product_sub .li_product').each(function () {
-            sp_id += $(this).attr('sp') + ',';
-        });
-        setTimeout(function () {
-            $.ajax({
-                url: "/ncc/process.php",
-                type: "post",
-                data: {
-                    action: 'load_product_sub',
-                    list_id: sp_id,
-                    page: 1,
-                },
-                success: function (kq) {
-                    var info = JSON.parse(kq);
-                    $('.box_select_product .box_list').html(info.list);
-                    $('.box_select_product .box_list').attr('page', info.page);
-                    $('.box_select_product .box_list').attr('tiep', info.tiep);
-                    $('.box_select_product .box_list').attr('loaded', 1);
-                }
-            });
-        }, 1000);
+    // $('.select_product_sub').on('click', function () {
+    //     $('.box_select_product .box_list').html('<div class="loading_product"><i class="fa fa-refresh fa-spin"></i> Đang tải dữ liệu...</div>');
+    //     $('.box_select_product').show();
+    //     $('.box_select_product .box_bottom button').attr('loai', 'sub_product');
+    //     var sp_id = '';
+    //     $('#list_product_main .li_product,#list_product_sub .li_product').each(function () {
+    //         sp_id += $(this).attr('sp') + ',';
+    //     });
+    //     setTimeout(function () {
+    //         $.ajax({
+    //             url: "/ncc/process.php",
+    //             type: "post",
+    //             data: {
+    //                 action: 'load_product_sub',
+    //                 list_id: sp_id,
+    //                 page: 1,
+    //             },
+    //             success: function (kq) {
+    //                 var info = JSON.parse(kq);
+    //                 $('.box_select_product .box_list').html(info.list);
+    //                 $('.box_select_product .box_list').attr('page', info.page);
+    //                 $('.box_select_product .box_list').attr('tiep', info.tiep);
+    //                 $('.box_select_product .box_list').attr('loaded', 1);
+    //             }
+    //         });
+    //     }, 1000);
 
-    });
+    // });
     $('.search_deal').on('click', function () {
         key = $('input[name=key_deal]').val();
         loai = $('button[name=select_main_product]').attr('loai');
@@ -3099,112 +3099,112 @@ $(document).ready(function () {
         }
     });
     /////////////////////////////
-    $('button[name=edit_flash_sale]').click(function () {
-        tieu_de = $('input[name=tieu_de]').val();
-        date_start = $('input[name=date_start]').val();
-        date_end = $('input[name=date_end]').val();
-        id = $('input[name=id]').val();
-        var sub_product = '';
-        var product_length = $('#list_product_sub .li_product').length;
-        s = 0;
-        list = '';
-        sub_ok = 1;
-        $('#list_product_sub .li_product').each(function () {
-            sub_product += $(this).attr('sp') + ',';
-            sp_id = $(this).attr('sp');
-            gia = $(this).find('input[name^=gia_deal]').val();
-            s++;
-            if (s == product_length) {
-                list += '"' + sp_id + '":{"gia":"' + gia + '"}';
-            } else {
-                list += '"' + sp_id + '":{"gia":"' + gia + '"},';
-            }
-            if (gia == '') {
-                sub_ok = 0;
-            }
-        });
-        var list_product_sub = '{' + list + '}';
-        $('.load_overlay').show();
-        $('.load_process').fadeIn();
-        if (tieu_de == '') {
-            setTimeout(function () {
-                $('.load_note').html('Vui lòng nhập tên chương trình');
-            }, 500);
-            setTimeout(function () {
-                $('.load_process').hide();
-                $('.load_note').html('Hệ thống đang xử lý');
-                $('.load_overlay').hide();
-            }, 1500);
-            $('input[name=tieu_de]').focus();
+    // $('button[name=edit_flash_sale]').click(function () {
+    //     tieu_de = $('input[name=tieu_de]').val();
+    //     date_start = $('input[name=date_start]').val();
+    //     date_end = $('input[name=date_end]').val();
+    //     id = $('input[name=id]').val();
+    //     var sub_product = '';
+    //     var product_length = $('#list_product_sub .li_product').length;
+    //     s = 0;
+    //     list = '';
+    //     sub_ok = 1;
+    //     $('#list_product_sub .li_product').each(function () {
+    //         sub_product += $(this).attr('sp') + ',';
+    //         sp_id = $(this).attr('sp');
+    //         gia = $(this).find('input[name^=gia_deal]').val();
+    //         s++;
+    //         if (s == product_length) {
+    //             list += '"' + sp_id + '":{"gia":"' + gia + '"}';
+    //         } else {
+    //             list += '"' + sp_id + '":{"gia":"' + gia + '"},';
+    //         }
+    //         if (gia == '') {
+    //             sub_ok = 0;
+    //         }
+    //     });
+    //     var list_product_sub = '{' + list + '}';
+    //     $('.load_overlay').show();
+    //     $('.load_process').fadeIn();
+    //     if (tieu_de == '') {
+    //         setTimeout(function () {
+    //             $('.load_note').html('Vui lòng nhập tên chương trình');
+    //         }, 500);
+    //         setTimeout(function () {
+    //             $('.load_process').hide();
+    //             $('.load_note').html('Hệ thống đang xử lý');
+    //             $('.load_overlay').hide();
+    //         }, 1500);
+    //         $('input[name=tieu_de]').focus();
 
-        } else if (date_start == '') {
-            setTimeout(function () {
-                $('.load_note').html('Vui lòng nhập thời gian bắt đầu');
-            }, 500);
-            setTimeout(function () {
-                $('.load_process').hide();
-                $('.load_note').html('Hệ thống đang xử lý');
-                $('.load_overlay').hide();
-            }, 1500);
-        } else if (date_end == '') {
-            setTimeout(function () {
-                $('.load_note').html('Vui lòng nhập thời gian kết thúc');
-            }, 500);
-            setTimeout(function () {
-                $('.load_process').hide();
-                $('.load_note').html('Hệ thống đang xử lý');
-                $('.load_overlay').hide();
-            }, 1500);
-        } else if (sub_product == '') {
-            setTimeout(function () {
-                $('.load_note').html('Vui lòng chọn sản phẩm');
-            }, 500);
-            setTimeout(function () {
-                $('.load_process').hide();
-                $('.load_note').html('Hệ thống đang xử lý');
-                $('.load_overlay').hide();
-            }, 1500);
+    //     } else if (date_start == '') {
+    //         setTimeout(function () {
+    //             $('.load_note').html('Vui lòng nhập thời gian bắt đầu');
+    //         }, 500);
+    //         setTimeout(function () {
+    //             $('.load_process').hide();
+    //             $('.load_note').html('Hệ thống đang xử lý');
+    //             $('.load_overlay').hide();
+    //         }, 1500);
+    //     } else if (date_end == '') {
+    //         setTimeout(function () {
+    //             $('.load_note').html('Vui lòng nhập thời gian kết thúc');
+    //         }, 500);
+    //         setTimeout(function () {
+    //             $('.load_process').hide();
+    //             $('.load_note').html('Hệ thống đang xử lý');
+    //             $('.load_overlay').hide();
+    //         }, 1500);
+    //     } else if (sub_product == '') {
+    //         setTimeout(function () {
+    //             $('.load_note').html('Vui lòng chọn sản phẩm');
+    //         }, 500);
+    //         setTimeout(function () {
+    //             $('.load_process').hide();
+    //             $('.load_note').html('Hệ thống đang xử lý');
+    //             $('.load_overlay').hide();
+    //         }, 1500);
 
-        } else if (sub_ok == 0) {
-            setTimeout(function () {
-                $('.load_note').html('Vui lòng nhập giá khuyến mại');
-            }, 500);
-            setTimeout(function () {
-                $('.load_process').hide();
-                $('.load_note').html('Hệ thống đang xử lý');
-                $('.load_overlay').hide();
-            }, 1500);
+    //     } else if (sub_ok == 0) {
+    //         setTimeout(function () {
+    //             $('.load_note').html('Vui lòng nhập giá khuyến mại');
+    //         }, 500);
+    //         setTimeout(function () {
+    //             $('.load_process').hide();
+    //             $('.load_note').html('Hệ thống đang xử lý');
+    //             $('.load_overlay').hide();
+    //         }, 1500);
 
-        } else {
-            $.ajax({
-                url: "/ncc/process.php",
-                type: "post",
-                data: {
-                    action: 'edit_flash_sale',
-                    tieu_de: tieu_de,
-                    sub_product: sub_product,
-                    list_product_sub: list_product_sub,
-                    date_start: date_start,
-                    date_end: date_end,
-                    id: id
-                },
-                success: function (kq) {
-                    var info = JSON.parse(kq);
-                    setTimeout(function () {
-                        $('.load_note').html(info.thongbao);
-                    }, 1000);
-                    setTimeout(function () {
-                        $('.load_process').hide();
-                        $('.load_note').html('Hệ thống đang xử lý');
-                        $('.load_overlay').hide();
-                        if (info.ok == 1) {
-                            window.location.reload();
-                        }
-                    }, 3000);
-                }
-            });
-        }
-    });
+    //     } else {
+    //         $.ajax({
+    //             url: "/ncc/process.php",
+    //             type: "post",
+    //             data: {
+    //                 action: 'edit_flash_sale',
+    //                 tieu_de: tieu_de,
+    //                 sub_product: sub_product,
+    //                 list_product_sub: list_product_sub,
+    //                 date_start: date_start,
+    //                 date_end: date_end,
+    //                 id: id
+    //             },
+    //             success: function (kq) {
+    //                 var info = JSON.parse(kq);
+    //                 setTimeout(function () {
+    //                     $('.load_note').html(info.thongbao);
+    //                 }, 1000);
+    //                 setTimeout(function () {
+    //                     $('.load_process').hide();
+    //                     $('.load_note').html('Hệ thống đang xử lý');
+    //                     $('.load_overlay').hide();
+    //                     if (info.ok == 1) {
+    //                         window.location.reload();
+    //                     }
+    //                 }, 3000);
+    //             }
+    //         });
+    //     }
+    // });
     if ($('.list_baiviet tr').length < 2 && $('.li_sanpham_drop').length < 2) {
         $('.load_sanpham button').hide();
     }
@@ -3374,6 +3374,7 @@ $(document).ready(function () {
         id = $('#button_thuchien').attr('post_id');
         loai = $('#button_thuchien').attr('loai');
         action = $('#button_thuchien').attr('action');
+        selectedIds = $('#button_thuchien').attr('data-ids');
         $('.box_pop').hide();
         $('.load_overlay').show();
         $('.load_process').fadeIn();
@@ -3383,7 +3384,8 @@ $(document).ready(function () {
             data: {
                 action: action,
                 loai: loai,
-                id: id
+                id: id,
+                'selectedIds[]': typeof selectedIds === 'string' ? JSON.parse(selectedIds) : selectedIds
             },
             success: function (kq) {
                 var info = JSON.parse(kq);
@@ -4771,17 +4773,83 @@ $(document).ready(function () {
     $("#popup").change(function () {
         readURL(this, 'preview-popup');
     });
-    /////////////////////////////
+    /////////////////////////////huyphuc12/05/2025
+    const uploadedFiles = [];
     $('.box_profile').on('click', '.button_select_photo', function () {
+        total_photo = $('.li_photo').length;
+        
+        if (total_photo < 8) {
         $('#photo-add').click();
+        } else {
+            setTimeout(function () {
+                $('.load_overlay').show();
+                $('.load_process').fadeIn();
+                $('.load_note').html('Bạn chỉ được phép chọn tối đa 8 ảnh đa chiều sản phẩm!');
+            }, 1000);
+            setTimeout(function () {
+                $('.load_process').hide();
+                $('.load_overlay').hide();
+                $('.load_note').html('');
+            }, 3000);
+        }
     });
     $('#photo-add').on('change', function () {
+        var files = $("input[name=file]")[0].files;
         var form_data = new FormData();
         form_data.append('action', 'upload_photo');
-        $.each($("input[name=file]")[0].files, function (i, file) {
+    
+        var filesToUpload = [];
+        var hasDuplicate = false;
+    
+        function isDuplicate(file) {
+            return uploadedFiles.some(f =>
+                f.name === file.name &&
+                f.size === file.size
+            );
+        }
+    
+        $.each(files, function (i, file) {
+            if (isDuplicate(file)) {
+                hasDuplicate = true;
+            } else {
+                filesToUpload.push(file);
+            }
+        });
+        const totalCurrentPhotos = uploadedFiles.length; // Số ảnh đã upload
+        const totalNewPhotos = files.length; // Số ảnh vừa chọn
+        const totalPhotosAfterUpload = totalCurrentPhotos + totalNewPhotos;
+        if (totalPhotosAfterUpload > 8) {
+            setTimeout(function () {
+                $('.load_overlay').show();
+                $('.load_process').fadeIn();
+                $('.load_note').html('Bạn chỉ được phép chọn tối đa 8 ảnh đa chiều sản phẩm!');
+            }, 1000);
+            setTimeout(function () {
+                $('.load_process').hide();
+                $('.load_overlay').hide();
+                $('.load_note').html('');
+            }, 3000);
+            $(this).val(''); // Reset input
+            return;
+        }
+        if (hasDuplicate) {
+            setTimeout(function () {
+                $('.load_overlay').show();
+                $('.load_process').fadeIn();
+                $('.load_note').html('Ảnh đa chiều sản phẩm không được phép trùng!');
+            }, 1000);
+            setTimeout(function () {
+                $('.load_process').hide();
+                $('.load_overlay').hide();
+                $('.load_note').html('');
+            }, 3000);
+            $(this).val('');
+            return;
+        }
+        $.each(filesToUpload, function (i, file) {
             form_data.append('file[]', file);
         });
-        //form_data.append('file', file_data);
+    
         $('.load_overlay').show();
         $('.load_process').fadeIn();
         $.ajax({
@@ -4793,7 +4861,6 @@ $(document).ready(function () {
             data: form_data,
             success: function (kq) {
                 var info = JSON.parse(kq);
-                console.log(info);
                 setTimeout(function () {
                     $('.load_note').html(info.thongbao);
                 }, 1000);
@@ -4803,19 +4870,33 @@ $(document).ready(function () {
                     $('.load_overlay').hide();
                     if (info.ok == 1) {
                         $('.list_photo').append(info.list);
+                        $.each(filesToUpload, function (i, file) {
+                            uploadedFiles.push({
+                                name: file.name,
+                                size: file.size,
+                            });
+                        });
+                        console.log(uploadedFiles); // Kiểm tra mảng đã được cập nhật chưa
                     }
                 }, 3000);
+            },
+            error: function () {
+                $('.load_process').hide();
+                $('.load_overlay').hide();
+                $('.load_note').html('Lỗi khi upload ảnh.');
             }
-
         });
+        
+        // Reset input
+        $(this).val('');
     });
-
-    //4-4
+    // 
+    //huyphuc12/05/2025
     $(document).ready(function () {
         $('.list_photo').on('click', '.fa-close', function () {
             var $photo = $(this).closest('.li_photo');
             var src = $photo.find('img').attr('src');
-
+            var name =$photo.find('img').attr('name_pt');
             var form_data = new FormData();
             form_data.append('src', src);
             form_data.append('action', 'delete_photo');
@@ -4832,6 +4913,12 @@ $(document).ready(function () {
                         $photo.fadeOut(300, function () {
                             $(this).remove();
                         });
+                     // Tìm và xoá phần tử trong uploadedFiles theo src
+                    const index = uploadedFiles.findIndex(f => f.name === name);
+                    if (index !== -1) {
+                        uploadedFiles.splice(index, 1);
+                    }
+                       
                     } else {
                         alert(response.thongbao || 'Xóa ảnh thất bại!');
                     }
@@ -4840,6 +4927,7 @@ $(document).ready(function () {
                     alert('Lỗi kết nối đến server.');
                 }
             });
+            // uploadedFiles.length = 0;
         });
     });
     /////////////////////////////
@@ -5860,6 +5948,7 @@ $(document).ready(function () {
         var tieu_de = $('input[name=tieu_de]').val();
         var thu_tu = $('input[name=thu_tu]').val();
         var id_thuonghieu_socdo = $('input[name=id_thuonghieu_socdo]').val();
+        var brand = $('input[name="brand[]"]').val();
         if (tieu_de.length < 2) {
             $('input[name=tieu_de]').focus();
         } else {
@@ -5872,6 +5961,7 @@ $(document).ready(function () {
                     action: "add_brand",
                     tieu_de: tieu_de,
                     thu_tu: thu_tu,
+                    brand: brand,
                     id_thuonghieu_socdo: id_thuonghieu_socdo
                 },
                 success: function (kq) {
@@ -7079,12 +7169,14 @@ $(document).ready(function () {
 
         }
     });
-    /////////////////////////////
+    /////////////////////////////huyphuc06/05/2025
     $('button[name=add_slide]').on('click', function () {
-        tieu_de = $('input[name=tieu_de]').val();
-        link = $('input[name=link]').val();
-        thu_tu = $('input[name=thu_tu]').val();
-        target = $('select[name=target]').val();
+        const tieu_de = $('input[name=tieu_de]').val();
+        const link = $('input[name=link]').val();
+        const thu_tu = $('input[name=thu_tu]').val();
+        const target = $('select[name=target]').val();
+        const file = $('#minh_hoa').prop('files')[0]; // Lấy file
+        // Kiểm tra tiêu đề
         if (tieu_de.length < 2) {
             $('.load_overlay').show();
             $('.load_process').fadeIn();
@@ -7097,7 +7189,11 @@ $(document).ready(function () {
                 $('.load_overlay').hide();
             }, 2000);
             $('input[name=tieu_de]').focus();
-        } else if (thu_tu == '') {
+            return;
+        }
+
+        // Kiểm tra thứ tự
+        if (thu_tu === '') {
             $('.load_overlay').show();
             $('.load_process').fadeIn();
             setTimeout(function () {
@@ -7109,17 +7205,63 @@ $(document).ready(function () {
                 $('.load_overlay').hide();
             }, 2000);
             $('input[name=thu_tu]').focus();
-        } else {
+            return;
+        }
+
+        // Kiểm tra có file hay không
+        if (!file) {
             $('.load_overlay').show();
             $('.load_process').fadeIn();
-            var file_data = $('#minh_hoa').prop('files')[0];
-            var form_data = new FormData();
+            setTimeout(function () {
+                $('.load_note').html('Vui lòng chọn một ảnh!');
+            }, 500);
+            setTimeout(function () {
+                $('.load_process').hide();
+                $('.load_note').html('Hệ thống đang xử lý');
+                $('.load_overlay').hide();
+            }, 2000);
+            $('#minh_hoa').focus();
+            return;
+        }
+
+        // Kiểm tra kích thước ảnh
+        const img = new Image();
+        const objectUrl = URL.createObjectURL(file);
+
+        img.onload = function () {
+            const width = img.width;
+            const height = img.height;
+            // Log kích thước
+            console.log('Kích thước ảnh:', width, 'x', height, 'px');
+            // Validate kích thước
+            if (width < 800 || width > 1900 || height < 300 || height > 580) {
+                $('.load_overlay').show();
+                $('.load_process').fadeIn();
+                setTimeout(function () {
+                    $('.load_note').html('Kích thước ảnh phải từ 800x300px đến 1900x580px.');
+                }, 500);
+                setTimeout(function () {
+                    $('.load_process').hide();
+                    $('.load_note').html('Hệ thống đang xử lý');
+                    $('.load_overlay').hide();
+                }, 2000);
+                $('#minh_hoa').val(''); // Xóa file đã chọn
+                $('#preview-minhhoa').attr('src', '/images/no-images.jpg'); // Reset preview
+                URL.revokeObjectURL(objectUrl);
+                return;
+            }
+
+            // Nếu tất cả hợp lệ, gửi AJAX
+            $('.load_overlay').show();
+            $('.load_process').fadeIn();
+            const form_data = new FormData();
             form_data.append('action', 'add_slide');
-            form_data.append('file', file_data);
+            form_data.append('file', file);
             form_data.append('tieu_de', tieu_de);
             form_data.append('link', link);
             form_data.append('thu_tu', thu_tu);
             form_data.append('target', target);
+
             $.ajax({
                 url: '/ncc/process.php',
                 type: 'post',
@@ -7128,7 +7270,7 @@ $(document).ready(function () {
                 processData: false,
                 data: form_data,
                 success: function (kq) {
-                    var info = JSON.parse(kq);
+                    const info = JSON.parse(kq);
                     setTimeout(function () {
                         $('.load_note').html(info.thongbao);
                     }, 1000);
@@ -7138,22 +7280,49 @@ $(document).ready(function () {
                         $('.load_overlay').hide();
                         if (info.ok == 1) {
                             window.location.reload();
-                        } else {
-
                         }
                     }, 3000);
+                },
+                error: function () {
+                    $('.load_note').html('Lỗi hệ thống, vui lòng thử lại!');
+                    setTimeout(function () {
+                        $('.load_process').hide();
+                        $('.load_note').html('Hệ thống đang xử lý');
+                        $('.load_overlay').hide();
+                    }, 3000);
                 }
-
             });
-        }
+
+            URL.revokeObjectURL(objectUrl);
+        };
+
+        img.onerror = function () {
+            $('.load_overlay').show();
+            $('.load_process').fadeIn();
+            setTimeout(function () {
+                $('.load_note').html('Lỗi khi đọc file ảnh!');
+            }, 500);
+            setTimeout(function () {
+                $('.load_process').hide();
+                $('.load_note').html('Hệ thống đang xử lý');
+                $('.load_overlay').hide();
+            }, 2000);
+            $('#minh_hoa').val('');
+            $('#preview-minhhoa').attr('src', '/images/no-images.jpg');
+            URL.revokeObjectURL(objectUrl);
+        };
+
+        img.src = objectUrl;
     });
-    /////////////////////////////
+    /////////////////////////////huyphuc06/05/2025
     $('button[name=edit_slide]').on('click', function () {
-        tieu_de = $('input[name=tieu_de]').val();
-        link = $('input[name=link]').val();
-        thu_tu = $('input[name=thu_tu]').val();
-        id = $('input[name=id]').val();
-        target = $('select[name=target]').val();
+        const id = $('input[name=id]').val();
+        const tieu_de = $('input[name=tieu_de]').val();
+        const link = $('input[name=link]').val();
+        const thu_tu = $('input[name=thu_tu]').val();
+        const target = $('select[name=target]').val();
+        const file = $('#minh_hoa').prop('files')[0]; // Lấy file
+        // Kiểm tra tiêu đề
         if (tieu_de.length < 2) {
             $('.load_overlay').show();
             $('.load_process').fadeIn();
@@ -7166,7 +7335,11 @@ $(document).ready(function () {
                 $('.load_overlay').hide();
             }, 2000);
             $('input[name=tieu_de]').focus();
-        } else if (thu_tu == '') {
+            return;
+        }
+
+        // Kiểm tra thứ tự
+        if (thu_tu === '') {
             $('.load_overlay').show();
             $('.load_process').fadeIn();
             setTimeout(function () {
@@ -7178,18 +7351,63 @@ $(document).ready(function () {
                 $('.load_overlay').hide();
             }, 2000);
             $('input[name=thu_tu]').focus();
-        } else {
+            return;
+        }
+        // Kiểm tra có file hay không
+        if (!file) {
             $('.load_overlay').show();
             $('.load_process').fadeIn();
-            var file_data = $('#minh_hoa').prop('files')[0];
-            var form_data = new FormData();
+            setTimeout(function () {
+                $('.load_note').html('Vui lòng chọn một ảnh!');
+            }, 500);
+            setTimeout(function () {
+                $('.load_process').hide();
+                $('.load_note').html('Hệ thống đang xử lý');
+                $('.load_overlay').hide();
+            }, 2000);
+            $('#minh_hoa').focus();
+            return;
+        }
+
+        // Kiểm tra kích thước ảnh
+        const img = new Image();
+        const objectUrl = URL.createObjectURL(file);
+
+        img.onload = function () {
+            const width = img.width;
+            const height = img.height;
+            // Log kích thước
+            console.log('Kích thước ảnh:', width, 'x', height, 'px');
+            // Validate kích thước
+            if (width < 800 || width > 1900 || height < 300 || height > 580) {
+                $('.load_overlay').show();
+                $('.load_process').fadeIn();
+                setTimeout(function () {
+                    $('.load_note').html('Kích thước ảnh phải từ 800x300px đến 1900x580px.');
+                }, 500);
+                setTimeout(function () {
+                    $('.load_process').hide();
+                    $('.load_note').html('Hệ thống đang xử lý');
+                    $('.load_overlay').hide();
+                }, 2000);
+                $('#minh_hoa').val(''); // Xóa file đã chọn
+                $('#preview-minhhoa').attr('src', '/images/no-images.jpg'); // Reset preview
+                URL.revokeObjectURL(objectUrl);
+                return;
+            }
+
+            // Nếu tất cả hợp lệ, gửi AJAX
+            $('.load_overlay').show();
+            $('.load_process').fadeIn();
+            const form_data = new FormData();
             form_data.append('action', 'edit_slide');
-            form_data.append('file', file_data);
+            form_data.append('file', file);
+            form_data.append('id', id);
             form_data.append('tieu_de', tieu_de);
             form_data.append('link', link);
             form_data.append('thu_tu', thu_tu);
             form_data.append('target', target);
-            form_data.append('id', id);
+
             $.ajax({
                 url: '/ncc/process.php',
                 type: 'post',
@@ -7198,7 +7416,7 @@ $(document).ready(function () {
                 processData: false,
                 data: form_data,
                 success: function (kq) {
-                    var info = JSON.parse(kq);
+                    const info = JSON.parse(kq);
                     setTimeout(function () {
                         $('.load_note').html(info.thongbao);
                     }, 1000);
@@ -7207,15 +7425,40 @@ $(document).ready(function () {
                         $('.load_note').html('Hệ thống đang xử lý');
                         $('.load_overlay').hide();
                         if (info.ok == 1) {
-                            window.location.href = '/ncc/list-slide';
-                        } else {
-
+                            window.location.reload();
                         }
                     }, 3000);
+                },
+                error: function () {
+                    $('.load_note').html('Lỗi hệ thống, vui lòng thử lại!');
+                    setTimeout(function () {
+                        $('.load_process').hide();
+                        $('.load_note').html('Hệ thống đang xử lý');
+                        $('.load_overlay').hide();
+                    }, 3000);
                 }
-
             });
-        }
+
+            URL.revokeObjectURL(objectUrl);
+        };
+
+        img.onerror = function () {
+            $('.load_overlay').show();
+            $('.load_process').fadeIn();
+            setTimeout(function () {
+                $('.load_note').html('Lỗi khi đọc file ảnh!');
+            }, 500);
+            setTimeout(function () {
+                $('.load_process').hide();
+                $('.load_note').html('Hệ thống đang xử lý');
+                $('.load_overlay').hide();
+            }, 2000);
+            $('#minh_hoa').val('');
+            $('#preview-minhhoa').attr('src', '/images/no-images.jpg');
+            URL.revokeObjectURL(objectUrl);
+        };
+
+        img.src = objectUrl;
     });
     /////////////////////////////
     $('button[name=edit_category]').on('click', function () {
@@ -7451,6 +7694,40 @@ $(document).ready(function () {
             }
 
         });
+    });
+    ////////////////////////////8-5
+    /////////////////////////////
+     $('button[name=edit_donhang_socdo]').on('click', function () {
+            id = $('input[name=id]').val();
+            status = $('select[name=status]').val();
+            $('.load_overlay').show();
+            $('.load_process').fadeIn();
+            $.ajax({
+                url: "/ncc/process.php",
+                type: "post",
+                data: {
+                    action: "edit_donhang_socdo",
+                    status: status,
+                    id: id
+                },
+                success: function (kq) {
+                    var info = JSON.parse(kq);
+                    setTimeout(function () {
+                        $('.load_note').html(info.thongbao);
+                    }, 1000);
+                    setTimeout(function () {
+                        $('.load_process').hide();
+                        $('.load_note').html('Hệ thống đang xử lý');
+                        $('.load_overlay').hide();
+                        if (info.ok == 1) {
+                            window.location.reload();
+                        } else {
+    
+                        }
+                    }, 3000);
+                }
+    
+            });
     });
     /////////////////////////////
     $('button[name=edit_livestream]').on('click', function () {
@@ -9541,15 +9818,15 @@ $(document).ready(function () {
             '<div class="info_can_nang"><input type="text" name="can_nang[]" value="0" placeholder="Trọng lượng"></div>' +
             '<div class="info_gia"><input type="text" name="gia_cu[]" class="price_format" value="0" placeholder="Giá niêm yết"></div>' +
             '<div class="info_gia"><input type="text" name="gia_moi[]" class="price_format" value="0" placeholder="Giá bán"></div>' +
-            '<div class="info_gia"><input type="text" name="gia_drop[]" class="price_format" value="0" placeholder="Giá Drop"></div>' +
-            '<div class="info_gia"><input type="text" name="gia_ctv[]" class="price_format" value="0" placeholder="Giá CTV"></div>' +
-            '<div class="info_gia"><input type="text" name="gia_socdo[]" class="price_format" value="0" placeholder="Giá trên Sóc Đỏ"></div>' +
             '<div class="info_kho_sanpham_shop"><input type="text" name="kho_sanpham_shop[]" class="price_format" value="0" placeholder="Số hàng trong kho"></div>' +
             '<div class="info_trongluongtinhship"><input type="text" name="trongluongtinhship[]" class="price_format" value="0" readonly></div>' +
-            '<div class="info_action"><i class="fa fa-trash-o"></i> Xóa</div>' +
-            '<div class="info_action_copy"><i class="fa fa-files-o"></i> Sao chép</div></div>');
+            '<div class="info_action"><i class="fa fa-trash-o"></i></div>' +
+            '<div class="info_action_copy"><i class="fa fa-files-o"></i></div></div>');
         updateTrongLuongTinhShip(); // Cập nhật trọng lượng tính ship khi thêm mới
     });
+    // '<div class="info_gia"><input type="text" name="gia_drop[]" style="display: none;" class="price_format" value="0" placeholder="Giá Drop"></div>' +
+    //         '<div class="info_gia"><input type="text" name="gia_ctv[]" style="display: none;" class="price_format" value="0" placeholder="Giá CTV"></div>' +
+    //         '<div class="info_gia"><input type="text" name="gia_socdo[]" style="display: none;" class="price_format" value="0" placeholder="Giá trên Sóc Đỏ"></div>' +
 
     // Tự động tính giá
     $('body').on('keyup', '.list_phanloai .li_phanloai input[name^=gia_moi]', function () {
@@ -9843,6 +10120,7 @@ $(document).ready(function () {
     });
 
     //Gửi dữ liệu khi nhấn nút "Hoàn thành"
+    // huyphuc12/05/2025
     $('button[name=add_sanpham_ngoai]').on('click', function () {
         tieu_de = $('input[name=tieu_de]').val();
         //kho = $('input[name=kho]').val();
@@ -9878,7 +10156,9 @@ $(document).ready(function () {
         });
         // Đặc điểm nổi bật và nội dung chi tiết
         noibat = tinyMCE.get('noibat').getContent();
+        noibat2=stripHtml(noibat);
         noidung = tinyMCE.get('edit_textarea').getContent();
+        noidung2=stripHtml(noidung);
         link = $('input[name=link]').val();
         thuong_hieu = $('select[name=thuong_hieu]').val();
         thuong_hieu_2 = $('input[name=thuong_hieu_2]').val();
@@ -9886,6 +10166,7 @@ $(document).ready(function () {
         chieudai_shop = $('input[name=chieudai_shop]').val();
         chieurong_shop = $('input[name=chieurong_shop]').val();
         chieucao_shop = $('input[name=chieucao_shop]').val();
+        // console.log(noidung);
         // Phân loại sản phẩm
         var list_phanloai = [];
         $('.list_phanloai .li_phanloai').each(function () {
@@ -9919,11 +10200,111 @@ $(document).ready(function () {
         // Kiểm tra dữ liệu
         if (tieu_de.length < 4) {
             $('input[name=tieu_de]').focus();
-        } else if (noibat.length < 10) {
+        }
+        // huyphuc08/05/225
+        else if(list_photo.length > 8){
+            setTimeout(function () {
+                $('.load_overlay').show();
+                $('.load_process').fadeIn();
+                $('.load_note').html('Tối đa 8 ảnh đa chiều sản phẩm');
+            }, 1000);
+            setTimeout(function () {
+                $('.load_process').hide();
+                $('.load_overlay').hide();
+                $('.load_note').html('');
+            }, 3000);
+        }
+        else if(!list_photo.length){
+            setTimeout(function () {
+                $('.load_overlay').show();
+                $('.load_process').fadeIn();
+                $('.load_note').html('Vui lòng chọn ít nhất một ảnh đa chiều sản phẩm');
+            }, 1000);
+            setTimeout(function () {
+                $('.load_process').hide();
+                $('.load_overlay').hide();
+                $('.load_note').html('');
+            }, 3000);
+        }
+        
+         else if (noibat2.length < 10) {
+            setTimeout(function () {
+                $('.load_overlay').show();
+                $('.load_process').fadeIn();
+                $('.load_note').html('Vui lòng nhập ít nhất 10 ký tự cho đặc điểm nổi bật!');
+            }, 1000);
+            setTimeout(function () {
+                $('.load_process').hide();
+                $('.load_overlay').hide();
+                $('.load_note').html('');
+            }, 3000);
             tinymce.execCommand('mceFocus', false, 'noibat');
-        } else if (noidung.length < 10) {
+        } else if (noibat2.length > 600) {
+            setTimeout(function () {
+                $('.load_overlay').show();
+                $('.load_process').fadeIn();
+                $('.load_note').html('Đặc điểm nổi bật không được quá 600 ký tự!');
+            }, 1000);
+            setTimeout(function () {
+                $('.load_process').hide();
+                $('.load_overlay').hide();
+                $('.load_note').html('');
+            }, 3000);
+            tinymce.execCommand('mceFocus', false, 'noibat');
+        }
+         else if (noidung2.length < 10) {
+            setTimeout(function () {
+                $('.load_overlay').show();
+                $('.load_process').fadeIn();
+                $('.load_note').html('Vui lòng nhập ít nhất 10 ký tự cho mô tả chi tiết!');
+            }, 1000);
+            setTimeout(function () {
+                $('.load_process').hide();
+                $('.load_overlay').hide();
+                $('.load_note').html('');
+            }, 3000);
             tinymce.execCommand('mceFocus', false, 'edit_textarea');
-        } else if (title == '') {
+        } else if (noidung2.length > 5000) {
+            setTimeout(function () {
+                $('.load_overlay').show();
+                $('.load_process').fadeIn();
+                $('.load_note').html('Nội dung chi tiết không được vượt quá 5000 ký tự!');
+            }, 1000);
+            setTimeout(function () {
+                $('.load_process').hide();
+                $('.load_overlay').hide();
+                $('.load_note').html('');
+            }, 3000);
+            tinymce.execCommand('mceFocus', false, 'edit_textarea');
+        }
+        // 
+        else if( title.length > 150){
+            setTimeout(function () {
+                $('.load_overlay').show();
+                $('.load_process').fadeIn();
+                $('.load_note').html('Title không được vượt quá 150 ký tự!');
+            }, 1000);
+            setTimeout(function () {
+                $('.load_process').hide();
+                $('.load_overlay').hide();
+                $('.load_note').html('');
+            }, 3000);
+            $('input[name=title]').focus();
+        }
+        else if( description.length > 150){
+            setTimeout(function () {
+                $('.load_overlay').show();
+                $('.load_process').fadeIn();
+                $('.load_note').html('description không được vượt quá 150 ký tự!');
+            }, 1000);
+            setTimeout(function () {
+                $('.load_process').hide();
+                $('.load_overlay').hide();
+                $('.load_note').html('');
+            }, 3000);
+            $('textarea[name=description]').focus();
+        }
+        else if (title == '') {
             $('input[name=title]').focus();
         } else if (description == '') {
             $('textarea[name=description]').focus();
@@ -9931,7 +10312,8 @@ $(document).ready(function () {
             alert('Vui lòng thêm ít nhất một phân loại sản phẩm!');
         } else if (list_noiban.length === 0) {
             alert('Vui lòng chọn nơi bán!');
-        } else {
+        } 
+        else {
             // Gửi dữ liệu qua AJAX
             var file_data = $('#minh_hoa').prop('files')[0];
             var form_data = new FormData();
@@ -10006,7 +10388,7 @@ $(document).ready(function () {
 
 
 
-    /////////////////////////////
+    /////////////////////////////huyphuc/09/05/2025
     $('button[name=edit_sanpham_ngoai]').on('click', function () {
         tieu_de = $('input[name=tieu_de]').val();
         gia_cu = $('input[name=gia_cu]').val();
@@ -10032,11 +10414,6 @@ $(document).ready(function () {
             list_color.push($(this).val());
         });
         list_color = list_color.toString();
-        /*        var list_size = [];
-                $('.li_input input[name^=size]:checked').each(function() {
-                    list_size.push($(this).val());
-                });
-                list_size = list_size.toString();*/
         size = $('select[name=size]').val();
         size_2 = $('input[name=size_2]').val();
         thuong_hieu = $('select[name=thuong_hieu]').val();
@@ -10083,25 +10460,98 @@ $(document).ready(function () {
             return sum + (parseInt($(el).find('input[name^=kho_sanpham_shop]').val()) || 0);
         }, 0);
         noibat = tinyMCE.get('noibat').getContent();
+        noibat2=stripHtml(noibat);
         noidung = tinyMCE.get('edit_textarea').getContent();
+        noidung2=stripHtml(noidung);
         link = $('input[name=link]').val();
         link_old = $('input[name=link_old]').val();
         thongtin = $('input[name=thongtin]').val();
         if (tieu_de.length < 4) {
             $('input[name=tieu_de]').focus();
-        } else if (gia_cu == '') {
-            $('input[name=gia_cu]').focus();
-        } else if (gia_moi == '') {
-            $('input[name=gia_moi]').focus();
-        } else if (noibat.length < 10) {
+        } // huyphuc08/05/225
+        else if(list_photo.length > 8){
+            setTimeout(function () {
+                $('.load_overlay').show();
+                $('.load_process').fadeIn();
+                $('.load_note').html('Tối đa 8 ảnh đa chiều sản phẩm');
+            }, 1000);
+            setTimeout(function () {
+                $('.load_process').hide();
+                $('.load_overlay').hide();
+                $('.load_note').html('');
+            }, 3000);
+        }
+        else if(!list_photo.length){
+            setTimeout(function () {
+                $('.load_overlay').show();
+                $('.load_process').fadeIn();
+                $('.load_note').html('Vui lòng chọn ít nhất một ảnh đa chiều sản phẩm');
+            }, 1000);
+            setTimeout(function () {
+                $('.load_process').hide();
+                $('.load_overlay').hide();
+                $('.load_note').html('');
+            }, 3000);
+        }
+        
+         else if (noibat2.length < 10) {
+            setTimeout(function () {
+                $('.load_overlay').show();
+                $('.load_process').fadeIn();
+                $('.load_note').html('Vui lòng nhập ít nhất 10 ký tự cho đặc điểm nổi bật!');
+            }, 1000);
+            setTimeout(function () {
+                $('.load_process').hide();
+                $('.load_overlay').hide();
+                $('.load_note').html('');
+            }, 3000);
             tinymce.execCommand('mceFocus', false, 'noibat');
-        } else if (noidung.length < 10) {
+        } else if (noibat2.length > 600) {
+            setTimeout(function () {
+                $('.load_overlay').show();
+                $('.load_process').fadeIn();
+                $('.load_note').html('Đặc điểm nổi bật không được quá 600 ký tự!');
+            }, 1000);
+            setTimeout(function () {
+                $('.load_process').hide();
+                $('.load_overlay').hide();
+                $('.load_note').html('');
+            }, 3000);
+            tinymce.execCommand('mceFocus', false, 'noibat');
+        }
+         else if (noidung2.length < 10) {
+            setTimeout(function () {
+                $('.load_overlay').show();
+                $('.load_process').fadeIn();
+                $('.load_note').html('Vui lòng nhập ít nhất 10 ký tự cho mô tả chi tiết!');
+            }, 1000);
+            setTimeout(function () {
+                $('.load_process').hide();
+                $('.load_overlay').hide();
+                $('.load_note').html('');
+            }, 3000);
             tinymce.execCommand('mceFocus', false, 'edit_textarea');
-        } else if (title == '') {
+        } else if (noidung2.length > 5000) {
+            setTimeout(function () {
+                $('.load_overlay').show();
+                $('.load_process').fadeIn();
+                $('.load_note').html('Nội dung chi tiết không được vượt quá 5000 ký tự!');
+            }, 1000);
+            setTimeout(function () {
+                $('.load_process').hide();
+                $('.load_overlay').hide();
+                $('.load_note').html('');
+            }, 3000);
+            tinymce.execCommand('mceFocus', false, 'edit_textarea');
+        }
+        // 
+        else if (title == '') {
             $('input[name=title]').focus();
         } else if (description == '') {
             $('textarea[name=description]').focus();
-        } else {
+        } else if (list_phanloai.length === 0) {
+            alert('Vui lòng thêm ít nhất một phân loại sản phẩm!');
+        }  else {
             var file_data = $('#minh_hoa').prop('files')[0];
             var form_data = new FormData();
             form_data.append('action', 'edit_sanpham_ngoai');
@@ -10134,7 +10584,8 @@ $(document).ready(function () {
             form_data.append('thongtin', thongtin);// thông tin (thông số) 3-4
             $('.load_overlay').show();
             $('.load_process').fadeIn();
-            console.log([...form_data]);
+            // console.log([...form_data]);
+            // debugger;
             $.ajax({
                 url: '/ncc/process.php',
                 type: 'post',
@@ -10143,6 +10594,8 @@ $(document).ready(function () {
                 processData: false,
                 data: form_data,
                 success: function (kq) {
+                    // console.log(kq);
+                    // debugger
                     var info = JSON.parse(kq);
                     console.log(info);
                     setTimeout(function () {
@@ -11078,46 +11531,6 @@ $('#minh_hoa, #bg_banner').on('change', function (e) {
     }
 });
 
-// Handle form submit
-$('#editBannerForm').on('submit', function (e) {
-    e.preventDefault();
-    const formData = new FormData(this);
-    $('.load_overlay').show();
-    $('.load_process').fadeIn();
-    $.ajax({
-        url: '/ncc/process.php',
-        type: 'POST',
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function (kq) {
-            var info = JSON.parse(kq);
-            setTimeout(function () {
-                $('.load_note').html(info.thongbao);
-            }, 1000);
-            setTimeout(function () {
-                $('.load_process').hide();
-                $('.load_note').html('Hệ thống đang xử lý');
-                $('.load_overlay').hide();
-                if (info.ok == 1) {
-                    window.location.href = '/ncc/list-slide';
-                }
-            }, 3000);
-        },
-        error: function (xhr, status, error) {
-            Swal.fire({
-                title: 'Lỗi!',
-                text: 'Có lỗi xảy ra, vui lòng thử lại',
-                icon: 'error',
-                confirmButtonText: 'OK'
-            });
-        },
-        complete: function () {
-            $submitBtn.prop('disabled', false).text(originalBtnText);
-        }
-    });
-});
-
 //10-4
 $('#feedbackForm').submit(function (e) {
     e.preventDefault();
@@ -11185,3 +11598,20 @@ $(document).mouseup(function (e) {
         container.html('');
     }
 });
+function confirm_xoanhieu_sanpham(action, loai, title, ids) {
+    $('#title_confirm').html(title); // Cập nhật tiêu đề của popup
+    $('#button_thuchien').attr('action', action); // Gán thuộc tính action
+    $('#button_thuchien').attr('loai', loai); // Gán thuộc tính loai
+    $('#button_thuchien').attr('data-ids', JSON.stringify(ids)); // Lưu mảng ids dưới dạng JSON
+    $('#box_pop_confirm').show(); // Hiển thị popup
+}
+function stripHtml(html) {
+    const div = document.createElement("div");
+    div.innerHTML = html;
+    let text = div.textContent || div.innerText || "";
+    text = text
+        .replace(/[\n\r]+/g, " ") // Thay thế xuống dòng bằng khoảng trắng
+        .replace(/\s+/g, " ") // Chuẩn hóa khoảng trắng
+        .trim();
+    return text;
+}

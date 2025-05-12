@@ -2,7 +2,7 @@
     <div class="cart-item-inner">
         <div class="cart-item-image">
             <a href="/product/{link}.html" title="{tieu_de}" target="_blank">
-                <img loading="lazy" src="/thumbnail.php?w=320&img={minh_hoa}" alt="{tieu_de}" />
+                <img loading="lazy" src="{minh_hoa}" alt="{tieu_de}" />
             </a>
         </div>
         <div class="cart-item-details">
@@ -30,9 +30,11 @@
     padding: 15px;
     border-bottom: 1px solid #eee;
     transition: background-color 0.2s ease;
+    list-style-type: none;
 }
 
 .cart-item:hover {
+    list-style-type: none;
     background-color: #f8f9fa;
 }
 

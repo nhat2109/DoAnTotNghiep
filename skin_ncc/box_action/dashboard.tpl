@@ -2,12 +2,12 @@
     <div class="box_right_content">
         <div class="box_profile" style="width: 100%;padding: 10px;">
             <div class="box_list_donhang">
-                <div class="box_list_left">
+                <!-- <div class="box_list_left">
                     <div class="title">Đơn hàng sàn Socdo.vn</div>
                     <div class="list_donhang scroll">
                         {list_donhang}
                     </div>
-                </div>
+                </div> -->
                 <div class="box_list_right">
                     <div class="title">Đơn hàng trên website</div>
                     <div class="list_donhang scroll">

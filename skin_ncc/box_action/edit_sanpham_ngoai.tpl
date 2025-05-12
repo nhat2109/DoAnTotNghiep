@@ -482,9 +482,9 @@
                         <div class="info_can_nang">Trọng lượng (kg)</div>
                         <div class="info_gia">Giá niêm yết</div>
                         <div class="info_gia">Giá bán</div>
-                        <div class="info_gia">Giá drop</div>
-                        <div class="info_gia">Giá CTV</div>
-                        <div class="info_gia">Giá trên Sóc đỏ</div>
+                        <div class="info_gia" style="display: none;">Giá drop</div>
+                        <div class="info_gia" style="display: none;">Giá CTV</div>
+                        <div class="info_gia" style="display: none;">Giá trên Sóc đỏ</div>
                         <div class="info_kho_sanpham_shop">Kho</div>
                         <div class="info_trongluongtinhship">Trọng lượng tính ship</div>
                         <div class="info_action"></div>

@@ -480,9 +480,9 @@ tinymce.init({
                         <div class="info_can_nang">Trọng lượng (kg)</div>
                         <div class="info_gia">Giá niêm yết</div>
                         <div class="info_gia">Giá bán</div>
-                        <div class="info_gia">Giá drop</div>
-                        <div class="info_gia">Giá CTV</div>
-                        <div class="info_gia">Giá trên Sóc đỏ</div>
+                        <div class="info_gia" style="display: none;">Giá drop</div>
+                        <div class="info_gia" style="display: none;">Giá CTV</div>
+                        <div class="info_gia" style="display: none;">Giá trên Sóc đỏ</div>
                         <div class="info_kho_sanpham_shop">Kho</div>
                         <div class="info_trongluongtinhship">Trọng lượng tính ship</div>
                         <div class="info_action"></div>
@@ -512,13 +512,13 @@ tinymce.init({
                         <div class="info_gia">
                             <input type="text" name="gia_moi[]" class="price_format" value="0" placeholder="Giá bán">
                         </div>
-                        <div class="info_gia">
+                        <div class="info_gia" style="display: none;">
                             <input type="text" name="gia_drop[]" class="price_format" value="0" placeholder="Giá Nhà Bán Chuyên Nghiệp">
                         </div>
-                        <div class="info_gia">
+                        <div class="info_gia" style="display: none;">
                             <input type="text" name="gia_ctv[]" class="price_format" value="0" placeholder="Giá Hội Viên">
                         </div>
-                        <div class="info_gia">
+                        <div class="info_gia" style="display: none;">
                             <input type="text" name="gia_socdo[]" class="price_format" value="0" placeholder="Giá trên Sóc Đỏ">
                         </div>
                         <div class="info_kho_sanpham_shop">
@@ -527,8 +527,8 @@ tinymce.init({
                         <div class="info_trongluongtinhship">
                             <input type="text" name="trongluongtinhship[]" class="price_format" value="0" readonly>
                         </div>
-                        <div class="info_action"><i class="fa fa-trash-o"></i> Xóa</div>
-                        <div class="info_action_copy"><i class="fa fa-files-o"></i> Sao chép</div>
+                        <div class="info_action"><i class="fa fa-trash-o"></i> </div>
+                        <div class="info_action_copy"><i class="fa fa-files-o"></i> </div>
                     </div>
                 </div>
             </div>
@@ -593,11 +593,11 @@ tinymce.init({
                     <div id="description-counter">Ký tự: 0/150</div>
                 </div>
                 <div class="form_group">
-                    <label for="">Nơi bán</label>
+                    <label for="" style="display: none;">Nơi bán</label>
                     <div style="clear: both;"></div>
-                    <div class="li_input" id="noiban_all"><input type="radio" name="noiban[]" value="all"> Tất cả ( Sàn TMĐT & Website & CTV )</div>
-                    <div class="li_input" id="noiban_drop"><input type="radio" name="noiban[]" value="shop_ncc"> Website của bạn</div>
-                    <div class="li_input" id="noiban_socdo"><input type="radio" name="noiban[]" value="socdo_ctv"> Cộng đồng nhà bán hàng ( CTV )</div>
+                    <!-- <div class="li_input" id="noiban_all"><input type="radio" name="noiban[]" value="all"> Tất cả ( Sàn TMĐT & Website & CTV )</div> -->
+                    <div  class="li_input" style="display: none;" id="noiban_drop"><input type="radio" name="noiban[]" value="shop_ncc" checked> Website của bạn</div>
+                    <!-- <div class="li_input" id="noiban_socdo"><input type="radio" name="noiban[]" value="socdo_ctv"> Cộng đồng nhà bán hàng ( CTV )</div> -->
                 </div>
             </div>
             <div style="clear: both;"></div>

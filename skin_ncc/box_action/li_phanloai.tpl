@@ -22,16 +22,16 @@
     <div class="info_gia">
         <input type="text" name="gia_moi[]" class="price_format" placeholder="Giá bán" value="{gia_moi}">
     </div>
-    <div class="info_gia">
-        <input type="text" name="gia_drop[]" class="price_format" placeholder="Giá Nhà Bán Chuyên Nghiệp"
+    <!-- <div class="info_gia">
+        <input type="text" name="gia_drop[]" style="display: none;" class="price_format" placeholder="Giá Nhà Bán Chuyên Nghiệp"
             value="{gia_drop}">
     </div>
     <div class="info_gia">
-        <input type="text" name="gia_ctv[]" class="price_format" placeholder="Giá Hội Viên" value="{gia_ctv}">
+        <input type="text" name="gia_ctv[]" style="display: none;" class="price_format" placeholder="Giá Hội Viên" value="{gia_ctv}">
     </div>
     <div class="info_gia">
-        <input type="text" name="gia_socdo[]" class="price_format" placeholder="Giá trên Sóc Đỏ" value="{gia_socdo}">
-    </div>
+        <input type="text" name="gia_socdo[]" style="display: none;" class="price_format" placeholder="Giá trên Sóc Đỏ" value="{gia_socdo}">
+    </div> -->
     <div class="info_kho_sanpham_shop">
         <input type="text" name="kho_sanpham_shop[]" class="price_format" placeholder="Số hàng trong kho"
             value="{kho_sanpham_shop}">
