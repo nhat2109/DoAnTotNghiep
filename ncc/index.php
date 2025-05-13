@@ -2,7 +2,6 @@
 session_start();
 
 include '../includes/tlca_world.php';
-$check = $tlca_do->load('class_check');
 $class_index = $tlca_do->load('class_ncc');
 $class_viettel = $tlca_do->load('class_viettel');
 $param_url = parse_url($_SERVER['REQUEST_URI']);
@@ -10,12 +9,13 @@ parse_str($param_url['query'], $url_query);
 $page = addslashes($url_query['page']);
 $sort = addslashes($url_query['sort']);
 $skin = $tlca_do->load('class_skin_cpanel');
+$check = $tlca_do->load('class_check');
 $total_cart = isset($_SESSION['drop_cart']) ? count($_SESSION['drop_cart']) : 0;
 $tach_token = json_decode($check->token_login_decode($_COOKIE['user_id']), true);
 $user_id = $tach_token['user_id'];
 $user_info = $class_member->user_info($conn, $_COOKIE['user_id']);
-$query_follow = "SELECT sanpham FROM sanpham_follow WHERE user_id='$user_id' LIMIT 1";
-$result_follow = mysqli_query($conn, $query_follow);
+// $query_follow = "SELECT sanpham FROM sanpham_follow WHERE user_id='$user_id' LIMIT 1";
+// $result_follow = mysqli_query($conn, $query_follow);
 // if ($user_info['ctv'] != 1) {
 //     // Không phải CTV cấp 1 - chuyển hướng
 //     $thongbao = "Tài khoản của bạn không phải khiem...";
@@ -562,14 +562,6 @@ if ($user_info['leader'] == 0) {
 } else {
 	$marquee = '';
 }
-$domain_giao_viec ="";
-$domain_gv = $class_index->get_domain_giaoviec($conn, $user_id);
-if($domain_gv == "" || $domain_gv == null){
-	$domain_giao_viec = '/setup-domain.php';
-}
-else{
-	$domain_giao_viec = 'https://'.$domain_gv;
-}
 $tach_list_slide_donhang = json_decode($class_index->list_donhang_moi($conn, '', 1, 10), true);
 $thaythe = array(
 	'expire_time' => $expire_time,
@@ -597,7 +589,7 @@ $thaythe = array(
 	'nganhang' => $index_setting['nganhang'],
 	'user_money' => number_format($user_info['user_money']),
 	'user_money2' => number_format($user_info['user_money2']),
-	'list_danhmuc_video' => $class_index->list_danhmuc_video($conn),
+	// 'list_danhmuc_video' => $class_index->list_danhmuc_video($conn),
 	'list_donhang_slide' => $tach_list_slide_donhang['list_slide'],
 	'name' => $name,
 	'menu_nhom' => $menu_nhom,
@@ -613,7 +605,7 @@ $thaythe = array(
 	'marquee' => $marquee,
 	'total_cart' => $total_cart,
 	'total_follow'    => $total_follow,
-	'domain_giaoviec' => $domain_giao_viec,
+	// 'domain_giaoviec' => $domain_giao_viec,
 );
 
 $file_action = 'action/' . $action . '.php';

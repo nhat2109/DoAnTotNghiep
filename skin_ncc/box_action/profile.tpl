@@ -12,10 +12,10 @@
                         <label for="">Username</label>
                         <input type="text" class="form_control" name="username" disabled value="{username}">
                     </div>
-                    <div class="form_group">
+                    <!-- <div class="form_group">
                         <label for="">Số dư hiện tại</label>
                         <input type="text" class="form_control" name="user_money" disabled value="{user_money}">
-                    </div>
+                    </div> -->
                     <div class="form_group">
                         <label for="">Tên công ty/ Hộ kinh doanh</label>
                         <input type="text" class="form_control" name="name" value="{name}" placeholder="Nhập tên công ty/hộ kinh doanh...">

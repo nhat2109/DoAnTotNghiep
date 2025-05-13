@@ -1855,39 +1855,39 @@ $list_big.=$skin->skin_replace('skin/box_li/li_video_skin_big',$r_tt);
 		return json_encode(array('list' => $list, 'list_mobile' => $list_mobile));
 	}
 	///////////////////
-	function list_tintuc_index($conn, $limit)
-	{
-		$skin = $this->load('class_skin');
-		$check = $this->load('class_check');
-		$start = $page * $limit - $limit;
-		$thongtin = mysqli_query($conn, "SELECT * FROM post ORDER BY id DESC LIMIT $limit");
-		$i = 0;
-		while ($r_tt = mysqli_fetch_assoc($thongtin)) {
-			$i++;
-			$r_tt['i'] = $i;
-			$r_tt['date_post'] = date('d/m/Y', $r_tt['date_post']);
-			$cat = $r_tt['cat'];
-			if ($cat == '') {
-				$list_cat = '';
-			} else {
-				$thongtin_cat = mysqli_query($conn, "SELECT * FROM category WHERE cat_id IN ($cat) ORDER BY cat_thutu ASC");
-				while ($r_c = mysqli_fetch_assoc($thongtin_cat)) {
-					$list_cat .= $r_c['cat_tieude'] . ',';
-				}
-				$list_cat = substr($list_cat, 0, -1);
-			}
-			$r_tt['list_cat'] = $list_cat;
-			unset($list_cat);
-			if ($i == 1) {
-				$r_tt['trich'] = $check->words($r_tt['noidung'], 30);
-				$list['big'] .= $skin->skin_replace('skin/box_li/li_tintuc_index', $r_tt);
-			} else {
-				$r_tt['trich'] = $check->words($r_tt['noidung'], 25);
-				$list['small'] .= $skin->skin_replace('skin/box_li/li_tintuc_index_small', $r_tt);
-			}
-		}
-		return json_encode($list);
-	}
+	// function list_tintuc_index($conn, $limit)
+	// {
+	// 	$skin = $this->load('class_skin');
+	// 	$check = $this->load('class_check');
+	// 	$start = $page * $limit - $limit;
+	// 	$thongtin = mysqli_query($conn, "SELECT * FROM post ORDER BY id DESC LIMIT $limit");
+	// 	$i = 0;
+	// 	while ($r_tt = mysqli_fetch_assoc($thongtin)) {
+	// 		$i++;
+	// 		$r_tt['i'] = $i;
+	// 		$r_tt['date_post'] = date('d/m/Y', $r_tt['date_post']);
+	// 		$cat = $r_tt['cat'];
+	// 		if ($cat == '') {
+	// 			$list_cat = '';
+	// 		} else {
+	// 			$thongtin_cat = mysqli_query($conn, "SELECT * FROM category WHERE cat_id IN ($cat) ORDER BY cat_thutu ASC");
+	// 			while ($r_c = mysqli_fetch_assoc($thongtin_cat)) {
+	// 				$list_cat .= $r_c['cat_tieude'] . ',';
+	// 			}
+	// 			$list_cat = substr($list_cat, 0, -1);
+	// 		}
+	// 		$r_tt['list_cat'] = $list_cat;
+	// 		unset($list_cat);
+	// 		if ($i == 1) {
+	// 			$r_tt['trich'] = $check->words($r_tt['noidung'], 30);
+	// 			$list['big'] .= $skin->skin_replace('skin/box_li/li_tintuc_index', $r_tt);
+	// 		} else {
+	// 			$r_tt['trich'] = $check->words($r_tt['noidung'], 25);
+	// 			$list['small'] .= $skin->skin_replace('skin/box_li/li_tintuc_index_small', $r_tt);
+	// 		}
+	// 	}
+	// 	return json_encode($list);
+	// }
 	//////////////////////////////
 	function list_baiviet_right($conn, $limit)
 	{

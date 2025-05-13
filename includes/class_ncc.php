@@ -1387,20 +1387,20 @@
 			return $list;
 		}
 		////////////////////
-		function list_danhmuc_video($conn)
-		{
-			$skin = $this->load('class_skin_cpanel');
-			$check = $this->load('class_check');
-			$start = $page * $limit - $limit;
-			$i = $start;
-			$thongtin = mysqli_query($conn, "SELECT * FROM category_video ORDER BY thu_tu ASC");
-			while ($r_tt = mysqli_fetch_assoc($thongtin)) {
-				$i++;
-				$r_tt['i'] = $i;
-				$list .= $skin->skin_replace('skin_ncc/box_action/li_danhmuc_video', $r_tt);
-			}
-			return $list;
-		}
+		// function list_danhmuc_video($conn)
+		// {
+		// 	$skin = $this->load('class_skin_cpanel');
+		// 	$check = $this->load('class_check');
+		// 	$start = $page * $limit - $limit;
+		// 	$i = $start;
+		// 	$thongtin = mysqli_query($conn, "SELECT * FROM category_video ORDER BY thu_tu ASC");
+		// 	while ($r_tt = mysqli_fetch_assoc($thongtin)) {
+		// 		$i++;
+		// 		$r_tt['i'] = $i;
+		// 		$list .= $skin->skin_replace('skin_ncc/box_action/li_danhmuc_video', $r_tt);
+		// 	}
+		// 	return $list;
+		// }
 		////////////////////
 		function list_banner_qc($conn, $limit)
 		{
@@ -5332,11 +5332,5 @@
 		}
 
 		// huyphuc15/04/2025
-		function get_domain_giaoviec($conn, $user_id)
-		{
-			$data = mysqli_query($conn, "SELECT domain FROM domain_giaoviec WHERE user_id='$user_id' ORDER BY id ASC LIMIT 1");
-			$domain_giaoviec = mysqli_fetch_assoc($data);
-			return $domain_giaoviec['domain'];
-		}
 	}
 	?>

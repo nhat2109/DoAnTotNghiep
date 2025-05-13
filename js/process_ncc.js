@@ -9818,6 +9818,9 @@ $(document).ready(function () {
             '<div class="info_can_nang"><input type="text" name="can_nang[]" value="0" placeholder="Trọng lượng"></div>' +
             '<div class="info_gia"><input type="text" name="gia_cu[]" class="price_format" value="0" placeholder="Giá niêm yết"></div>' +
             '<div class="info_gia"><input type="text" name="gia_moi[]" class="price_format" value="0" placeholder="Giá bán"></div>' +
+            '<div class="info_gia" style="display: none;"><input type="text" name="gia_drop[]" class="price_format" value="0" placeholder="Giá Drop"></div>' +
+            '<div class="info_gia" style="display: none;"><input type="text" name="gia_ctv[]" class="price_format" value="0" placeholder="Giá CTV"></div>' +
+            '<div class="info_gia" style="display: none;"><input type="text" name="gia_socdo[]" class="price_format" value="0" placeholder="Giá trên Sóc Đỏ"></div>' +
             '<div class="info_kho_sanpham_shop"><input type="text" name="kho_sanpham_shop[]" class="price_format" value="0" placeholder="Số hàng trong kho"></div>' +
             '<div class="info_trongluongtinhship"><input type="text" name="trongluongtinhship[]" class="price_format" value="0" readonly></div>' +
             '<div class="info_action"><i class="fa fa-trash-o"></i></div>' +

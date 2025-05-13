@@ -28,7 +28,7 @@
       </div>
 
 
-      <div class="menu_top_center">
+      <!-- <div class="menu_top_center">
         <div class="social_box"
           style="margin-left: 15px;border: 1px solid rgb(147, 141, 140); padding: 3px 5px; border-radius: 20px; background-color: rgb(42, 68, 231);">
           <i style="color: #ffffff;" class="fa fa-facebook"></i>
@@ -46,7 +46,7 @@
         <button name="timkiem_sanpham_drop_hieu" class="button_timkiem_hieu" kieu="laptop"> <i
             class="fa fa-search search_icon"></i></button>
 
-      </div>
+      </div> -->
 
       <div class="menu_top_right">
 

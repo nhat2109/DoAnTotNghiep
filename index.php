@@ -6,8 +6,45 @@ if (in_array($web, $web_root) == false) {
 	include('./shop/index.php');
 	exit();
 }
+
 include('./includes/tlca_world.php');
 $check = $tlca_do->load('class_check');
+$tach_token = json_decode($check->token_login_decode($_COOKIE['user_id']), true);
+$user_id = $tach_token['user_id'];
+$user_info = $class_member->user_info($conn, $_COOKIE['user_id']);
+if ($user_info['ctv'] == 1) {
+	$thongbao = "Bạn đã đăng nhập tài khoản admin thành công...";
+	$replace = array(
+		'title' => 'Bạn đã đăng nhập tài khoản admin thành công...',
+		'description' => $index_setting['description'],
+		'thongbao' => $thongbao,
+		'link_chuyen' => '/ncc',
+	);
+	echo $skin->skin_replace('skin_ncc/chuyenhuong', $replace);
+	exit();
+} else if ($user_info['ctv'] == 4) {
+	$thongbao = "Tài khoản của bạn đang bị tạm khóa...";
+	$replace = array(
+		'title' => 'Tài khoản của bạn đang bị tạm khóa...',
+		'description' => $index_setting['description'],
+		'thongbao' => $thongbao,
+		'link_chuyen' => '/',
+	);
+	echo $skin->skin_replace('skin_ncc/chuyenhuong', $replace);
+	exit();
+}
+ else{
+	$thongbao = "Tài khoản của bạn không có quyền truy cập vào trang này...";
+	$replace = array(
+		'title' => 'Tài khoản của bạn không có quyền truy cập vào trang này...',
+		'description' => $index_setting['description'],
+		'thongbao' => $thongbao,
+		'link_chuyen' => '/ncc',
+	);
+	echo $skin->skin_replace('skin_ncc/chuyenhuong', $replace);
+	exit();
+}
+
 $class_index = $tlca_do->load('class_index');
 $param_url = parse_url($_SERVER['REQUEST_URI']);
 parse_str($param_url['query'], $url_query);
@@ -74,7 +111,7 @@ $list_danhmuc_top = json_decode($class_index->list_category_danhmuc_top($conn), 
 $list_muakem_id = substr($list_muakem_id, 0, -1);
 $list_flashsale_id = substr($list_flashsale_id, 0, -1);
 $list_tang_id = substr($list_tang_id, 0, -1);
-$tach_tintuc = json_decode($class_index->list_tintuc_index($conn, 6), true);
+//$tach_tintuc = json_decode($class_index->list_tintuc_index($conn, 6), true);
 $tach_menu = json_decode($class_index->list_menu($conn), true);
 $tach_banner = json_decode($class_index->list_banner($conn), true);
 // Xóa đoạn giới hạn để lấy tất cả banner

@@ -34,8 +34,8 @@
                 </div>
             </div>
             <div class="box_result">
-                <div class="title_thongke"><i class="icon icon-file-stats2"></i> THỐNG KÊ ĐƠN HÀNG SÓC ĐỎ</div>
-                <div class="li_box">
+                <!-- <div class="title_thongke"><i class="icon icon-file-stats2"></i> THỐNG KÊ ĐƠN HÀNG SÓC ĐỎ</div> -->
+                <!-- <div class="li_box">
                     <h3 class="color_green">Đơn hàng hoàn thành</h3>
                     <div class="li_box_content">
                         <div class="li_box_left">
@@ -120,7 +120,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <div class="title_thongke"><i class="icon icon-file-stats2"></i> THỐNG KÊ ĐƠN HÀNG SÀN</div>
                 <div class="li_box">
                     <h3 class="color_green">Đơn hàng hoàn thành</h3>
