@@ -21,7 +21,7 @@
     </div>
     <div style="width: 15%;" class="text-center">
         <!-- <button class="reduced items-count btn-minus" type="button">–</button> -->
-        <input type="text" maxlength="12" min="0" class="input-text number-sidebar" name="quantity" size="4" value="{quantity}">
+        <input type="text" maxlength="12" min="0" class="input-text number-sidebar" name="quantity" size="4" value="{quantity}" readonly> 
         <!-- <button class="increase items-count btn-plus" type="button">+</button> -->
     </div>
     

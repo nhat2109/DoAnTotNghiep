@@ -2,7 +2,34 @@
 
 <body>
     <style>
-        
+        .donhang_wrapper {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+          }
+          
+          /* Giữ thead cố định khi cuộn */
+          .list_donhang thead th {
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 2;
+          }
+          
+          /* Table full width + khớp cột */
+          .list_donhang {
+            width: 100%;
+            border-collapse: collapse;
+          }
+          
+          .list_donhang th,
+          .list_donhang td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: left;
+            vertical-align: top;
+          }
+          
     </style>
     {box_header}
     <section class="bread-crumb margin-bottom-10">
@@ -89,17 +116,23 @@
                     </div>
                     <h1>Đơn hàng của bạn</h1>
                     <div class="box_profile">
-                        <table class="list_donhang">
-                            <tr>
-                                <th width="100">Mã đơn</th>
-                                <th width="100" class="mobile_hide">Ngày</th>
-                                <th>Sản phẩm</th>
-                                <th width="120" class="mobile_hide">Giá trị</th>
-                                <th width="120" class="mobile_hide">Tình trạng</th>
-                                <th width="100">Chi tiết</th>
-                            </tr>
-                            {list_donhang}
-                        </table>
+                        <div class="donhang_wrapper">
+                            <table class="list_donhang">
+                              <thead>
+                                <tr>
+                                  <th width="100">Mã đơn</th>
+                                  <th width="100" class="mobile_hide">Ngày</th>
+                                  <th>Sản phẩm</th>
+                                  <th width="120" class="mobile_hide">Giá trị</th>
+                                  <th width="120" class="mobile_hide">Tình trạng</th>
+                                  <th width="100">Chi tiết</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {list_donhang}
+                              </tbody>
+                            </table>
+                          </div>
                     </div>
                 </div>
             </div>

@@ -152,7 +152,7 @@ if ($action == 'check_exp') {
 				$ok = 1;
 				$thongbao = 'Đang chuyển hướng...';
 				mysqli_query($conn, "INSERT INTO donhang_shop(ma_don,shop,user_id,ho_ten,email,dien_thoai,dia_chi,tinh,huyen,sanpham,tamtinh,coupon,giam,phi_ship,tongtien,status,thanhtoan,date_post,ghi_chu) VALUES ('$ma_don','$shop','$user_id','$ho_ten','$email','$dien_thoai','$dia_chi','$tinh','$huyen','$sanpham','$tamtinh','$coupon','$giam','$phi_ship','$tongtien','0','$thanhtoan'," . time() . ",'$ghi_chu')");
-				$noidung_notification = "Bạn có đơn hàng mới: #$ma_don";
+				$noidung_notification = "Bạn có đơn hàng mới: #$ma_don - " . $ho_ten . " - " . $dien_thoai;
 				$date_post = time();
 				mysqli_query($conn, "INSERT INTO notification (user_id, sp_id, noi_dung, doc, bo_phan, admin, date_post) VALUES ('$user_id', '$ma_don', '$noidung_notification', '', 'donhang', '0', '$date_post')");
 				if ($ok == 1) {

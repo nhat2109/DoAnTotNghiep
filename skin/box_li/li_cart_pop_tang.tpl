@@ -9,7 +9,7 @@
         <div class="item-price"><span class="price">{gia_moi}₫</span></div>
     </div>
     <div style="width: 15%;" class="text-center">
-        <input type="text" maxlength="12" min="0" class="input-text number-sidebar" disabled="disabled" name="quantity" size="4" value="{quantity}">
+        <input type="text" maxlength="12" min="0" class="input-text number-sidebar" disabled="disabled" name="quantity" size="4" value="{quantity}" readonly>
     </div>
     <div style="width: 15%;" class="text-center"><span class="cart-price"> <span class="price">{thanhtien}₫</span> </span></div>
 </div>

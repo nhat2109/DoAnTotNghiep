@@ -463,9 +463,9 @@ $(document).ready(function () {
 
   $(".cart-items").on("click", ".btn-plus", function () {
     var $row = $(this).closest(".shopping-cart-item");
-    var id = $row.find(".remove-item-cart").data("id");
-    var color = $row.find(".remove-item-cart").data("color");
-    var size = $row.find(".remove-item-cart").data("size");
+    var id = $row.find(".remove-item-cart-shop").data("id");
+    var color = $row.find(".remove-item-cart-shop").data("color");
+    var size = $row.find(".remove-item-cart-shop").data("size");
     var quantity = parseInt($row.find("input[name=quantity]").val()) + 1;
 
     $.ajax({
@@ -494,9 +494,9 @@ $(document).ready(function () {
 
   $(".cart-items").on("click", ".btn-minus", function () {
     var $row = $(this).closest(".shopping-cart-item");
-    var id = $row.find(".remove-item-cart").data("id");
-    var color = $row.find(".remove-item-cart").data("color");
-    var size = $row.find(".remove-item-cart").data("size");
+    var id = $row.find(".remove-item-cart-shop").data("id");
+    var color = $row.find(".remove-item-cart-shop").data("color");
+    var size = $row.find(".remove-item-cart-shop").data("size");
     var quantity = parseInt($row.find("input[name=quantity]").val());
 
     if (quantity > 1) {
@@ -729,7 +729,7 @@ $(document).ready(function () {
   });
   //////////////////////////
   $(".cart_page_mobile").on("click", ".btn-plus", function () {
-    id = $(this).parent().parent().find(".remove-item-cart").data("id");
+    id = $(this).parent().parent().find(".remove-item-cart-shop").data("id");
     quantity = $(this).parent().find("input[name=quantity]").val();
     quantity++;
     $.ajax({
@@ -753,7 +753,7 @@ $(document).ready(function () {
   });
   //////////////////////////
   $(".cart_page_mobile").on("click", ".btn-minus", function () {
-    id = $(this).parent().parent().find(".remove-item-cart").data("id");
+    id = $(this).parent().parent().find(".remove-item-cart-shop").data("id");
     quantity = $(this).parent().find("input[name=quantity]").val();
     if (quantity > 1) {
       quantity--;
