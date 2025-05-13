@@ -335,9 +335,10 @@ if (!isset($_COOKIE['user_id'])) {
 		}
 
 		// Thực thi truy vấn để thêm mới banner
-		$query = "INSERT INTO banner (tieu_de, link, minh_hoa, target, vi_tri, thu_tu, shop_id) VALUES (
+		$query = "INSERT INTO banner (tieu_de, link, bg_banner, minh_hoa, target, vi_tri, thu_tu, shop_id) VALUES (
 			'$tieu_de',
 			'$link',
+			'0',
 			'$minh_hoa',
 			'$target',
 			'$vi_tri',

@@ -14,6 +14,14 @@ if (isset($_COOKIE['user_id'])) {
     $user_info = $class_member->user_info($conn, $_COOKIE['user_id']);
 } else {
     $box_header = $skin->skin_normal('skin_shop/' . $s . '/tpl/box_header');
+    $thongbao = "Bạn chưa đăng nhập tài khoản.";
+        $replace = [
+            'title' => 'Chưa đăng nhập tài khoản',
+            'thongbao' => $thongbao,
+            'link' => '/dang-nhap.html'
+        ];
+    echo $skin->skin_replace('skin_shop/' . $s . '/tpl/chuyenhuong', $replace);
+    exit();
 }
 
 $tach_menu = json_decode($class_index->list_menu($conn, $s, $r_shop['user_id']), true);

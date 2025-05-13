@@ -14,8 +14,7 @@ if ($action == 'check_exp') {
 		$thongbao = 'Shop chưa hết hạn';
 	}
 	echo json_encode(array('ok' => $ok, 'thongbao' => $thongbao));
-}
- else if ($action == 'checkout_complete') {
+} else if ($action == 'checkout_complete') {
 	$ho_ten = addslashes(strip_tags($_REQUEST['ho_ten'] ?? ''));
 	$email = addslashes(strip_tags($_REQUEST['email'] ?? ''));
 	$dien_thoai = addslashes(strip_tags($_REQUEST['dien_thoai'] ?? ''));
@@ -167,8 +166,7 @@ if ($action == 'check_exp') {
 		}
 	}
 	echo json_encode(['ok' => $ok, 'thongbao' => $thongbao]);
-}
- else if ($action == 'load_huyen') {
+} else if ($action == 'load_huyen') {
 	$tinh = intval($_REQUEST['tinh']);
 	$thongtin = mysqli_query($conn, "SELECT * FROM huyen_moi WHERE tinh='$tinh' ORDER BY tieu_de ASC");
 	while ($r_tt = mysqli_fetch_assoc($thongtin)) {
@@ -219,8 +217,7 @@ if ($action == 'check_exp') {
 		$thongbao = 'Sản phẩm không nằm trong chương trình mua kèm deal sốc';
 	}
 	echo json_encode(array('ok' => $ok, 'thongbao' => $thongbao));
-}
-else if ($action == 'add_to_cart') {
+} else if ($action == 'add_to_cart') {
 	$sp_id = intval($_REQUEST['sp_id'] ?? 0);
 	$variant_id = intval($_REQUEST['variant_id'] ?? 0);
 	$mau = addslashes(strip_tags($_REQUEST['mau'] ?? ''));
@@ -405,8 +402,7 @@ else if ($action == 'add_to_cart') {
 	]);
 	exit();
 	////////////////////////////////////////
-}
- else if ($action == 'update_cart') {
+} else if ($action == 'update_cart') {
 	$sp_id = intval($_REQUEST['sp_id']);
 	$quantity = intval($_REQUEST['quantity']);
 	if (isset($_SESSION['cart'][$sp_id]) and $quantity > 1) {
@@ -1517,8 +1513,7 @@ else if ($action == 'add_to_cart') {
 		'link' => $link,
 	);
 	echo json_encode($info);
-}
-else if ($action == 'quick_view') {
+} else if ($action == 'quick_view') {
 	global $skin, $s;
 	$sp_id = (int) $_REQUEST['sp_id'];
 	$link = addslashes(strip_tags($_REQUEST['link']));
@@ -1703,8 +1698,7 @@ else if ($action == 'quick_view') {
 	];
 
 	echo $skin->skin_replace('skin_shop/' . $s . '/tpl/quick_view', $replace);
-}
-else if ($action == 'load_sp_more_index') {
+} else if ($action == 'load_sp_more_index') {
 	$limit = (int) $_REQUEST['limit'];
 	$list_sp = $class_index->list_home_goiy($conn, $s, $shop, $limit);
 	echo json_encode(
@@ -1713,8 +1707,7 @@ else if ($action == 'load_sp_more_index') {
 			'list_sp' => $list_sp,
 		]
 	);
-} 
-else if ($action == 'fee_ship') {
+} else if ($action == 'fee_ship') {
 	$sender_province = addslashes(strip_tags($_REQUEST['sender_province'] ?? ''));
 	$sender_district = addslashes(strip_tags($_REQUEST['sender_district'] ?? ''));
 	$receiver_province = addslashes(strip_tags($_REQUEST['receiver_province'] ?? ''));
@@ -1740,8 +1733,7 @@ else if ($action == 'fee_ship') {
 	//     'amount' => $amount,
 	// 	'fee'=> $data_ship
 	// ]);
-}
-else if ($action == 'search_suggestions') {
+} else if ($action == 'search_suggestions') {
     $keyword = addslashes(strip_tags($_REQUEST['keyword'] ?? ''));
     $list_muakem_id = $_REQUEST['list_muakem_id'] ?? ''; // Giả sử dữ liệu được gửi qua request
     $list_tang_id = $_REQUEST['list_tang_id'] ?? '';
@@ -1751,8 +1743,7 @@ else if ($action == 'search_suggestions') {
     $class_index = $tlca_do->load_skin($s, 'class_shop');
   $suggestions = $class_index->get_search_suggestions($conn, $s, $shop, $keyword);
     echo json_encode($suggestions);
-}
-else if ($action == 'show_cart') {
+} else if ($action == 'show_cart') {
         global $conn, $skin, $s, $shop;
 
     $list_shopcart = '';
@@ -1933,8 +1924,7 @@ else if ($action == 'show_cart') {
         'thongbao' => 'Cập nhật giỏ hàng thành công'
     ]);
     exit;
-}
-else if ($action == 'remove_cart' && isset($_POST['id'])) {
+} else if ($action == 'remove_cart' && isset($_POST['id'])) {
         $product_id = mysqli_real_escape_string($conn, $_POST['id']);
 
         if (isset($_SESSION['cart'][$product_id])) {
@@ -1951,8 +1941,7 @@ else if ($action == 'remove_cart' && isset($_POST['id'])) {
             ]);
         }
         exit;
-}
-else {
+} else {
 	echo "Không có hành động nào được xử lý";
 }
 

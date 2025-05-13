@@ -156,7 +156,7 @@ $banner_first = '<div class="banner_slider swiper">'; // Changed from slide_home
 $banner_first .= '<div class="swiper-wrapper">';
 $exclude_ids = [];
 $i = 0;
-$query_first = "SELECT * FROM banner WHERE shop_id = '{$r_shop['user_id']}' ORDER BY thu_tu ASC LIMIT 2";
+$query_first = "SELECT * FROM banner WHERE shop_id = '{$r_shop['user_id']}' AND vi_tri='banner_giua' ORDER BY thu_tu ASC LIMIT 2";
 // var_dump("SELECT * FROM banner WHERE shop_id = '{$r_shop['user_id']}' ORDER BY thu_tu ASC LIMIT 2");
 // die;
 $result_first = mysqli_query($conn, $query_first);
@@ -177,7 +177,7 @@ $banner_first .= '</div>';
 $banner_two = '<div class="banner_slider swiper">'; // Changed from slide_home to banner_slider
 $banner_two .= '<div class="swiper-wrapper">';
 $ids = implode(',', $exclude_ids);
-$query_second = "SELECT * FROM banner WHERE shop_id = '{$r_shop['user_id']}' AND id NOT IN ($ids) ORDER BY thu_tu ASC LIMIT 2";
+$query_second = "SELECT * FROM banner WHERE shop_id = '{$r_shop['user_id']}' AND vi_tri='banner_giua' AND id NOT IN ($ids) ORDER BY thu_tu ASC LIMIT 2";
 $result_second = mysqli_query($conn, $query_second);
 while ($row = mysqli_fetch_assoc($result_second)) {
     $row['blank'] = $check->blank($row['post_tieude']);

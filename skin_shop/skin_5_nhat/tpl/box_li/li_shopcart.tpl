@@ -22,7 +22,7 @@
                     data-color="{color}" data-size="{size}">
                 <button type="button" class="btn-plus" data-id="{id}" data-color="{color}" data-size="{size}">+</button>
             </div>
-            <a href="javascript:;" class="remove-item-cart" data-id="{id}" data-color="{color}" data-size="{size}">
+            <a href="javascript:;" class="remove-item-cart-shop" data-id="{id}" data-color="{color}" data-size="{size}">
                 <i class="fa fa-trash"></i>
             </a>
         </div>
@@ -116,14 +116,14 @@
         margin: 0;
     }
 
-    .remove-item-cart {
+    .remove-item-cart-shop {
         color: #666;
         font-size: 18px;
         text-decoration: none;
         padding: 5px;
     }
 
-    .remove-item-cart:hover {
+    .remove-item-cart-shop:hover {
         color: #ef4444;
     }
 

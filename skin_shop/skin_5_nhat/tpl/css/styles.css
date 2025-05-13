@@ -4,9 +4,9 @@
 
 #voiceSearchBtn {
     width: 47px;
-    height: 38px;
+    height: 38.5px;
     left: 80%;
-    top: -40px;
+    top: -39.8px;
     z-index: 9999999000000000000001;
     position: relative;
     background: none;
@@ -49,6 +49,13 @@ body {
 @media (max-width: 767px) {
     body {
         margin-bottom: 50px;
+    }
+    #voiceSearchBtn
+    {
+        width: 47px !important;
+        height: 38.5px !important;
+        left: 75% !important;
+        top: -40.8px !important;
     }
 }
 

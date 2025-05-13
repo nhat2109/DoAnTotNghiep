@@ -66,15 +66,12 @@ function readURL(input, id) {
   }
 }
 function removeURLParameter(url, parameter) {
-  //prefer to use l.search if you have a location/link object
   var urlparts = url.split("?");
   if (urlparts.length >= 2) {
     var prefix = encodeURIComponent(parameter) + "=";
     var pars = urlparts[1].split(/[&;]/g);
 
-    //reverse iteration as may be destructive
-    for (var i = pars.length; i-- > 0;) {
-      //idiom for string.startsWith
+    for (var i = pars.length; i-- > 0; ) {
       if (pars[i].lastIndexOf(prefix, 0) !== -1) {
         pars.splice(i, 1);
       }
@@ -291,45 +288,6 @@ $(document).ready(function () {
     $("#zoom_01").attr("src", src);
   });
   //////////////////////////
-  // $(".tbody-popup").on("click", ".remove-cart-popup", function() {
-  //   var sp_id = $(this).data("id");
-  //   var color = $(this).data("color") || '';
-  //   var size = $(this).data("size") || '';
-
-  //   $(".load_overlay").show();
-  //   $(".load_process").fadeIn();
-
-  //   $.ajax({
-  //       url: "/process.php",
-  //       type: "POST",
-  //       data: {
-  //           action: "remove_cart",
-  //           sp_id: sp_id,
-  //           color: color,
-  //           size: size
-  //       },
-  //       success: function(kq) {
-  //           try {
-  //               var info = JSON.parse(kq);
-  //               if (info.ok == 1) {
-  //                   $(".count_item_pr").html(info.total);
-  //                   $(".total-price").html(info.total_price);
-  //                   $(".tbody-popup").html(info.list);
-  //                   $(".content_cart_header .count_item").html(info.total);
-  //               }
-  //           } catch(e) {
-  //               console.error("JSON parse error:", e);
-  //           }
-  //           $(".load_process").hide();
-  //           $(".load_overlay").hide();
-  //       },
-  //       error: function() {
-  //           $(".load_process").hide();
-  //           $(".load_overlay").hide();
-  //           alert("Có lỗi xảy ra, vui lòng thử lại!");
-  //       }
-  //   });
-  // });
   $(".tbody-popup").on("click", ".remove-cart-popup", function () {
     var sp_id = $(this).data("id");
     var color = $(this).data("color") || "";
@@ -534,7 +492,6 @@ $(document).ready(function () {
     });
   });
 
-  // Sự kiện giảm số lượng
   $(".cart-items").on("click", ".btn-minus", function () {
     var $row = $(this).closest(".shopping-cart-item");
     var id = $row.find(".remove-item-cart").data("id");
@@ -571,12 +528,12 @@ $(document).ready(function () {
   });
   //////////////////////////
 
-  $(".cart-items").on("click", ".remove-item-cart", function () {
-    var $button = $(this); // Lưu tham chiếu đến nút xóa
+  $(".cart-items").on("click", ".remove-item-cart-shop", function () {
+    var $button = $(this);
     var sp_id = $button.data("id") || 0;
     var color = $button.data("color") || "";
     var size = $button.data("size") || "";
-    var $item = $button.closest(".shopping-cart-item"); // Lấy phần tử sản phẩm cần xóa
+    var $item = $button.closest(".shopping-cart-item");
 
     $.ajax({
       url: "/process.php",
@@ -591,26 +548,21 @@ $(document).ready(function () {
         var info = JSON.parse(kq);
         if (info.ok === 1) {
           if (info.total_cart > 0) {
-            // Xóa chỉ sản phẩm bị xóa khỏi giao diện
             $item.remove();
 
-            // Cập nhật số lượng sản phẩm trong giỏ
             $(".count_item_pr").html(info.total_cart);
             $("#popup-cart .cart-popup-count").html(info.total_cart);
 
-            // Cập nhật tổng tiền
             $(".cart-summary-section .total .price").html(info.tongtien);
-            $(".totals_price").html(info.tongtien); // Nếu có class này
+            $(".totals_price").html(info.tongtien);
             $(".totals_price_mobile").html(info.tongtien);
 
-            // Cập nhật tạm tính (nếu cần)
             $(".cart-summary-section .summary-item:not(.total) .price").html(
               info.tamtinh
             );
 
             console.log("Đã xóa sản phẩm");
           } else {
-            // Nếu giỏ hàng trống, xóa toàn bộ giao diện
             $(".cart_page_mobile").html("");
             $(".cart-items").html("<p>Giỏ hàng của bạn trống.</p>");
             $(".count_item_pr").html("0");
@@ -620,7 +572,7 @@ $(document).ready(function () {
             $(".totals_price_mobile").html("0 ₫");
           }
         } else {
-          alert(info.thongbao); // Hiển thị thông báo lỗi từ server
+          alert(info.thongbao);
         }
       },
       error: function () {
@@ -630,6 +582,97 @@ $(document).ready(function () {
   });
 
   //////////////////////////
+  $(".cart_page_mobile").on("click", ".remove-item-cart-shop", function () {
+    id = $(this).data("id");
+    $.ajax({
+      url: "/process.php",
+      type: "post",
+      data: {
+        action: "remove_shopcart",
+        sp_id: id,
+      },
+      success: function (kq) {
+        var info = JSON.parse(kq);
+        if (info.total_cart > 0) {
+          $(".cart_page_mobile").html(info.list_shopcart_mobile);
+          $(".cart_desktop_page .cart-tbody").html(info.list_shopcart);
+          $(".count_item_pr").html(info.total_cart);
+          $("#popup-cart .cart-popup-count").html(info.total_cart);
+          $(".totals_price").html(info.tongtien);
+          $(".totals_price_mobile").html(info.tongtien);
+        } else {
+          $(".cart_page_mobile").html("");
+          $(".cart_desktop_page .cart-tbody").html("");
+          $(".count_item_pr").html("0");
+          $("#popup-cart .cart-popup-count").html("0");
+          $(".totals_price").html("0");
+          $(".totals_price_mobile").html("0");
+        }
+      },
+    });
+  });
+  $(".cart-items").on("click", ".remove-item-cart", function () {
+    var $button = $(this);
+    var sp_id = $button.data("id") || 0;
+    var color = $button.data("color") || "";
+    var size = $button.data("size") || "";
+    var $cartItem = $button.closest(".cart-item");
+
+    $.ajax({
+      url: "/process.php",
+      type: "post",
+      data: {
+        action: "remove_shopcart",
+        sp_id: sp_id,
+        color: color,
+        size: size,
+      },
+      success: function (kq) {
+        var info = JSON.parse(kq);
+        if (info.ok === 1) {
+          if (info.total_cart > 0) {
+            $cartItem.remove();
+
+           var $shopCartItem = $(".shopping-cart-item").filter(function () {
+                return (
+                    $(this).find(".remove-item-cart-shop").data("id") == sp_id &&
+                    $(this).find(".remove-item-cart-shop").data("color") == color &&
+                    $(this).find(".remove-item-cart-shop").data("size") == size
+                );
+            });
+            $shopCartItem.remove();
+
+            $(".count_item_pr").html(info.total_cart);
+            $("#popup-cart .cart-popup-count").html(info.total_cart);
+
+            $(".cart-summary-section .total .price").html(info.tongtien);
+            $(".totals_price").html(info.tongtien);
+            $(".totals_price_mobile").html(info.tongtien);
+
+            $(".cart-summary-section .summary-item:not(.total) .price").html(
+              info.tamtinh
+            );
+
+            console.log("Đã xóa sản phẩm trong xem nhanh cart và shopcart");
+          } else {
+            $(".cart_page_mobile").html("");
+            $(".cart-items").html("<p>Giỏ hàng của bạn trống.</p>");
+            $(".count_item_pr").html("0");
+            $("#popup-cart .cart-popup-count").html("0");
+            $(".cart-summary-section .total .price").html("0 ₫");
+            $(".totals_price").html("0 ₫");
+            $(".totals_price_mobile").html("0 ₫");
+          }
+        } else {
+          alert(info.thongbao);
+        }
+      },
+      error: function () {
+        alert("Có lỗi xảy ra khi xóa sản phẩm!");
+      },
+    });
+  });
+  //////////////////////////
   $(".cart_page_mobile").on("click", ".remove-item-cart", function () {
     id = $(this).data("id");
     $.ajax({
@@ -638,6 +681,8 @@ $(document).ready(function () {
       data: {
         action: "remove_shopcart",
         sp_id: id,
+        color: color,
+        size: size,
       },
       success: function (kq) {
         var info = JSON.parse(kq);
@@ -775,113 +820,6 @@ $(document).ready(function () {
     $(".order-summary.thongtin_donhang").addClass("order-summary-is-collapsed");
   });
   //////////////////////////
-  // $("#checkout_step_1").on("click", function () {
-  //   ho_ten = $("input[name=ho_ten]").val();
-  //   email = $("input[name=email]").val();
-  //   dien_thoai = $("input[name=dien_thoai]").val();
-  //   dia_chi = $("input[name=dia_chi]").val();
-  //   tinh = $("select[name=tinh]").val();
-  //   huyen = $("select[name=huyen]").val();
-  //   if (ho_ten.length < 4) {
-  //     $("input[name=ho_ten]").focus();
-  //   } else if (dien_thoai.length < 8) {
-  //     $("input[name=dien_thoai]").focus();
-  //   } else if (dia_chi.length < 10) {
-  //     $("input[name=dia_chi]").focus();
-  //   } else if (tinh == "") {
-  //     $(".load_overlay").show();
-  //     $(".load_process").fadeIn();
-  //     setTimeout(function () {
-  //       $(".load_note").html("Vui lòng chọn Tỉnh/Thành phố");
-  //     }, 1000);
-  //     setTimeout(function () {
-  //       $(".load_process").hide();
-  //       $(".load_note").html("Hệ thống đang xử lý");
-  //       $(".load_overlay").hide();
-  //     }, 3000);
-  //   } else if (huyen == "") {
-  //     $(".load_overlay").show();
-  //     $(".load_process").fadeIn();
-  //     setTimeout(function () {
-  //       $(".load_note").html("Vui lòng chọn Quận/huyện");
-  //     }, 1000);
-  //     setTimeout(function () {
-  //       $(".load_process").hide();
-  //       $(".load_note").html("Hệ thống đang xử lý");
-  //       $(".load_overlay").hide();
-  //     }, 3000);
-  //   } else {
-  //     $(".load_overlay").show();
-  //     $(".load_process").fadeIn();
-  //     $.ajax({
-  //       url: "/process.php",
-  //       type: "post",
-  //       data: {
-  //         action: "checkout_step_1",
-  //         ho_ten: ho_ten,
-  //         email: email,
-  //         dien_thoai: dien_thoai,
-  //         dia_chi: dia_chi,
-  //         tinh: tinh,
-  //         huyen: huyen,
-  //       },
-  //       success: function (kq) {
-  //         var info = JSON.parse(kq);
-  //         if (info.ok == 1) {
-  //           setTimeout(function () {
-  //             $(".load_note").html(info.thongbao);
-  //           }, 1000);
-  //           setTimeout(function () {
-  //             window.location.href = "/checkout.html?step=2";
-  //           }, 3000);
-  //         } else {
-  //           setTimeout(function () {
-  //             $(".load_note").html(info.thongbao);
-  //           }, 1000);
-  //           setTimeout(function () {
-  //             $(".load_process").hide();
-  //             $(".load_note").html("Hệ thống đang xử lý");
-  //             $(".load_overlay").hide();
-  //           }, 3000);
-  //         }
-  //       },
-  //     });
-  //   }
-  // });
-  // //////////////////////////
-  // $("#checkout_step_2").on("click", function () {
-  //   thanhtoan = $("input[name=payment_method_id]:checked").val();
-  //   $(".load_overlay").show();
-  //   $(".load_process").fadeIn();
-  //   $.ajax({
-  //     url: "/process.php",
-  //     type: "post",
-  //     data: {
-  //       action: "checkout_step_2",
-  //       thanhtoan: thanhtoan,
-  //     },
-  //     success: function (kq) {
-  //       var info = JSON.parse(kq);
-  //       if (info.ok == 1) {
-  //         setTimeout(function () {
-  //           $(".load_note").html(info.thongbao);
-  //         }, 1000);
-  //         setTimeout(function () {
-  //           window.location.href = "/checkout.html?step=3";
-  //         }, 3000);
-  //       } else {
-  //         setTimeout(function () {
-  //           $(".load_note").html(info.thongbao);
-  //         }, 1000);
-  //         setTimeout(function () {
-  //           $(".load_process").hide();
-  //           $(".load_note").html("Hệ thống đang xử lý");
-  //           $(".load_overlay").hide();
-  //         }, 3000);
-  //       }
-  //     },
-  //   });
-  // });
 
   $("#checkout_complete").on("click", function () {
     var ho_ten = $("input[name=ho_ten]").val().trim();
@@ -1209,7 +1147,7 @@ $(document).ready(function () {
   });
   /////////////////////////////
 
-  $("body").on("click", '.add_to_cart', function () {
+  $("body").on("click", ".add_to_cart", function () {
     if (!$(this).hasClass("disabled")) {
       // Lấy thông tin từ nút button
       let sp_id = $(this).attr("sp_id");
@@ -1279,7 +1217,6 @@ $(document).ready(function () {
           gia_moi: gia_moi,
         },
 
-
         success: function (kq) {
           try {
             var info = JSON.parse(kq);
@@ -1289,7 +1226,9 @@ $(document).ready(function () {
                 $(".load_note").html("Hệ thống đang xử lý");
                 $("#popup-cart").css("display", "block");
                 $("#popup-cart .tbody-popup").html(info.list);
-                $("#popup-cart .tfoot-popup .total-price").html(info.total_price);
+                $("#popup-cart .tfoot-popup .total-price").html(
+                  info.total_price
+                );
                 $("#popup-cart .cart-popup-name").html(info.name);
                 $("#popup-cart .cart-popup-count").html(info.total_cart);
                 $(".content_cart_header .count_item").html(info.total);
@@ -1314,149 +1253,6 @@ $(document).ready(function () {
       });
     }
   });
-
-  // $(".quick-view").on("click", function () {
-  //   var sp_id = $(this).data("id");
-  //   var link = $(this).data("link");
-
-  //   $.ajax({
-  //     url: "/process.php",
-  //     type: "POST",
-  //     data: {
-  //       action: "quick_view",
-  //       sp_id: sp_id,
-  //       link: link,
-  //     },
-  //     success: function (response) {
-  //       $("#quick-view-content").html(response);
-  //       $("#quick-view-popup").css("display", "flex");
-
-  //       var galleryThumbs = new Swiper(".gallery-thumbs", {
-  //         spaceBetween: 10,
-  //         slidesPerView: 4,
-  //         freeMode: true,
-  //         watchSlidesVisibility: true,
-  //         watchSlidesProgress: true,
-  //       });
-  //       var galleryTop = new Swiper(".gallery-top", {
-  //         spaceBetween: 10,
-  //         thumbs: {
-  //           swiper: galleryThumbs,
-  //         },
-  //       });
-
-  //       // Logic xử lý biến thể
-  //       document.querySelectorAll(".variant-color").forEach((input) => {
-  //         input.addEventListener("change", function () {
-  //           const selectedColor = this.value;
-  //           const sizeSwap = document.getElementById("size-swap");
-  //           let sizeHtml = "";
-  //           let firstSize = true;
-  //           variants.forEach((variant) => {
-  //             if (variant.color === selectedColor) {
-  //               const checked = firstSize ? "checked" : "";
-  //               sizeHtml += `
-  //                               <div class="n-sd swatch-element">
-  //                                   <input class="variant-size" id="size-${variant.size}" type="radio" name="size" value="${variant.size}" ${checked} data-kho="${variant.kho}" data-gia="${variant.gia_moi}" data-ten-size="${variant.ten_size}" />
-  //                                   <label for="size-${variant.size}">${variant.ten_size}</label>
-  //                               </div>`;
-  //               firstSize = false;
-  //             }
-  //           });
-  //           sizeSwap.innerHTML = sizeHtml;
-  //           updateStockAndPrice();
-  //           addSizeEventListeners();
-  //         });
-  //       });
-
-  //       function addSizeEventListeners() {
-  //         document.querySelectorAll(".variant-size").forEach((input) => {
-  //           input.addEventListener("change", updateStockAndPrice);
-  //         });
-  //       }
-  //       addSizeEventListeners();
-
-  //       function updateStockAndPrice() {
-  //         const selectedSize = document.querySelector(".variant-size:checked");
-  //         if (selectedSize) {
-  //           const kho = selectedSize.getAttribute("data-kho");
-  //           const gia = selectedSize.getAttribute("data-gia");
-  //           const stockStatus = kho > 0 ? "Còn hàng" : "Hết hàng";
-  //           const buttonText = kho > 0 ? "Thêm vào giỏ hàng" : "Hết hàng";
-  //           const disabled = kho > 0 ? "" : "disabled";
-
-  //           document.getElementById("stock-status").innerText = stockStatus;
-  //           document.getElementById("price").innerText =
-  //             new Intl.NumberFormat().format(gia);
-  //           document.getElementById("buy-button").innerText = buttonText;
-  //           document
-  //             .getElementById("buy-button")
-  //             .classList.toggle("disabled", kho <= 0);
-  //         }
-  //       }
-  //       $(".btn-plus").on("click", function () {
-  //         var input = $(this).siblings("input.quantity");
-  //         var currentVal = parseInt(input.val());
-  //         input.val(currentVal + 1);
-  //       });
-
-  //       $(".btn-minus").on("click", function () {
-  //         var input = $(this).siblings("input.quantity");
-  //         var currentVal = parseInt(input.val());
-  //         if (currentVal > 1) {
-  //           input.val(currentVal - 1);
-  //         }
-  //       });
-
-  //       // Xử lý thêm vào giỏ hàng
-  //       $("#buy-button").on("click", function () {
-  //         if ($(this).hasClass("disabled")) return;
-
-  //         const selectedColor = document.querySelector(
-  //           ".variant-color:checked"
-  //         ).value;
-  //         const selectedSize = document.querySelector(
-  //           ".variant-size:checked"
-  //         ).value;
-  //         const selectedVariant = variants.find(
-  //           (v) => v.color === selectedColor && v.size === selectedSize
-  //         );
-  //         const cartData = {
-  //           action: "add_to_cart",
-  //           sp_id: $(this).attr("sp_id"),
-  //           loai: $(this).attr("loai"),
-  //           mau: selectedColor,
-  //           size: selectedSize,
-  //           ten_color: selectedVariant.ten_color,
-  //           ten_size: selectedVariant.ten_size,
-  //           gia_moi: selectedVariant.gia_moi,
-  //           kho: selectedVariant.kho,
-  //           quantity: $("#quantity_quick_view").val(),
-  //         };
-
-  //         $.ajax({
-  //           url: "/process.php",
-  //           type: "POST",
-  //           data: cartData,
-  //           success: function (kq) {
-  //             var info = JSON.parse(kq);
-  //             setTimeout(function () {
-  //               $("#popup-cart").css("display", "block");
-  //               $("#popup-cart .tbody-popup").html(info.list);
-  //               $("#popup-cart .tfoot-popup .total-price").html(
-  //                 info.total_price
-  //               );
-  //               $("#popup-cart .cart-popup-name").html(info.name);
-  //               $("#popup-cart .cart-popup-count").html(info.total_cart);
-  //               $(".content_cart_header .count_item").html(info.total);
-  //               $("#quick-view-popup").css("display", "none");
-  //             }, 1000);
-  //           },
-  //         });
-  //       });
-  //     },
-  //   });
-  // });
 
   $(".close-quick-view").on("click", function () {
     $("#quick-view-popup").css("display", "none");
@@ -2317,100 +2113,99 @@ $(document).ready(function () {
     } else {
     }
   });
-   /////////////////
+  /////////////////
 });
 
 $(document).ready(function () {
-    const searchInput = $("#search-input");
-    const searchDropdown = $(".search-dropdown");
-    const featuredProducts = $(".featured-products");
-    const searchProducts = $(".search-products");
-    const featuredList = $(".featured-list");
-    const searchList = $(".search-list");
-    let searchTimeout;
+  const searchInput = $("#search-input");
+  const searchDropdown = $(".search-dropdown");
+  const featuredProducts = $(".featured-products");
+  const searchProducts = $(".search-products");
+  const featuredList = $(".featured-list");
+  const searchList = $(".search-list");
+  let searchTimeout;
 
-    // Load featured products on focus
-    searchInput.on("focus", function () {
-        if (!searchInput.val().trim()) {
-            $.ajax({
-                url: "/process.php",
-                type: "POST",
-                data: {
-                    action: "search_suggestions"
-                },
-                success: function (response) {
-                    const data = JSON.parse(response);
-                    featuredList.html(data.featured);
-                    featuredProducts.show();
-                    searchProducts.hide();
-                    searchDropdown.show();
-                }
-            });
-        }
-    });
+  
+  searchInput.on("focus", function () {
+    if (!searchInput.val().trim()) {
+      $.ajax({
+        url: "/process.php",
+        type: "POST",
+        data: {
+          action: "search_suggestions",
+        },
+        success: function (response) {
+          const data = JSON.parse(response);
+          featuredList.html(data.featured);
+          featuredProducts.show();
+          searchProducts.hide();
+          searchDropdown.show();
+        },
+      });
+    }
+  });
 
-    // Handle search input
-    searchInput.on("input", function () {
-        const keyword = $(this).val().trim();
+  
+  searchInput.on("input", function () {
+    const keyword = $(this).val().trim();
+
+    
+    clearTimeout(searchTimeout);
+
+    
+    searchTimeout = setTimeout(function () {
+      if (keyword) {
+        $.ajax({
+          url: "/process.php",
+          type: "POST",
+          data: {
+            action: "search_suggestions",
+            keyword: keyword,
+          },
+          success: function (response) {
+            const data = JSON.parse(response);
+            searchList.html(data.search);
+            featuredProducts.hide();
+            searchProducts.show();
+            searchDropdown.show();
+          },
+        });
+      } else {
         
-        // Clear previous timeout
-        clearTimeout(searchTimeout);
-        
-        // Set new timeout to prevent too many requests
-        searchTimeout = setTimeout(function () {
-            if (keyword) {
-                $.ajax({
-                    url: "/process.php",
-                    type: "POST",
-                    data: {
-                        action: "search_suggestions",
-                        keyword: keyword
-                    },
-                    success: function (response) {
-                        const data = JSON.parse(response);
-                        searchList.html(data.search);
-                        featuredProducts.hide();
-                        searchProducts.show();
-                        searchDropdown.show();
-                    }
-                });
-            } else {
-                // If search is empty, show featured products
-                $.ajax({
-                    url: "/process.php",
-                    type: "POST",
-                    data: {
-                        action: "search_suggestions"
-                    },
-                    success: function (response) {
-                        const data = JSON.parse(response);
-                        featuredList.html(data.featured);
-                        featuredProducts.show();
-                        searchProducts.hide();
-                        searchDropdown.show();
-                    }
-                });
-            }
-        }, 300); // Delay 300ms
-    });
+        $.ajax({
+          url: "/process.php",
+          type: "POST",
+          data: {
+            action: "search_suggestions",
+          },
+          success: function (response) {
+            const data = JSON.parse(response);
+            featuredList.html(data.featured);
+            featuredProducts.show();
+            searchProducts.hide();
+            searchDropdown.show();
+          },
+        });
+      }
+    }, 300); 
+  });
 
-    // Hide dropdown when clicking outside
-    $(document).on("click", function (e) {
-        if (!$(e.target).closest(".header_search").length) {
-            searchDropdown.hide();
-        }
-    });
+  
+  $(document).on("click", function (e) {
+    if (!$(e.target).closest(".header_search").length) {
+      searchDropdown.hide();
+    }
+  });
 
-    // Handle close button click
-    $(document).on("click", ".close-search-btn", function () {
-        searchDropdown.hide();
-    });
+  
+  $(document).on("click", ".close-search-btn", function () {
+    searchDropdown.hide();
+  });
 
-    // Prevent form submission on enter if dropdown is visible
-    searchInput.on("keydown", function (e) {
-        if (e.keyCode === 13 && searchDropdown.is(":visible")) {
-            e.preventDefault();
-        }
-    });
+  
+  searchInput.on("keydown", function (e) {
+    if (e.keyCode === 13 && searchDropdown.is(":visible")) {
+      e.preventDefault();
+    }
+  });
 });
-

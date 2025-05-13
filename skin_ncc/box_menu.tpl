@@ -274,11 +274,15 @@
 			</div>
 		</div>
 		<div class="li_menu"><a href="javascript:;" class="a_main"><span class="left"><i class="icofont-image"></i>Quản
-					lý slide</span><span class="right"><i class="fa fa-plus-square-o"></i></span></a>
+					lý slide và banner</span><span class="right"><i class="fa fa-plus-square-o"></i></span></a>
 			<div class="list_menu_sub">
 				<div class="li_menu_sub"><a href="/ncc/add-slide"><i class="fa fa-plus-circle"></i>Thêm slide mới</a>
 				</div>
 				<div class="li_menu_sub"><a href="/ncc/list-slide"><i class="icofont-ui-file"></i>Danh sách slide</a>
+				</div>
+				<div class="li_menu_sub"><a href="/ncc/add-banner"><i class="fa fa-plus-circle"></i>Thêm banner mới</a>
+				</div>
+				<div class="li_menu_sub"><a href="/ncc/list-banner"><i class="icofont-ui-file"></i>Danh sách banner</a>
 				</div>
 			</div>
 		</div>

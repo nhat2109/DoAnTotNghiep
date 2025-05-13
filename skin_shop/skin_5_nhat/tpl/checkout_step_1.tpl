@@ -1868,6 +1868,7 @@
 
         .field-input-wrapper {
             width: 100%;
+            margin-top: 10px;
         }
 
         .field-input {
@@ -1990,6 +1991,7 @@
             background: #f8f9fa;
             text-decoration: none;
         }
+        
     </style>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2, user-scalable=no">
 </head>
@@ -2199,48 +2201,50 @@
                                 <div class="section-content section-customer-information no-mb">
                                     <div class="fieldset">
                                         <div class="field field-show-floating-label">
+                                            <label class="field-label" for="billing_address_full_name">Họ và tên <span class="required">*</span></label>
                                             <div class="field-input-wrapper">
-                                                <label class="field-label" for="billing_address_full_name">Họ và tên <span class="required">*</span></label>
                                                 <input placeholder="Họ và tên" autocapitalize="off" spellcheck="false"
                                                     class="field-input" size="30" type="text" name="ho_ten"
                                                     value="{name}">
                                             </div>
                                         </div>
                                         <div class="field field-third field-show-floating-label">
+                                            <label class="field-label" for="billing_address_phone">Số điện thoại <span class="required">*</span></label>
                                             <div class="field-input-wrapper">
-                                                <label class="field-label" for="billing_address_phone">Số điện thoại <span class="required">*</span></label>
                                                 <input placeholder="Số điện thoại" autocapitalize="off"
                                                     spellcheck="false" class="field-input" size="30" maxlength="15"
                                                     type="tel" name="dien_thoai" value="{mobile}">
                                             </div>
                                         </div>
                                         <div class="field field-third field-show-floating-label">
+                                            <label class="field-label" for="customer_shipping_province">Tỉnh/thành<span class="required">*</span></label>
                                             <div class="field-input-wrapper field-input-wrapper-select">
-                                                <label class="field-label" for="customer_shipping_province"><span class="required">*</span></label>
                                                 <select class="field-input" id="customer_shipping_province" name="tinh" value="{tinh}">
+                                                    <option value="0" selected>Chọn tỉnh / thành</option>
                                                     {option_tinh}
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="field field-third field-show-floating-label">
+                                            <label class="field-label" for="customer_shipping_district">Quận / huyện<span class="required">*</span></label>
                                             <div class="field-input-wrapper field-input-wrapper-select">
-                                                <label class="field-label" for="customer_shipping_district"><span class="required">*</span></label>
-                                                <select class="field-input" id="customer_shipping_district" name="huyen" value="{huyen}">
-                                                    <option value="" selected>Chọn quận / huyện</option>
+                                                <select class="field-input" id="customer_shipping_district"
+                                                    name="huyen" value="{huyen}">
+                                                    <option value="">Chọn quận / huyện</option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="field field-show-floating-label">
+                                            <label class="field-label" for="billing_address_address1">Địa chỉ đầy đủ <span class="required">*</span></label>
                                             <div class="field-input-wrapper">
-                                                <label class="field-label" for="billing_address_address1">Địa chỉ đầy đủ <span class="required">*</span></label>
                                                 <input placeholder="Địa chỉ" autocapitalize="off" spellcheck="false"
                                                     class="field-input" size="30" type="text" name="dia_chi"
                                                     value="{dia_chi}">
                                             </div>
                                        </div>
                                         <div class="field field-show-floating-label">
+                                            <label class="field-label" for="checkout_user_email">Email</label>
                                             <div class="field-input-wrapper">
-                                                <label class="field-label" for="checkout_user_email">Email</label>
                                                 <input placeholder="Email" autocapitalize="off" spellcheck="false"
                                                     class="field-input" size="30" type="email" name="email"
                                                     value="{email}">
@@ -2294,7 +2298,7 @@
     </div>
     <input type="hidden" name="shop" value="{shop}">
     <script type="text/javascript" src="/js/jquery-3.2.1.min.js"></script>
-    <script src="/skin_shop/skin_5_nhat/tpl/js/process.js?t=<?php echo time();?>"></script>
+    <script type="text/javascript" src="/skin_shop/skin_5_nhat/tpl/js/process.js"></script>
     <div class="load_overlay" style="display: none;"></div>
     <div class="load_process" style="display: none;">
         <div class="load_content">
@@ -2314,6 +2318,7 @@
             z-index: 99990;
             display: none;
         }
+
         .load_process {
             position: fixed;
             margin: auto;
@@ -2348,9 +2353,7 @@
         const sender_province = '{sender_province}';
         const sender_district ='{sender_district}';
         const weight = {weight};
-        const amountString = '{tongtien}';
-        const amount = parseInt(amountString.replace(/,/g, ''));
-        console.log(amount);
+        const amount = {amount};
         $(document).ready(function() {
             var $provinceSelect = $('#customer_shipping_province[name="tinh"]');
             var $districtSelect = $('#customer_shipping_district[name="huyen"]');
@@ -2383,9 +2386,6 @@
                 var tinhText = provinceSelect_tinh.find("option:selected").text();
                 var huyenValue = $(this).val();
                 var huyenText = $(this).find("option:selected").text();
-                console.log("Đã chọn huyện:", huyenText, "Giá trị:", huyenValue);
-                console.log("Tỉnh tương ứng:", tinhText, "Giá trị:", tinhValue);
-
                 // Gửi AJAX
                 $.ajax({
                     url: '/process.php', 
@@ -2416,7 +2416,6 @@
                     }
                 });
             });
-
         });
     </script>
 </body>

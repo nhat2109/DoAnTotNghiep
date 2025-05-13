@@ -1,4 +1,130 @@
 <style>
+.cart-item {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.2s ease;
+    list-style-type: none;
+}
+
+.cart-item:hover {
+    list-style-type: none;
+    background-color: #f8f9fa;
+}
+
+.cart-item-inner {
+    display: flex;
+    gap: 15px;
+}
+
+.cart-item-image {
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
+}
+
+.cart-item-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.cart-item-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.cart-item-header {
+    position: relative;
+}
+
+.remove-item-cart {
+    position: absolute;
+    top: -20px;
+    right: -15px;
+    color: #666;
+    font-size: 16px;
+    padding: 5px;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.remove-item-cart:hover {
+    color: #dc3545;
+}
+
+.cart-item-title {
+    margin: 0 0 10px;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.cart-item-title a {
+    color: #333;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.cart-item-title a:hover {
+    color: #007bff;
+}
+
+.cart-item-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.cart-item-price {
+    font-weight: 600;
+    color: #dc3545;
+    font-size: 15px;
+}
+
+.cart-item-quantity {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #666;
+    font-size: 13px;
+}
+
+.quantity-label {
+    color: #666;
+}
+
+.quantity-value {
+    font-weight: 500;
+    color: #333;
+}
+
+@media (max-width: 576px) {
+    .cart-item-inner {
+        gap: 10px;
+    }
+    
+    .cart-item-image {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .cart-item-title {
+        font-size: 13px;
+    }
+    
+    .cart-item-price {
+        font-size: 14px;
+    }
+    
+    .cart-item-quantity {
+        font-size: 12px;
+    }
+}
+</style>
+<style>
 .cart-dropdown {
     z-index: 999 !important;
     position: absolute;
@@ -191,7 +317,7 @@
                         </a>
                     </div>
                 </div>
-                <div class="col-md-5">
+                <div class="col-md-5" style="position:relative; top:20px">
                     <div class="search">
                         <div class="header_search search_form">
                             <form class="input-group search-bar search_form" action="/tim-kiem.html" method="get" role="search">
