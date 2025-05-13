@@ -1,1 +1,0 @@
-<li><a href="{menu_link}" title="{menu_tieude}" target="{menu_target}">{menu_tieude}</a></li>

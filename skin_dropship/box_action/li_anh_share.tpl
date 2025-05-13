@@ -1,1 +1,0 @@
-<div class="li_anh_share"><img src="https://socdo.vn{src}"></div>

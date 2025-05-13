@@ -1,2 +1,0 @@
-<div class="li_ma" id="ma_sanpham_{0}"><input type="text" name="ma_sanpham[]" placeholder="Nhập mã sản phẩm" value="{2}" mau="{0}"><i class="fa fa-arrow-right"></i><span>{1}</span></div>
-<!-- ////HuyPhuc/// -->

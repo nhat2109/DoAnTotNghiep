@@ -1,1 +1,0 @@
-<div class="li_ma_giam"><span>{ma}</span> giảm {giam}đ</div>
