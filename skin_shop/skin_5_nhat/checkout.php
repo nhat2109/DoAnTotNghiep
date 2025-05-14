@@ -141,17 +141,16 @@ if ($step == 1 || !$step) {
     //nccncc
     function getCtvProvinceDistrict($conn, $user_id) {
             $stmt = mysqli_prepare($conn, "
-            SELECT 
-                transport.province, 
-                transport.district, 
-                tinh_moi.tieu_de AS tinh_ten, 
-                huyen_moi.tieu_de AS huyen_ten
+                SELECT 
+                    transport.province, 
+                    transport.district, 
+                    tinh_moi.tieu_de AS tinh_ten, 
+                    huyen_moi.tieu_de AS huyen_ten
                 FROM transport
                 INNER JOIN tinh_moi ON transport.province = tinh_moi.id
                 INNER JOIN huyen_moi ON transport.district = huyen_moi.id
-                WHERE transport.user_id = ? AND transport.is_default = 1
+                WHERE transport.user_id = ? AND (transport.is_default = 1 OR transport.is_pickup = 1)
             ");
-        
             if (!$stmt) {
                 return "Lỗi chuẩn bị truy vấn";
             }
@@ -397,7 +396,7 @@ $replace = [
     'list_product' => $list_product,
     'tongtien' => number_format(floatval($tongtien)),
     'tamtinh' => number_format(floatval($tamtinh)),
-    'giam' => number_format(floatval($giam)),
+    'giam_hienthi' => number_format(floatval($giam)),
     'phi_ship' => number_format(floatval( $phi_ship)) . 'đ',
     'coupon' => $coupon,
     'list_giam' => $list_ma_giam,
@@ -407,7 +406,8 @@ $replace = [
     'sender_province'=>$data['tinh'],
     'sender_district'=>$data['huyen'],
     'weight'=> $trongluong*1000,
-    'amount'=>$tamtinh
+    'amount'=>$tamtinh,
+    'giam'=>$giam,
 ];
 
 if ($step == 3) {

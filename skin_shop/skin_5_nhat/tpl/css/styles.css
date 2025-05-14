@@ -1,6 +1,63 @@
 @charset "UTF-8";
 
+.gd-menu {
+    border-radius: 7px;
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    min-width: 150px;
+    z-index: 1000;
+    box-shadow: none; /* Bỏ bóng nếu không cần */
+    padding: 0;
+}
 
+.dropdown:hover .gd-menu {
+    display: block;
+}
+
+.sub-flex ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.sub-flex ul li {
+    
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.sub-flex ul li:last-child {
+    border-bottom: none;
+}
+
+.sub-flex ul li a.sub-a {
+    display: block;
+    font-size: 14px;
+    color: #333;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color 0.3s ease;
+}
+.sub-flex ul li a::before {
+    content: ''; /* Remove the URL from content */
+    display: inline-block;
+    background-image: url('/skin_shop/skin_5_nhat/tpl/css/images/default_menu_icon.png'); /* Use background-image instead */
+    background-size: contain; /* Ensure the image fits within the defined dimensions */
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 20px; /* Desired width */
+    height: 20px; /* Desired height */
+    margin-right: 8px; /* Space between icon and text */
+    vertical-align: middle; /* Align with text */
+}
+
+.sub-flex ul li a.sub-a:hover {
+    background-color: #f5f5f5;
+    color: #007bff;
+}
 
 #voiceSearchBtn {
     width: 47px;

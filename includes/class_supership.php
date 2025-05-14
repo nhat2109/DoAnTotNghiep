@@ -50,6 +50,7 @@ class class_supership extends class_manage {
       $ok=0;
       $thongbao='Tài khoản đã được đăng ký';
     }else{
+      //https://khachhang.supership.vn/register?referral=S416176
       $partner="WOsRymNkoU8tRsJwFdNZQd73M8urrlxm4NvAtIvA";
       $url = "https://api.mysupership.vn/v1/partner/auth/register";
       $headers = [
@@ -237,10 +238,17 @@ class class_supership extends class_manage {
     return $response;
   }
   function get_tax($sender_province,$sender_district,$receiver_province,$receiver_district,$weight,$amount,$accessToken){
+    // $accessToken là token của bạn
+    // $sender_province là tỉnh gửi
+    // $sender_district là huyện gửi
+    // $receiver_province là tỉnh nhận
+    // $receiver_district là huyện nhận
+    // $weight là trọng lượng
+    // $amount là giá trị
     if($accessToken!=''){
 
     }else{
-      $accessToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjUxNjY5YzJiNTVlMzA0MWVhNTdiNmI1YzQ2ODVlZGM5ZTM0YTcwYmM1OWMyMWRmZTk3NGE2NTdlYTNlMDk1YWM5MzM2ZDc0NGMyZGY2YWY0In0.eyJhdWQiOiIxIiwianRpIjoiNTE2NjljMmI1NWUzMDQxZWE1N2I2YjVjNDY4NWVkYzllMzRhNzBiYzU5YzIxZGZlOTc0YTY1N2VhM2UwOTVhYzkzMzZkNzQ0YzJkZjZhZjQiLCJpYXQiOjE3MjY2MzE4NTksIm5iZiI6MTcyNjYzMTg1OSwiZXhwIjoxNzU4MTY3ODU5LCJzdWIiOiIxMjc1MyIsInNjb3BlcyI6W119.eCRdByLdEXpz8XyhCOl2Mv50OV1f6PKWz_hCkrbOPXcjES7voj_wl3vZUoW5pH3AnT_oQn3HuMlm1Ifx1fldpsrT3qW9m3pTDDjNKBd0jSR1OWREeGqX8HtA8rfILOTe1EjmvynkgtOJVfq5_3H4qqyadKC6dmNjenU-ljfhGpXAsQd2FsW7SNmSoCRvtGvHQS80oB0ZFx-5VtBNFygvDq-9yXjPYVxmNPGC9mJZeyFRtpCX5j4nAaeeMm5QlPWBzdfRSy_hogD03HraEPw9MWMo5A0JpZjijtzrxfiTQ03Xemp3X_aVsvCeN82NfCkVzAiQPkrBFhL4dJlVn3-wbZCy9FUF83eOSroEGjKTm1nIV3hLm1cfgxg_EC-1YihrTrDFbCgfYJAgYSt1fZWNiu-5Tk0BsMqH7_TsSY_X66KZII-HKFlMV_GajxSqL8gVd9fJhViRDRuln354dtK0ky6X0TixiE0ks2Qu9IimE5ZYYart2KLYU6BrNeYj_qzJsiJMyZMpD1uMg5xNp2R3eL41BFqLLVcxaVnbx_MzwiCEtcSQR-Cpxo3tFlCC_k7P-JNp4pCbjEjdjSeyve73zK5AK6uWyqhzgZpJtBeNXKT4Kcm4rX0AtN3o8e32TQSBwXqWxlCh5KcY2ejjwUgqM_sOjbZdM2ldeaPjoSTIMjw';
+      $accessToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImVmNWIwODYyYmIxNGFmYzRjZGVhYmNhMjRjNjk2NzQwOGMzN2Q0ZmIwNTVhOGU5NTU1MzRhZjZlNzNlNGVlNjNiM2E1M2NjMTVlNzczZmRmIn0.eyJhdWQiOiIxIiwianRpIjoiZWY1YjA4NjJiYjE0YWZjNGNkZWFiY2EyNGM2OTY3NDA4YzM3ZDRmYjA1NWE4ZTk1NTUzNGFmNmU3M2U0ZWU2M2IzYTUzY2MxNWU3NzNmZGYiLCJpYXQiOjE3NDUzNzkwNTAsIm5iZiI6MTc0NTM3OTA1MCwiZXhwIjoxNzc2OTE1MDUwLCJzdWIiOiIxODcwMDEiLCJzY29wZXMiOltdfQ.QZDPcOa0c5jZHwMIu9eF-mEAmsAFDHJ1slI-mqpEAATTBJU6b8nPc4zYuUhKZC4noi6J0LKVesDvVx-rogiA-4vYJ7mZIu2x1MhhVfvB9wltNGtwoErogc2fAYmFb2zS4M3xr7_5ZlpWamkORDuGyJA1bkALzPliMFCStUSCa-RaZAFUpWi1lj0bGi7kiOvctNUPDzRDcceoxTVi0Th5wD6VY9lOk9iO6a3YBiks-Tv8bhvPsNiJRri5U4UqaUk9RKRGVEquOAN9uqG7G7btmXh9wYonqnNt-wwQEHJjt9siQ8rc99SRQGSpKee6r21_MI_zrFDZ1qAK30kHWX9IYrpNAFd5rZgt887Mp57L2ZZbcq1H09xqXZs6e76QdzwY1nOaHWf7_Z9fqf0jmFOLn7kVP4bsF5eyqnpuM6leN8wS09Em8uKj4cViZsqHjacS6CjzGApBl5t-XKta1y5DJkp6Hyv6Dqk1suQY5fFKeBBqvepOUQw5Fs4mc5xQHQmfilChsflA6MMGr8NoejgWPdHuKNJIUQ2xia7fZQ83ymR0FG2uFVpP854IveduTur1xtRy8d1WKKSYOuHS-JEKXlSjw58PMNLCqg62eAkt0RdUGcUSZIxbQMZBRLy33u5fEnf8VrKWLhp5fBVWkG2Ns2xmqi72yczt8aifVkdxMIo';
     }
     $url = "https://api.mysupership.vn/v1/partner/orders/price?" . http_build_query([
       'sender_province'   => $sender_province,
@@ -269,6 +277,9 @@ class class_supership extends class_manage {
     return json_decode($response, true); // Trả về mảng kết quả 
   }
   function tao_don($orderData,$accessToken) {
+    if($accessToken!=''){
+      $accessToken='eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImVmNWIwODYyYmIxNGFmYzRjZGVhYmNhMjRjNjk2NzQwOGMzN2Q0ZmIwNTVhOGU5NTU1MzRhZjZlNzNlNGVlNjNiM2E1M2NjMTVlNzczZmRmIn0.eyJhdWQiOiIxIiwianRpIjoiZWY1YjA4NjJiYjE0YWZjNGNkZWFiY2EyNGM2OTY3NDA4YzM3ZDRmYjA1NWE4ZTk1NTUzNGFmNmU3M2U0ZWU2M2IzYTUzY2MxNWU3NzNmZGYiLCJpYXQiOjE3NDUzNzkwNTAsIm5iZiI6MTc0NTM3OTA1MCwiZXhwIjoxNzc2OTE1MDUwLCJzdWIiOiIxODcwMDEiLCJzY29wZXMiOltdfQ.QZDPcOa0c5jZHwMIu9eF-mEAmsAFDHJ1slI-mqpEAATTBJU6b8nPc4zYuUhKZC4noi6J0LKVesDvVx-rogiA-4vYJ7mZIu2x1MhhVfvB9wltNGtwoErogc2fAYmFb2zS4M3xr7_5ZlpWamkORDuGyJA1bkALzPliMFCStUSCa-RaZAFUpWi1lj0bGi7kiOvctNUPDzRDcceoxTVi0Th5wD6VY9lOk9iO6a3YBiks-Tv8bhvPsNiJRri5U4UqaUk9RKRGVEquOAN9uqG7G7btmXh9wYonqnNt-wwQEHJjt9siQ8rc99SRQGSpKee6r21_MI_zrFDZ1qAK30kHWX9IYrpNAFd5rZgt887Mp57L2ZZbcq1H09xqXZs6e76QdzwY1nOaHWf7_Z9fqf0jmFOLn7kVP4bsF5eyqnpuM6leN8wS09Em8uKj4cViZsqHjacS6CjzGApBl5t-XKta1y5DJkp6Hyv6Dqk1suQY5fFKeBBqvepOUQw5Fs4mc5xQHQmfilChsflA6MMGr8NoejgWPdHuKNJIUQ2xia7fZQ83ymR0FG2uFVpP854IveduTur1xtRy8d1WKKSYOuHS-JEKXlSjw58PMNLCqg62eAkt0RdUGcUSZIxbQMZBRLy33u5fEnf8VrKWLhp5fBVWkG2Ns2xmqi72yczt8aifVkdxMIo';
+    }
     $headers = [
         'Accept: application/json',
         'Authorization: Bearer ' . $accessToken,
@@ -317,6 +328,7 @@ class class_supership extends class_manage {
         ]
       ];
     }
+    $url = 'https://api.mysupership.vn/v1/partner/orders/add';
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_POST, true);
@@ -457,6 +469,135 @@ class class_supership extends class_manage {
         return 'Lỗi cURL: ' . curl_error($ch);
     }
     curl_close($ch);
+    return $response;
+  }
+  function tao_kho($name,$phone,$contact,$address,$province,$district,$commune,$primary,$accessToken) {
+    // $accessToken là token của bạn
+    // $name là tên kho
+    // $phone là số điện thoại kho
+    // $contact là tên liên hệ kho
+    // $address là địa chỉ kho
+    // $province là tỉnh kho
+    // $district là huyện kho
+    // $commune là xã kho
+    // $primary là kho chính. 1 là mặc định, 2 là kho thường
+    if($accessToken==''){
+      $accessToken='eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImVmNWIwODYyYmIxNGFmYzRjZGVhYmNhMjRjNjk2NzQwOGMzN2Q0ZmIwNTVhOGU5NTU1MzRhZjZlNzNlNGVlNjNiM2E1M2NjMTVlNzczZmRmIn0.eyJhdWQiOiIxIiwianRpIjoiZWY1YjA4NjJiYjE0YWZjNGNkZWFiY2EyNGM2OTY3NDA4YzM3ZDRmYjA1NWE4ZTk1NTUzNGFmNmU3M2U0ZWU2M2IzYTUzY2MxNWU3NzNmZGYiLCJpYXQiOjE3NDUzNzkwNTAsIm5iZiI6MTc0NTM3OTA1MCwiZXhwIjoxNzc2OTE1MDUwLCJzdWIiOiIxODcwMDEiLCJzY29wZXMiOltdfQ.QZDPcOa0c5jZHwMIu9eF-mEAmsAFDHJ1slI-mqpEAATTBJU6b8nPc4zYuUhKZC4noi6J0LKVesDvVx-rogiA-4vYJ7mZIu2x1MhhVfvB9wltNGtwoErogc2fAYmFb2zS4M3xr7_5ZlpWamkORDuGyJA1bkALzPliMFCStUSCa-RaZAFUpWi1lj0bGi7kiOvctNUPDzRDcceoxTVi0Th5wD6VY9lOk9iO6a3YBiks-Tv8bhvPsNiJRri5U4UqaUk9RKRGVEquOAN9uqG7G7btmXh9wYonqnNt-wwQEHJjt9siQ8rc99SRQGSpKee6r21_MI_zrFDZ1qAK30kHWX9IYrpNAFd5rZgt887Mp57L2ZZbcq1H09xqXZs6e76QdzwY1nOaHWf7_Z9fqf0jmFOLn7kVP4bsF5eyqnpuM6leN8wS09Em8uKj4cViZsqHjacS6CjzGApBl5t-XKta1y5DJkp6Hyv6Dqk1suQY5fFKeBBqvepOUQw5Fs4mc5xQHQmfilChsflA6MMGr8NoejgWPdHuKNJIUQ2xia7fZQ83ymR0FG2uFVpP854IveduTur1xtRy8d1WKKSYOuHS-JEKXlSjw58PMNLCqg62eAkt0RdUGcUSZIxbQMZBRLy33u5fEnf8VrKWLhp5fBVWkG2Ns2xmqi72yczt8aifVkdxMIo';
+    }
+    $url = 'https://api.mysupership.vn/v1/partner/warehouses/create';
+    $data = [
+        "name" => $name,
+        "phone" => $phone,
+        "contact" => $contact,
+        "address" => $address,
+        "province" => $province,
+        "district" => $district,
+        "commune" => $commune,
+        "primary" => $primary
+    ];
+    // Convert data to JSON format
+    $jsonData = json_encode($data);
+
+    // cURL initialization
+    $ch = curl_init($url);
+
+    // Set cURL options
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Accept: application/json',
+        'Authorization: Bearer ' . $accessToken,
+        'Content-Type: application/json'
+    ]);
+
+    // Execute the cURL request
+    $response = curl_exec($ch);
+
+    // Check for errors in the cURL request
+    if(curl_errno($ch)) {
+        echo 'cURL error: ' . curl_error($ch);
+    }
+
+    // Close the cURL session
+    curl_close($ch);
+
+    // Return the response
+    return $response;
+  }
+  function update_kho($name,$phone,$contact,$warehouseCode,$accessToken) {
+    // $accessToken là token của bạn
+    // $name là tên kho
+    // $phone là số điện thoại kho
+    // $contact là tên liên hệ kho
+    // $warehouseCode là mã kho
+    if($accessToken=''){
+      $accessToken='eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImVmNWIwODYyYmIxNGFmYzRjZGVhYmNhMjRjNjk2NzQwOGMzN2Q0ZmIwNTVhOGU5NTU1MzRhZjZlNzNlNGVlNjNiM2E1M2NjMTVlNzczZmRmIn0.eyJhdWQiOiIxIiwianRpIjoiZWY1YjA4NjJiYjE0YWZjNGNkZWFiY2EyNGM2OTY3NDA4YzM3ZDRmYjA1NWE4ZTk1NTUzNGFmNmU3M2U0ZWU2M2IzYTUzY2MxNWU3NzNmZGYiLCJpYXQiOjE3NDUzNzkwNTAsIm5iZiI6MTc0NTM3OTA1MCwiZXhwIjoxNzc2OTE1MDUwLCJzdWIiOiIxODcwMDEiLCJzY29wZXMiOltdfQ.QZDPcOa0c5jZHwMIu9eF-mEAmsAFDHJ1slI-mqpEAATTBJU6b8nPc4zYuUhKZC4noi6J0LKVesDvVx-rogiA-4vYJ7mZIu2x1MhhVfvB9wltNGtwoErogc2fAYmFb2zS4M3xr7_5ZlpWamkORDuGyJA1bkALzPliMFCStUSCa-RaZAFUpWi1lj0bGi7kiOvctNUPDzRDcceoxTVi0Th5wD6VY9lOk9iO6a3YBiks-Tv8bhvPsNiJRri5U4UqaUk9RKRGVEquOAN9uqG7G7btmXh9wYonqnNt-wwQEHJjt9siQ8rc99SRQGSpKee6r21_MI_zrFDZ1qAK30kHWX9IYrpNAFd5rZgt887Mp57L2ZZbcq1H09xqXZs6e76QdzwY1nOaHWf7_Z9fqf0jmFOLn7kVP4bsF5eyqnpuM6leN8wS09Em8uKj4cViZsqHjacS6CjzGApBl5t-XKta1y5DJkp6Hyv6Dqk1suQY5fFKeBBqvepOUQw5Fs4mc5xQHQmfilChsflA6MMGr8NoejgWPdHuKNJIUQ2xia7fZQ83ymR0FG2uFVpP854IveduTur1xtRy8d1WKKSYOuHS-JEKXlSjw58PMNLCqg62eAkt0RdUGcUSZIxbQMZBRLy33u5fEnf8VrKWLhp5fBVWkG2Ns2xmqi72yczt8aifVkdxMIo';
+    }
+    $url = 'https://api.mysupership.vn/v1/partner/warehouses/update';
+    // Data to be updated
+    $data = [
+        "code" => $warehouseCode,
+        "name" => $name,
+        "phone" => $phone,
+        "contact" => $contact
+    ];
+
+    // Convert data to JSON format
+    $jsonData = json_encode($data);
+
+    // cURL initialization
+    $ch = curl_init($url);
+
+    // Set cURL options
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Accept: application/json',
+        'Authorization: Bearer ' . $accessToken,
+        'Content-Type: application/json'
+    ]);
+    // Execute the cURL request
+    $response = curl_exec($ch);
+    // Check for errors in the cURL request
+    if(curl_errno($ch)) {
+        echo 'cURL error: ' . curl_error($ch);
+    }
+    // Close the cURL session
+    curl_close($ch);
+
+    // Return the response
+    return $response;
+  }
+  function get_list_kho($accessToken) {
+    // $accessToken là token của bạn
+    if($accessToken=''){
+      $accessToken='eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImVmNWIwODYyYmIxNGFmYzRjZGVhYmNhMjRjNjk2NzQwOGMzN2Q0ZmIwNTVhOGU5NTU1MzRhZjZlNzNlNGVlNjNiM2E1M2NjMTVlNzczZmRmIn0.eyJhdWQiOiIxIiwianRpIjoiZWY1YjA4NjJiYjE0YWZjNGNkZWFiY2EyNGM2OTY3NDA4YzM3ZDRmYjA1NWE4ZTk1NTUzNGFmNmU3M2U0ZWU2M2IzYTUzY2MxNWU3NzNmZGYiLCJpYXQiOjE3NDUzNzkwNTAsIm5iZiI6MTc0NTM3OTA1MCwiZXhwIjoxNzc2OTE1MDUwLCJzdWIiOiIxODcwMDEiLCJzY29wZXMiOltdfQ.QZDPcOa0c5jZHwMIu9eF-mEAmsAFDHJ1slI-mqpEAATTBJU6b8nPc4zYuUhKZC4noi6J0LKVesDvVx-rogiA-4vYJ7mZIu2x1MhhVfvB9wltNGtwoErogc2fAYmFb2zS4M3xr7_5ZlpWamkORDuGyJA1bkALzPliMFCStUSCa-RaZAFUpWi1lj0bGi7kiOvctNUPDzRDcceoxTVi0Th5wD6VY9lOk9iO6a3YBiks-Tv8bhvPsNiJRri5U4UqaUk9RKRGVEquOAN9uqG7G7btmXh9wYonqnNt-wwQEHJjt9siQ8rc99SRQGSpKee6r21_MI_zrFDZ1qAK30kHWX9IYrpNAFd5rZgt887Mp57L2ZZbcq1H09xqXZs6e76QdzwY1nOaHWf7_Z9fqf0jmFOLn7kVP4bsF5eyqnpuM6leN8wS09Em8uKj4cViZsqHjacS6CjzGApBl5t-XKta1y5DJkp6Hyv6Dqk1suQY5fFKeBBqvepOUQw5Fs4mc5xQHQmfilChsflA6MMGr8NoejgWPdHuKNJIUQ2xia7fZQ83ymR0FG2uFVpP854IveduTur1xtRy8d1WKKSYOuHS-JEKXlSjw58PMNLCqg62eAkt0RdUGcUSZIxbQMZBRLy33u5fEnf8VrKWLhp5fBVWkG2Ns2xmqi72yczt8aifVkdxMIo';
+    }
+    $url = 'https://api.mysupership.vn/v1/partner/warehouses';
+    // cURL initialization
+    $ch = curl_init($url);
+
+    // Set cURL options
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Accept: application/json',
+        'Authorization: Bearer ' . $accessToken
+    ]);
+
+    // Execute the cURL request
+    $response = curl_exec($ch);
+
+    // Check for errors in the cURL request
+    if(curl_errno($ch)) {
+        echo 'cURL error: ' . curl_error($ch);
+    }
+
+    // Close the cURL session
+    curl_close($ch);
+
+    // Return the response
     return $response;
   }  
 }

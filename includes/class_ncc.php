@@ -5000,7 +5000,7 @@
 				} else if ($r_tt['status'] == 6) {
 					$r_tt['status'] = 'Đã hoàn đơn';
 					$r_tt['huy'] = '';
-				} else {
+				} else if ($r_tt['status'] == 0) {
 					$r_tt['status'] = 'Chờ xử lý';
 				}
 				$tach_sanpham = json_decode($r_tt['sanpham'], true);

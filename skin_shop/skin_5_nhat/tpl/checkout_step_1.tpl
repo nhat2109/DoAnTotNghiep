@@ -2147,7 +2147,7 @@
                                         <tr class="total-line total-line-subtotal">
                                             <td class="total-line-name">Giảm giá</td>
                                             <td class="total-line-price">
-                                                <span class="order-summary-emphasis" id="total_coupon">{giam}₫</span>
+                                                <span class="order-summary-emphasis" id="total_coupon">{giam_hienthi}₫</span>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -2354,6 +2354,7 @@
         const sender_district ='{sender_district}';
         const weight = {weight};
         const amount = {amount};
+        const giam = {giam};
         $(document).ready(function() {
             var $provinceSelect = $('#customer_shipping_province[name="tinh"]');
             var $districtSelect = $('#customer_shipping_district[name="huyen"]');
@@ -2405,7 +2406,7 @@
                             order_summary_emphasis
                                 .html(formatCurrency(info.fee))
                                 .attr('data-checkout-total-shipping-target', info.fee);
-                            var total = amount + info.fee;
+                            var total = amount + info.fee - giam;
                             payment_due_price
                                  .html(formatCurrency(total))
                             $('.phi_ship[name="phi_ship"]').val(info.fee);
