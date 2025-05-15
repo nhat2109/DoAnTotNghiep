@@ -2,14 +2,14 @@
     <div class="box_right_content">
         <div class="box_profile">
             <div class="page_title">
-                <h1 class="undefined">Sửa mã coupon</h1>
+                <h1 class="undefined">Sửa mã voucher</h1>
                 <div class="line"></div>
                 <hr>
             </div>
             <div class="col_50">
                 <div class="form_group">
-                    <label for="">Nhập mã</label>
-                    <input type="text" class="form_control" name="ma" value="{ma}" placeholder="Viết liền, không dấu...">
+                    <label for="ma">Nhập mã</label>
+                    <input type="text" class="form_control" name="ma" id="ma" value="{ma}" placeholder="Viết liền, không dấu, tối đa 5 ký tự..." maxlength="5" oninput="this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '')">
                 </div>
                 <div class="form_group">
                     <label for="">Kiểu khuyến mại</label>
@@ -70,7 +70,7 @@
 <script type="text/javascript" src="/js/jquery.priceformat.min.js"></script>
 <script type="text/javascript" src="/js/demo_price.js"></script>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-<link rel="stylesheet" href="/skin/css/jquery.timepicker.css">
+<link rel="stylesheet" href="/skin_ncc/css/jquery.timepicker.css">
 <script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="/js/jquery.timepicker.js"></script>
 <script type="text/javascript">
@@ -99,5 +99,9 @@
             showMonthAfterYear: false,
             yearSuffix: ""
         });
-    })
+    });
+    document.getElementById('ma').addEventListener('input', function(e) {
+        let value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+        e.target.value = value.slice(0, 5);
+    });
 </script>

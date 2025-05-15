@@ -2472,6 +2472,7 @@ $(document).ready(function () {
     $('.box_select_product').on('click', '.action button', function () {
         $(this).toggleClass('active');
     });
+    // voucher
     $('.box_select_product .box_list').on('scroll', function () {
         if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
             tiep = $('.box_select_product .box_list').attr('tiep');
@@ -2532,6 +2533,7 @@ $(document).ready(function () {
 
         }
     })
+    // voucher
     $('.select_product').on('click', function () {
         $('.box_select_product .box_list').html('<div class="loading_product"><i class="fa fa-refresh fa-spin"></i> Đang tải dữ liệu...</div>');
         $('.box_select_product').show();
@@ -2735,16 +2737,23 @@ $(document).ready(function () {
     $('#list_product_sub').on('click', '.action button', function () {
         $(this).parent().parent().remove();
     });
-    /////////////////////////////
-    $('select[name=apdung]').on('change', function () {
-        kieu = $(this).val();
-        if (kieu == 'all') {
-            $('#box_sanpham').hide();
-        } else {
-            $('#box_sanpham').show();
-        }
+    ///////////////////////////// voucher
+    // $('select[name=apdung]').on('change', function () {
+    //     kieu = $(this).val();
+    //     if (kieu == 'all') {
+    //         $('#box_sanpham').hide();
+    //     } else {
+    //         $('#box_sanpham').show();
+    //     }
 
-    });
+    // });
+    $('select[name=apdung]').on('change', function() {
+        if ($(this).val() === 'sanpham') {
+            $('#box_sanpham').show();
+        } else {
+            $('#box_sanpham').hide();
+        }
+    }).trigger('change');
     /////////////////////////////
     $('button[name=add_flash_sale]').click(function () {
         tieu_de = $('input[name=tieu_de]').val();
@@ -6619,11 +6628,74 @@ $(document).ready(function () {
         }
     });
     /////////////////////////////
+    // $('button[name=add_coupon]').on('click', function () {
+    //     ma = $('input[name=ma]').val();
+    //     loai = $('select[name=loai]').val();
+    //     kieu = $('select[name=apdung]').val();
+    //     giam = $('input[name=giam]').val();
+    //     time_start = $('input[name=time_start]').val();
+    //     time_expired = $('input[name=time_expired]').val();
+    //     date_start = $('input[name=date_start]').val();
+    //     date_expired = $('input[name=date_expired]').val();
+    //     var main_product = '';
+    //     $('#list_product_main .li_product').each(function () {
+    //         main_product += $(this).attr('sp') + ',';
+    //     });
+    //     if (ma.length < 2) {
+    //         $('input[name=ma]').focus();
+    //     } else if (giam == '') {
+    //         $('input[name=giam]').focus();
+    //     } else {
+    //         $('.load_overlay').show();
+    //         $('.load_process').fadeIn();
+    //         var form_data = new FormData();
+    //         form_data.append('action', 'add_coupon');
+    //         form_data.append('ma', ma);
+    //         form_data.append('loai', loai);
+    //         form_data.append('kieu', kieu);
+    //         form_data.append('giam', giam);
+    //         form_data.append('sanpham', main_product);
+    //         form_data.append('time_start', time_start);
+    //         form_data.append('date_start', date_start);
+    //         form_data.append('time_expired', time_expired);
+    //         form_data.append('date_expired', date_expired);
+    //         $.ajax({
+    //             url: '/ncc/process.php',
+    //             type: 'post',
+    //             cache: false,
+    //             contentType: false,
+    //             processData: false,
+    //             data: form_data,
+    //             success: function (kq) {
+    //                 var info = JSON.parse(kq);
+    //                 setTimeout(function () {
+    //                     $('.load_note').html(info.thongbao);
+    //                 }, 1000);
+    //                 setTimeout(function () {
+    //                     $('.load_process').hide();
+    //                     $('.load_note').html('Hệ thống đang xử lý');
+    //                     $('.load_overlay').hide();
+    //                     if (info.ok == 1) {
+    //                         window.location.reload();
+    //                     } else {
+
+    //                     }
+    //                 }, 3000);
+    //             }
+
+    //         });
+    //     }
+    // });
     $('button[name=add_coupon]').on('click', function () {
         ma = $('input[name=ma]').val();
         loai = $('select[name=loai]').val();
         kieu = $('select[name=apdung]').val();
         giam = $('input[name=giam]').val();
+        min_price = $('input[name=min_price]').val();
+        max_price = $('input[name=max_price]').val();
+        allow_combination = $('input[name=allow_combination]').is(':checked') ? 1 : 0;
+        max_uses_per_user = $('input[name=max_uses_per_user]').val();
+        max_global_uses = $('input[name=max_global_uses]').val();
         time_start = $('input[name=time_start]').val();
         time_expired = $('input[name=time_expired]').val();
         date_start = $('input[name=date_start]').val();
@@ -6645,6 +6717,11 @@ $(document).ready(function () {
             form_data.append('loai', loai);
             form_data.append('kieu', kieu);
             form_data.append('giam', giam);
+            form_data.append('min_price', min_price);
+            form_data.append('max_price', max_price);
+            form_data.append('allow_combination', allow_combination);
+            form_data.append('max_uses_per_user', max_uses_per_user);
+            form_data.append('max_global_uses', max_global_uses);
             form_data.append('sanpham', main_product);
             form_data.append('time_start', time_start);
             form_data.append('date_start', date_start);
@@ -6668,12 +6745,9 @@ $(document).ready(function () {
                         $('.load_overlay').hide();
                         if (info.ok == 1) {
                             window.location.reload();
-                        } else {
-
                         }
                     }, 3000);
                 }
-
             });
         }
     });

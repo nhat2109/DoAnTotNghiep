@@ -14,7 +14,8 @@ if ($action == 'check_exp') {
 		$thongbao = 'Shop chưa hết hạn';
 	}
 	echo json_encode(array('ok' => $ok, 'thongbao' => $thongbao));
-} else if ($action == 'checkout_complete') {
+}
+ else if ($action == 'checkout_complete') {
 	$ho_ten = addslashes(strip_tags($_REQUEST['ho_ten'] ?? ''));
 	$email = addslashes(strip_tags($_REQUEST['email'] ?? ''));
 	$dien_thoai = addslashes(strip_tags($_REQUEST['dien_thoai'] ?? ''));
@@ -166,7 +167,8 @@ if ($action == 'check_exp') {
 		}
 	}
 	echo json_encode(['ok' => $ok, 'thongbao' => $thongbao]);
-} else if ($action == 'load_huyen') {
+} 
+else if ($action == 'load_huyen') {
 	$tinh = intval($_REQUEST['tinh']);
 	$thongtin = mysqli_query($conn, "SELECT * FROM huyen_moi WHERE tinh='$tinh' ORDER BY tieu_de ASC");
 	while ($r_tt = mysqli_fetch_assoc($thongtin)) {

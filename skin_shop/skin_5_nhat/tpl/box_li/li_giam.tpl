@@ -1,19 +1,30 @@
-<div class="li_ma_giam">
+<div class="li_ma_giam" style="height: 30px;">
     <div class="coupon_info">
-        <span class="coupon_code">{ma}</span> 
-        <span style="text-transform: lowercase !important;" class="coupon_value">- {giam}đ</span>
+        <div>
+            <span class="coupon_code">{ma}</span>
+            <span style="text-transform: lowercase !important" class="coupon_value">- {giam}đ</span>
+            <div class="product-description-variant" style=" margin: -5px; margin-left: 2px; font-weight: bold; white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;  max-width: 200px;">
+                {variant}
+            </div>
+        </div>
     </div>
     <div class="coupon_actions">
         <button type="button" class="field-input-btn btn btn-default" data-coupon="{ma}">
             <span class="btn-content" style="background: #338dbc">Áp dụng</span>
-            <i class="btn-spinner icon icon-button-spinner" style="display:none;"></i>
+            <i class="btn-spinner icon icon-button-spinner" style="display: none"></i>
         </button>
     </div>
 </div>
 
-
 <style>
+    .box_list{
+        max-height: 162px;
+        overflow-y: auto;
+    }
     .li_ma_giam {
+        
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -21,7 +32,6 @@
         border-radius: 4px;
         margin-bottom: 10px;
         background-color: #ffffff;
-
     }
 
     .coupon_code {
@@ -44,9 +54,8 @@
         margin-right: 5px;
     }
 
-    .coupon_value { 
+    .coupon_value {
         font-weight: normal;
-
     }
 
     .box_ma_giam .li_ma_giam {
@@ -64,6 +73,4 @@
         margin-left: 5px;
         transition: background-color 0.3s;
     }
-
-  
 </style>

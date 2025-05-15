@@ -6,8 +6,13 @@
     <title>
         Thanh toán đơn hàng
     </title>
+    
     <meta name="description" content="Tổng kho hàng - Thanh toán đơn hàng">
-    <style>
+    <style>     
+
+           
+
+
         .btn {
             display: inline-block;
             border-radius: 4px;
@@ -1799,7 +1804,7 @@
         .box_ma_giam .li_ma_giam span {
             background: #f00;
             color: #fff;
-            padding: 5px 10px;
+            padding:2px 10px;
             border-radius: 5px;
             text-transform: uppercase;
         }
@@ -2045,7 +2050,7 @@
                     <div class="order-summary">
                         <div class="order-summary-sections">
                             <div class="order-summary-section order-summary-section-discount"
-                                data-order-summary-section="discount">
+                                data-order-summary-section="discount" >
                                 {box_ma_giam}
                                 <form id="form_discount_add" accept-charset="UTF-8" method="post">
                                     <input name="utf8" type="hidden" value="✓">
@@ -2081,7 +2086,7 @@
                         <h2 class="visually-hidden">Thông tin đơn hàng</h2>
                         <div class="order-summary-sections">
                             <div class="order-summary-section order-summary-section-product-list"
-                                data-order-summary-section="line-items">
+                                data-order-summary-section="line-items" style=" max-height: 170px;overflow-y: auto;">
                                 <table class="product-table">
                                     <thead>
                                         <tr>
@@ -2418,7 +2423,38 @@
                 });
             });
         });
+    
     </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+        const couponElements = document.querySelectorAll(".li_ma_giam");
+
+        let maxValue = 0;
+        const valueMap = [];
+
+        couponElements.forEach(el => {
+            const valueEl = el.querySelector(".coupon_value");
+            if (valueEl) {
+                    const text = valueEl.textContent.trim();
+                const number = parseInt(text.replace(/[^0-9]/g, ''), 10);
+                if (!isNaN(number)) {
+                    valueMap.push({ el, number });
+                    if (number > maxValue) maxValue = number;
+                }
+            }
+        });
+
+        valueMap.forEach(({ el, number }) => {
+            if (number === maxValue) {
+                el.style.display = "flex";
+            } else {
+                el.style.display = "none";
+            }
+        });
+    });
+
+</script>
+
 </body>
 
 </html>

@@ -231,6 +231,7 @@ if ($step == 1 || !$step) {
                     return "Không tìm thấy tỉnh/huyện cho user";
                 }
     }
+    $list_giam_titles = [];
     $data_receiver = getReceiverProvinceDistrict($conn, $user_id);
     while ($r_cart = mysqli_fetch_assoc($thongtin_cart)) {
         $id_sp = $r_cart['id'];
@@ -261,16 +262,33 @@ if ($step == 1 || !$step) {
                             if ($vvv['loai'] == 'phantram') {
                                 $ggg = ($gia_moi * $value['quantity'] / 100) * $vvv['giam'];
                                 $list_giam[$kkk] = ($list_giam[$kkk] ?? 0) + ceil($ggg);
+                                // $list_giam_titles[$kkk] = "Toàn bộ sản phẩm";
                             } else {
                                 $list_giam[$kkk] = ($list_giam[$kkk] ?? 0) + $vvv['giam'];
+                                // $list_giam_titles[$kkk] = "Toàn bộ sản phẩm";
                             }
                         } else {
                             $tach_apdung = explode(',', $vvv['sanpham']);
                             if (in_array($id_sp, $tach_apdung)) {
                                 if ($vvv['loai'] == 'phantram') {
                                     $ggg = ($gia_moi * $value['quantity'] / 100) * $vvv['giam'];
+                                    $list_giam[$kkk] = ($list_giam[$kkk] ?? 0) + ceil($ggg);
+                                    if (!isset($list_giam_titles[$kkk])) {
+                                        $list_giam_titles[$kkk] = [];
+                                    }
+                                    if (!in_array($r_cart['tieu_de'], $list_giam_titles[$kkk])) {
+                                        $list_giam_titles[$kkk][] = $r_cart['tieu_de'];
+                                    }
+
                                 } else {
                                     $list_giam[$kkk] = ($list_giam[$kkk] ?? 0) + $vvv['giam'];
+                                    if (!isset($list_giam_titles[$kkk])) {
+                                        $list_giam_titles[$kkk] = [];
+                                    }
+                                    if (!in_array($r_cart['tieu_de'], $list_giam_titles[$kkk])) {
+                                        $list_giam_titles[$kkk][] = $r_cart['tieu_de'];
+                                    }
+
                                 }
                             }
                         }
@@ -280,6 +298,7 @@ if ($step == 1 || !$step) {
             }
         }
     }
+    // die;
     $data_receiver_tinh = $data_receiver['tinh'] ?? '';
     $data_receiver_huyen = $data_receiver['huyen'] ?? '';
     $data_ship = $class_supership->get_tax($data['tinh'],$data['huyen'],$data_receiver_tinh,$data_receiver_huyen,$trongluong*1000, $tamtinh, $accessToken);
@@ -317,14 +336,15 @@ if ($step == 1 || !$step) {
 foreach ($list_giam as $key => $value) {
     $r_g['ma'] = $key;
     $r_g['giam'] = number_format(floatval($value));
+    $r_g['variant'] = isset($list_giam_titles[$key]) && is_array($list_giam_titles[$key]) ? implode(', ', $list_giam_titles[$key]) : '';
     $list_ma_giam .= $skin->skin_replace('skin_shop/' . $s . '/tpl/box_li/li_giam', $r_g);
 }
+
 if (strlen($list_ma_giam) < 10) {
     $box_ma_giam = '';
 } else {
     $box_ma_giam = $skin->skin_normal('skin_shop/' . $s . '/tpl/box_ma_giam');
 }
-
 $google_analytics = str_replace('<script>// <![CDATA[', '<script>', $index_setting['google_analytics']);
 $google_analytics = str_replace('// ]]>', '', $google_analytics);
 $script_chat = str_replace('<script>// <![CDATA[', '<script>', $index_setting['script_footer']);
@@ -459,5 +479,3 @@ if ($step == 3) {
 } else {
     echo $skin->skin_replace('skin_shop/' . $s . '/tpl/checkout_step_1', $replace);
 }
-
-// echo $skin->skin_replace('skin_shop/' . $s . '/tpl/checkout_step_1', $replace);
