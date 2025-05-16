@@ -1,8 +1,8 @@
 <?php
 session_start();
 $class_index = $tlca_do->load_skin($s, 'class_shop');
-$class_supership = $tlca_do->load( 'class_supership');
-
+$class_supership = $tlca_do->load('class_supership');
+$check = $tlca_do->load('class_check');
 $giaodien = json_decode($index_setting['giaodien'], true);
 $limit = 10;
 
@@ -15,11 +15,11 @@ if (isset($_COOKIE['user_id'])) {
 } else {
     $box_header = $skin->skin_normal('skin_shop/' . $s . '/tpl/box_header');
     $thongbao = "Bạn chưa đăng nhập tài khoản.";
-        $replace = [
-            'title' => 'Chưa đăng nhập tài khoản',
-            'thongbao' => $thongbao,
-            'link' => '/dang-nhap.html'
-        ];
+    $replace = [
+        'title' => 'Chưa đăng nhập tài khoản',
+        'thongbao' => $thongbao,
+        'link' => '/dang-nhap.html'
+    ];
     echo $skin->skin_replace('skin_shop/' . $s . '/tpl/chuyenhuong', $replace);
     exit();
 }
@@ -33,6 +33,11 @@ while ($r_km = mysqli_fetch_assoc($thongtin_khuyenmai)) {
     $list_km[$ma]['giam'] = $r_km['giam'];
     $list_km[$ma]['loai'] = $r_km['loai'];
     $list_km[$ma]['kieu'] = $r_km['kieu'];
+    $list_km[$ma]['min_price'] = $r_km['min_price'];
+    $list_km[$ma]['max_price'] = $r_km['max_price'];
+    $list_km[$ma]['max_uses_per_user'] = $r_km['max_uses_per_user'];
+    $list_km[$ma]['max_global_uses'] = $r_km['max_global_uses'];
+    $list_km[$ma]['current_uses'] = $r_km['current_uses'];
     $list_km[$ma]['sanpham'] = $r_km['sanpham'];
 }
 
@@ -139,8 +144,9 @@ if ($step == 1 || !$step) {
     $can_nang = 0;
     $trongluong = 0;
     //nccncc
-    function getCtvProvinceDistrict($conn, $user_id) {
-            $stmt = mysqli_prepare($conn, "
+    function getCtvProvinceDistrict($conn, $user_id)
+    {
+        $stmt = mysqli_prepare($conn, "
                 SELECT 
                     transport.province, 
                     transport.district, 
@@ -151,47 +157,48 @@ if ($step == 1 || !$step) {
                 INNER JOIN huyen_moi ON transport.district = huyen_moi.id
                 WHERE transport.user_id = ? AND (transport.is_default = 1 OR transport.is_pickup = 1)
             ");
-            if (!$stmt) {
-                return "Lỗi chuẩn bị truy vấn";
-            }
-        
-            mysqli_stmt_bind_param($stmt, "i", $user_id);
-            mysqli_stmt_execute($stmt);
-            $result = mysqli_stmt_get_result($stmt);
-        
-            if ($row = mysqli_fetch_assoc($result)) {
-                $data = [
-                    'tinh' => $row['tinh_ten'],
-                    'huyen' => $row['huyen_ten']
-                ];
-                mysqli_stmt_close($stmt);
-                return $data;
-            }
+        if (!$stmt) {
+            return "Lỗi chuẩn bị truy vấn";
+        }
+
+        mysqli_stmt_bind_param($stmt, "i", $user_id);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+
+        if ($row = mysqli_fetch_assoc($result)) {
+            $data = [
+                'tinh' => $row['tinh_ten'],
+                'huyen' => $row['huyen_ten']
+            ];
+            mysqli_stmt_close($stmt);
+            return $data;
+        }
     }
-    function checkRole($conn, $user_id) {
+    function checkRole($conn, $user_id)
+    {
         $stmt = mysqli_prepare($conn, "SELECT dropship, ctv FROM user_info WHERE user_id = ?");
         mysqli_stmt_bind_param($stmt, "i", $user_id);
         mysqli_stmt_execute($stmt);
         $result = mysqli_stmt_get_result($stmt);
-        
+
         if ($row = mysqli_fetch_assoc($result)) {
             $dropship = $row['dropship'];
             $ctv = $row['ctv'];
-    
+
             if ($dropship == 1) {
                 mysqli_stmt_close($stmt);
                 $data = [
                     'tinh' => 'Thành phố Hà Nội',
-                    'huyen' => 'Nam Từ Liêm' 
+                    'huyen' => 'Nam Từ Liêm'
                 ];
                 return $data;
             }
-    
+
             if ($ctv == 1) {
                 $data = getCtvProvinceDistrict($conn, $user_id);
                 return $data;
             }
-            
+
             // Trường hợp không phải dropship hoặc ctv
             mysqli_stmt_close($stmt);
             $data = [
@@ -201,7 +208,8 @@ if ($step == 1 || !$step) {
             return $data;
         }
     }
-    function getReceiverProvinceDistrict($conn, $user_id){
+    function getReceiverProvinceDistrict($conn, $user_id)
+    {
         $stmt = mysqli_prepare($conn, "
                 SELECT 
                     user_info.tinh, 
@@ -213,23 +221,23 @@ if ($step == 1 || !$step) {
                     INNER JOIN huyen_moi ON user_info.huyen = huyen_moi.id
                     WHERE user_info.user_id = ?
                 ");
-            
-                if (!$stmt) {
-                    return "Lỗi chuẩn bị truy vấn";
-                }
-            
-                mysqli_stmt_bind_param($stmt, "i", $user_id);
-                mysqli_stmt_execute($stmt);
-                $result = mysqli_stmt_get_result($stmt);
-            
-                if ($row = mysqli_fetch_assoc($result)) {
-                    return [
-                        'tinh' => $row['tinh_ten'],
-                        'huyen' => $row['huyen_ten']
-                    ];
-                } else {
-                    return "Không tìm thấy tỉnh/huyện cho user";
-                }
+
+        if (!$stmt) {
+            return "Lỗi chuẩn bị truy vấn";
+        }
+
+        mysqli_stmt_bind_param($stmt, "i", $user_id);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+
+        if ($row = mysqli_fetch_assoc($result)) {
+            return [
+                'tinh' => $row['tinh_ten'],
+                'huyen' => $row['huyen_ten']
+            ];
+        } else {
+            return "Không tìm thấy tỉnh/huyện cho user";
+        }
     }
     $list_giam_titles = [];
     $data_receiver = getReceiverProvinceDistrict($conn, $user_id);
@@ -277,7 +285,7 @@ if ($step == 1 || !$step) {
                                         $list_giam_titles[$kkk] = [];
                                     }
                                     if (!in_array($r_cart['tieu_de'], $list_giam_titles[$kkk])) {
-                                        $list_giam_titles[$kkk][] = $r_cart['tieu_de'];
+                                        // $list_giam_titles[$kkk][] = $r_cart['tieu_de'];
                                     }
 
                                 } else {
@@ -286,7 +294,7 @@ if ($step == 1 || !$step) {
                                         $list_giam_titles[$kkk] = [];
                                     }
                                     if (!in_array($r_cart['tieu_de'], $list_giam_titles[$kkk])) {
-                                        $list_giam_titles[$kkk][] = $r_cart['tieu_de'];
+                                        // $list_giam_titles[$kkk][] = $r_cart['tieu_de'];
                                     }
 
                                 }
@@ -298,13 +306,13 @@ if ($step == 1 || !$step) {
             }
         }
     }
-    // die;
+
     $data_receiver_tinh = $data_receiver['tinh'] ?? '';
     $data_receiver_huyen = $data_receiver['huyen'] ?? '';
-    $data_ship = $class_supership->get_tax($data['tinh'],$data['huyen'],$data_receiver_tinh,$data_receiver_huyen,$trongluong*1000, $tamtinh, $accessToken);
-    $phi_ship = $data_ship['results'][0]['fee']; // phí ship
+    $data_ship = $class_supership->get_tax($data['tinh'], $data['huyen'], $data_receiver_tinh, $data_receiver_huyen, $trongluong * 1000, $tamtinh, $accessToken);
+    $phi_ship = $data_ship['results'][0]['fee'];
 
-    // tính tổng tiền 
+
     if (isset($_SESSION['coupon'])) {
         if ($r_coupon['total'] == 0) {
             $giam = 0;
@@ -331,13 +339,85 @@ if ($step == 1 || !$step) {
     //     $thanhtoan = 'cod';
     // }
 }
+function getUserVoucherUses($user_id, $voucher_code)
+{
+    global $conn;
+    $user_id = intval($user_id);
+    $voucher_code = mysqli_real_escape_string($conn, $voucher_code);
 
-// Phần còn lại giữ nguyên
-foreach ($list_giam as $key => $value) {
-    $r_g['ma'] = $key;
-    $r_g['giam'] = number_format(floatval($value));
-    $r_g['variant'] = isset($list_giam_titles[$key]) && is_array($list_giam_titles[$key]) ? implode(', ', $list_giam_titles[$key]) : '';
-    $list_ma_giam .= $skin->skin_replace('skin_shop/' . $s . '/tpl/box_li/li_giam', $r_g);
+    $query = "SELECT COUNT(*) AS uses FROM voucher_usage vu 
+              JOIN coupon c ON vu.voucher_id = c.id 
+              WHERE vu.user_id = $user_id AND c.ma = '$voucher_code'";
+    $result = mysqli_query($conn, $query);
+    if ($result && mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
+        return (int) ($row['uses'] ?? 0);
+    }
+    return 0;
+}
+
+
+if ($tamtinh <= 0) {
+    $list_ma_giam = '';
+} else {
+    $user_id = 0;
+    if (isset($_COOKIE['user_id'])) {
+        $tach_token = json_decode($check->token_login_decode($_COOKIE['user_id']), true);
+        $user_id = $tach_token['user_id'] ?? 0;
+    }
+
+    $list_ma_giam = '';
+    foreach ($list_giam as $key => $value) {
+        $voucher = $list_km[$key] ?? [];
+        $min_price = (int) ($voucher['min_price'] ?? 0);
+        $max_price = (int) ($voucher['max_price'] ?? 0);
+        $allow_combination = (int) ($voucher['allow_combination'] ?? 0);
+        $max_uses_per_user = (int) ($voucher['max_uses_per_user'] ?? 0);
+        $max_global_uses = (int) ($voucher['max_global_uses'] ?? 0);
+
+
+        $key_escaped = mysqli_real_escape_string($conn, $key);
+        $shop_escaped = mysqli_real_escape_string($conn, $shop);
+        $current_uses_query = mysqli_query($conn, "SELECT current_uses FROM coupon WHERE ma = '$key_escaped' AND shop = '$shop_escaped'");
+        $current_uses_row = mysqli_fetch_assoc($current_uses_query);
+        $current_uses = (int) ($current_uses_row['current_uses'] ?? 0);
+
+        $kieu = $voucher['kieu'] ?? 'all';
+        if (!in_array($kieu, ['all', 'sanpham'])) {
+            $kieu = 'all';
+        }
+
+        $applicable_total = ($kieu == 'all') ? $tamtinh : 0;
+        if ($kieu == 'sanpham') {
+            $tach_apdung = !empty($voucher['sanpham']) ? explode(',', $voucher['sanpham']) : [];
+            if (!empty($tach_apdung)) {
+                foreach ($_SESSION['cart'] as $cart_item) {
+                    $id_sp = $cart_item['sp_id'];
+                    if (in_array($id_sp, $tach_apdung)) {
+                        $applicable_total += floatval($cart_item['gia_moi']) * $cart_item['quantity'];
+                    }
+                }
+            }
+        }
+        $price_condition = ($min_price == 0 || $applicable_total >= $min_price) && ($max_price == 0 || $applicable_total <= $max_price);
+        $per_user_condition = ($max_uses_per_user == 0 || getUserVoucherUses($user_id, $key) < $max_uses_per_user);
+        $global_condition = ($max_global_uses == 0 || $current_uses < $max_global_uses);
+        if ($price_condition && $per_user_condition && $global_condition) {
+            $r_g = [
+                'ma' => $key,
+                'giam' => number_format(floatval($value)),
+                'variant' => (isset($list_giam_titles[$key]) && is_array($list_giam_titles[$key])) ? implode(', ', $list_giam_titles[$key]) : '',
+                'loai' => $voucher['loai'] ?? 'tru',
+                'kieu' => $kieu,
+                'min_price' => $min_price,
+                'max_price' => $max_price,
+                'sanpham' => $voucher['sanpham'] ?? ''
+            ];
+            $list_ma_giam .= $skin->skin_replace('skin_shop/' . $s . '/tpl/box_li/li_giam', $r_g);
+        } else {
+            file_put_contents('debug.log', "Voucher $key không hiển thị - user_id: $user_id, uses: " . getUserVoucherUses($user_id, $key) . ", max_uses_per_user: $max_uses_per_user, current_uses: $current_uses, max_global_uses: $max_global_uses\n", FILE_APPEND);
+        }
+    }
 }
 
 if (strlen($list_ma_giam) < 10) {
@@ -403,7 +483,7 @@ $replace = [
     'photo' => $index_setting['photo'],
     'phantrang' => $phantrang,
     'fanpage' => $index_setting['fanpage'],
-    
+
     'name' => $user_info['name'] ?? '',
     'email' => $user_info['email'] ?? '',
     'mobile' => $user_info['mobile'] ?? '',
@@ -417,17 +497,17 @@ $replace = [
     'tongtien' => number_format(floatval($tongtien)),
     'tamtinh' => number_format(floatval($tamtinh)),
     'giam_hienthi' => number_format(floatval($giam)),
-    'phi_ship' => number_format(floatval( $phi_ship)) . 'đ',
+    'phi_ship' => number_format(floatval($phi_ship)) . 'đ',
     'coupon' => $coupon,
     'list_giam' => $list_ma_giam,
     'shop' => $r_shop['user_id'],
     'thanhtoan' => $thanhtoan,
     //////////// fee_ship
-    'sender_province'=>$data['tinh'],
-    'sender_district'=>$data['huyen'],
-    'weight'=> $trongluong*1000,
-    'amount'=>$tamtinh,
-    'giam'=>$giam,
+    'sender_province' => $data['tinh'],
+    'sender_district' => $data['huyen'],
+    'weight' => $trongluong * 1000,
+    'amount' => $tamtinh,
+    'giam' => $giam,
 ];
 
 if ($step == 3) {

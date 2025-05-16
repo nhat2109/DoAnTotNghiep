@@ -1,7 +1,7 @@
-<div class="li_ma_giam" style="height: 30px;">
+<div class="li_ma_giam" style="height: 30px;" >
     <div class="coupon_info">
         <div>
-            <span class="coupon_code">{ma}</span>
+            <span class="coupon_code"  data-min-price="{min_price}" data-max-price="{max_price}">{ma}</span>
             <span style="text-transform: lowercase !important" class="coupon_value">- {giam}đ</span>
             <div class="product-description-variant" style=" margin: -5px; margin-left: 2px; font-weight: bold; white-space: nowrap;
                 overflow: hidden;

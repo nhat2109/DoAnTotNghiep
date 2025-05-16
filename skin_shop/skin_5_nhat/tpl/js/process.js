@@ -71,7 +71,7 @@ function removeURLParameter(url, parameter) {
     var prefix = encodeURIComponent(parameter) + "=";
     var pars = urlparts[1].split(/[&;]/g);
 
-    for (var i = pars.length; i-- > 0; ) {
+    for (var i = pars.length; i-- > 0;) {
       if (pars[i].lastIndexOf(prefix, 0) !== -1) {
         pars.splice(i, 1);
       }
@@ -633,12 +633,12 @@ $(document).ready(function () {
           if (info.total_cart > 0) {
             $cartItem.remove();
 
-           var $shopCartItem = $(".shopping-cart-item").filter(function () {
-                return (
-                    $(this).find(".remove-item-cart-shop").data("id") == sp_id &&
-                    $(this).find(".remove-item-cart-shop").data("color") == color &&
-                    $(this).find(".remove-item-cart-shop").data("size") == size
-                );
+            var $shopCartItem = $(".shopping-cart-item").filter(function () {
+              return (
+                $(this).find(".remove-item-cart-shop").data("id") == sp_id &&
+                $(this).find(".remove-item-cart-shop").data("color") == color &&
+                $(this).find(".remove-item-cart-shop").data("size") == size
+              );
             });
             $shopCartItem.remove();
 
@@ -839,7 +839,24 @@ $(document).ready(function () {
           .replace(/[^0-9]/g, "")
       ) ||
       28000;
-
+    var tamtinh =
+      parseInt(
+        $(".tamtinh")
+          .text()
+          .replace(/[^0-9]/g, "")
+      ) || 0;
+    var giam =
+      parseInt(
+        $("#total_coupon")
+          .text()
+          .replace(/[^0-9]/g, "")
+      ) || 0;
+    var tongtien =
+      parseInt(
+        $(".tongtien")
+          .text()
+          .replace(/[^0-9]/g, "")
+      ) || 0;
     var error = false;
     if (ho_ten.length < 4) {
       $("input[name=ho_ten]").focus();
@@ -883,6 +900,9 @@ $(document).ready(function () {
           ghi_chu: ghi_chu,
           shop: shop,
           phi_ship: phi_ship,
+          tamtinh: tamtinh,
+          giam: giam,
+          tongtien: tongtien,
         },
         success: function (kq) {
           try {
@@ -2125,7 +2145,6 @@ $(document).ready(function () {
   const searchList = $(".search-list");
   let searchTimeout;
 
-  
   searchInput.on("focus", function () {
     if (!searchInput.val().trim()) {
       $.ajax({
@@ -2145,14 +2164,11 @@ $(document).ready(function () {
     }
   });
 
-  
   searchInput.on("input", function () {
     const keyword = $(this).val().trim();
 
-    
     clearTimeout(searchTimeout);
 
-    
     searchTimeout = setTimeout(function () {
       if (keyword) {
         $.ajax({
@@ -2171,7 +2187,6 @@ $(document).ready(function () {
           },
         });
       } else {
-        
         $.ajax({
           url: "/process.php",
           type: "POST",
@@ -2187,22 +2202,19 @@ $(document).ready(function () {
           },
         });
       }
-    }, 300); 
+    }, 300);
   });
 
-  
   $(document).on("click", function (e) {
     if (!$(e.target).closest(".header_search").length) {
       searchDropdown.hide();
     }
   });
 
-  
   $(document).on("click", ".close-search-btn", function () {
     searchDropdown.hide();
   });
 
-  
   searchInput.on("keydown", function (e) {
     if (e.keyCode === 13 && searchDropdown.is(":visible")) {
       e.preventDefault();

@@ -119,6 +119,18 @@
 <script src="/js/jquery.timepicker.js"></script>
 <script type="text/javascript">
     $(document).ready(function(){
+        function generateCouponCode() {
+            const today = new Date();
+            const day = String(today.getDate()).padStart(2, '0');
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let random = '';
+            for (let i = 0; i < 3; i++) {
+                random += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return `${random}${day}`;
+        }
+
+        $('input[name=ma]').val(generateCouponCode());
         $(".datepicker" ).datepicker({dateFormat: 'dd/mm/yy',changeMonth: true,changeYear: true});
         $('input.timepicker').timepicker({'timeFormat': 'H:i:s','step': 5});
         $.datepicker.setDefaults({
@@ -149,5 +161,6 @@
     $('.number_format').on('input', function() {
         this.value = this.value.replace(/[^0-9]/g, '');
     });
+   
 </script>
 

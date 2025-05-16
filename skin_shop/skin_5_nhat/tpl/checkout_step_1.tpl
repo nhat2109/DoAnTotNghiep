@@ -2426,34 +2426,35 @@
     
     </script>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-        const couponElements = document.querySelectorAll(".li_ma_giam");
+       document.addEventListener("DOMContentLoaded", function () {
+    const couponElements = document.querySelectorAll(".box_ma_giam .li_ma_giam");
+    
+    if (couponElements.length === 0) return; // Không có mã giảm giá, thoát sớm
 
-        let maxValue = 0;
-        const valueMap = [];
+    let maxValue = 0;
+    const valueMap = [];
 
-        couponElements.forEach(el => {
-            const valueEl = el.querySelector(".coupon_value");
-            if (valueEl) {
-                    const text = valueEl.textContent.trim();
-                const number = parseInt(text.replace(/[^0-9]/g, ''), 10);
-                if (!isNaN(number)) {
-                    valueMap.push({ el, number });
-                    if (number > maxValue) maxValue = number;
-                }
+    // Lặp qua các mã để tìm giá trị cao nhất
+    couponElements.forEach(el => {
+        const valueEl = el.querySelector(".coupon_value");
+        if (valueEl) {
+            const text = valueEl.textContent.trim();
+            const number = parseInt(text.replace(/[^0-9]/g, ""), 10);
+            if (!isNaN(number)) {
+                valueMap.push({ el, number });
+                if (number > maxValue) maxValue = number;
             }
-        });
-
-        valueMap.forEach(({ el, number }) => {
-            if (number === maxValue) {
-                el.style.display = "flex";
-            } else {
-                el.style.display = "none";
-            }
-        });
+        }
     });
 
-</script>
+    // Áp dụng kiểu hiển thị
+    valueMap.forEach(({ el, number }) => {
+        el.style.display = "flex"; // Đảm bảo tất cả đều hiển thị
+        el.style.opacity = number === maxValue ? "1" : "0.5"; // Cao nhất: opacity 1, còn lại: opacity 0.5
+    });
+});
+
+    </script>
 
 </body>
 

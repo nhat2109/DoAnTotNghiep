@@ -6627,130 +6627,284 @@ $(document).ready(function () {
             });
         }
     });
-    /////////////////////////////
-    // $('button[name=add_coupon]').on('click', function () {
-    //     ma = $('input[name=ma]').val();
-    //     loai = $('select[name=loai]').val();
-    //     kieu = $('select[name=apdung]').val();
-    //     giam = $('input[name=giam]').val();
-    //     time_start = $('input[name=time_start]').val();
-    //     time_expired = $('input[name=time_expired]').val();
-    //     date_start = $('input[name=date_start]').val();
-    //     date_expired = $('input[name=date_expired]').val();
-    //     var main_product = '';
-    //     $('#list_product_main .li_product').each(function () {
-    //         main_product += $(this).attr('sp') + ',';
-    //     });
-    //     if (ma.length < 2) {
-    //         $('input[name=ma]').focus();
-    //     } else if (giam == '') {
-    //         $('input[name=giam]').focus();
-    //     } else {
-    //         $('.load_overlay').show();
-    //         $('.load_process').fadeIn();
-    //         var form_data = new FormData();
-    //         form_data.append('action', 'add_coupon');
-    //         form_data.append('ma', ma);
-    //         form_data.append('loai', loai);
-    //         form_data.append('kieu', kieu);
-    //         form_data.append('giam', giam);
-    //         form_data.append('sanpham', main_product);
-    //         form_data.append('time_start', time_start);
-    //         form_data.append('date_start', date_start);
-    //         form_data.append('time_expired', time_expired);
-    //         form_data.append('date_expired', date_expired);
-    //         $.ajax({
-    //             url: '/ncc/process.php',
-    //             type: 'post',
-    //             cache: false,
-    //             contentType: false,
-    //             processData: false,
-    //             data: form_data,
-    //             success: function (kq) {
-    //                 var info = JSON.parse(kq);
-    //                 setTimeout(function () {
-    //                     $('.load_note').html(info.thongbao);
-    //                 }, 1000);
-    //                 setTimeout(function () {
-    //                     $('.load_process').hide();
-    //                     $('.load_note').html('Hệ thống đang xử lý');
-    //                     $('.load_overlay').hide();
-    //                     if (info.ok == 1) {
-    //                         window.location.reload();
-    //                     } else {
-
-    //                     }
-    //                 }, 3000);
-    //             }
-
-    //         });
-    //     }
-    // });
-    $('button[name=add_coupon]').on('click', function () {
-        ma = $('input[name=ma]').val();
-        loai = $('select[name=loai]').val();
-        kieu = $('select[name=apdung]').val();
-        giam = $('input[name=giam]').val();
-        min_price = $('input[name=min_price]').val();
-        max_price = $('input[name=max_price]').val();
-        allow_combination = $('input[name=allow_combination]').is(':checked') ? 1 : 0;
-        max_uses_per_user = $('input[name=max_uses_per_user]').val();
-        max_global_uses = $('input[name=max_global_uses]').val();
-        time_start = $('input[name=time_start]').val();
-        time_expired = $('input[name=time_expired]').val();
-        date_start = $('input[name=date_start]').val();
-        date_expired = $('input[name=date_expired]').val();
-        var main_product = '';
-        $('#list_product_main .li_product').each(function () {
+    $('button[name=add_coupon]').on('click', function() {
+        // Get form values
+        let ma = $('input[name=ma]').val();
+        let loai = $('select[name=loai]').val();
+        let kieu = $('select[name=apdung]').val();
+        let giam = $('input[name=giam]').val().replace(/[^0-9]/g, '');
+        let min_price = $('input[name=min_price]').val().replace(/[^0-9]/g, '');
+        let max_price = $('input[name=max_price]').val().replace(/[^0-9]/g, '');
+        let allow_combination = $('input[name=allow_combination]').is(':checked') ? 1 : 0;
+        let max_uses_per_user = $('input[name=max_uses_per_user]').val().replace(/[^0-9]/g, '');
+        let max_global_uses = $('input[name=max_global_uses]').val().replace(/[^0-9]/g, '');
+        let time_start = $('input[name=time_start]').val();
+        let date_start = $('input[name=date_start]').val();
+        let time_expired = $('input[name=time_expired]').val();
+        let date_expired = $('input[name=date_expired]').val();
+        let main_product = '';
+        $('#list_product_main .li_product').each(function() {
             main_product += $(this).attr('sp') + ',';
         });
-        if (ma.length < 2) {
+
+        // Validations
+        let error = '';
+
+        // Validate coupon code
+        if (ma.length !== 5) {
+            error = 'Mã coupon phải đúng 5 ký tự';
             $('input[name=ma]').focus();
-        } else if (giam == '') {
+        }
+        // Validate discount value
+        else if (!giam || parseInt(giam) <= 0) {
+            error = 'Giá trị khuyến mại phải lớn hơn 0';
             $('input[name=giam]').focus();
-        } else {
+        }
+        // Validate percentage discount (max 100%)
+        else if (loai === 'phantram' && parseInt(giam) > 100) {
+            error = 'Khuyến mại phần trăm không được vượt quá 100%';
+            $('input[name=giam]').focus();
+        }
+        // Validate min/max price
+        else if (min_price && max_price && parseInt(min_price) >= parseInt(max_price)) {
+            error = 'Giá trị đơn hàng tối thiểu phải nhỏ hơn giá trị tối đa';
+            $('input[name=min_price]').focus();
+        }
+        // Validate discount vs max price for fixed amount
+        else if (loai === 'tru' && max_price && parseInt(giam) >= parseInt(max_price)) {
+            error = 'Giá trị khuyến mại không được lớn hơn giá trị đơn hàng tối đa';
+            $('input[name=giam]').focus();
+        }
+        // Validate usage limits
+        else if (max_uses_per_user && max_global_uses && parseInt(max_uses_per_user) > parseInt(max_global_uses)) {
+            error = 'Giới hạn lượt sử dụng/tài khoản phải nhỏ hơn tổng lượt sử dụng';
+            $('input[name=max_uses_per_user]').focus();
+        }
+        // Validate positive numbers
+        else if ((min_price && parseInt(min_price) <= 0) ||
+                 (max_price && parseInt(max_price) <= 0) ||
+                 (max_uses_per_user && parseInt(max_uses_per_user) <= 0) ||
+                 (max_global_uses && parseInt(max_global_uses) <= 0)) {
+            error = 'Các giá trị số phải lớn hơn 0';
+        }
+        // Validate expiration date
+        else if (date_start && date_expired && time_start && time_expired) {
+            const startDate = new Date(
+                date_start.split('/').reverse().join('-') + 'T' + time_start
+            );
+            const expiryDate = new Date(
+                date_expired.split('/').reverse().join('-') + 'T' + time_expired
+            );
+            const now = new Date();
+
+            if (startDate >= expiryDate) {
+                error = 'Ngày hết hạn phải lớn hơn ngày bắt đầu';
+                $('input[name=date_expired]').focus();
+            } else if (expiryDate <= now) {
+                error = 'Ngày hết hạn phải lớn hơn ngày hiện tại';
+                $('input[name=date_expired]').focus();
+            }
+        }
+        // Validate product selection
+        else if (kieu === 'sanpham' && !main_product) {
+            error = 'Vui lòng chọn ít nhất một sản phẩm';
+        }
+
+        if (error) {
             $('.load_overlay').show();
             $('.load_process').fadeIn();
-            var form_data = new FormData();
-            form_data.append('action', 'add_coupon');
-            form_data.append('ma', ma);
-            form_data.append('loai', loai);
-            form_data.append('kieu', kieu);
-            form_data.append('giam', giam);
-            form_data.append('min_price', min_price);
-            form_data.append('max_price', max_price);
-            form_data.append('allow_combination', allow_combination);
-            form_data.append('max_uses_per_user', max_uses_per_user);
-            form_data.append('max_global_uses', max_global_uses);
-            form_data.append('sanpham', main_product);
-            form_data.append('time_start', time_start);
-            form_data.append('date_start', date_start);
-            form_data.append('time_expired', time_expired);
-            form_data.append('date_expired', date_expired);
-            $.ajax({
-                url: '/ncc/process.php',
-                type: 'post',
-                cache: false,
-                contentType: false,
-                processData: false,
-                data: form_data,
-                success: function (kq) {
-                    var info = JSON.parse(kq);
-                    setTimeout(function () {
-                        $('.load_note').html(info.thongbao);
-                    }, 1000);
-                    setTimeout(function () {
-                        $('.load_process').hide();
-                        $('.load_note').html('Hệ thống đang xử lý');
-                        $('.load_overlay').hide();
-                        if (info.ok == 1) {
-                            window.location.reload();
-                        }
-                    }, 3000);
-                }
-            });
+            $('.load_note').html(error);
+            setTimeout(function() {
+                $('.load_process').hide();
+                $('.load_note').html('Hệ thống đang xử lý');
+                $('.load_overlay').hide();
+            }, 3000);
+            return;
         }
+
+        // Proceed with AJAX submission
+        $('.load_overlay').show();
+        $('.load_process').fadeIn();
+        let form_data = new FormData();
+        form_data.append('action', 'add_coupon');
+        form_data.append('ma', ma);
+        form_data.append('loai', loai);
+        form_data.append('kieu', kieu);
+        form_data.append('giam', giam);
+        form_data.append('min_price', min_price);
+        form_data.append('max_price', max_price);
+        form_data.append('allow_combination', allow_combination);
+        form_data.append('max_uses_per_user', max_uses_per_user);
+        form_data.append('max_global_uses', max_global_uses);
+        form_data.append('sanpham', main_product);
+        form_data.append('time_start', time_start);
+        form_data.append('date_start', date_start);
+        form_data.append('time_expired', time_expired);
+        form_data.append('date_expired', date_expired);
+
+        $.ajax({
+            url: '/ncc/process.php',
+            type: 'post',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            success: function(kq) {
+                let info = JSON.parse(kq);
+                setTimeout(function() {
+                    $('.load_note').html(info.thongbao);
+                }, 1000);
+                setTimeout(function() {
+                    $('.load_process').hide();
+                    $('.load_note').html('Hệ thống đang xử lý');
+                    $('.load_overlay').hide();
+                    if (info.ok == 1) {
+                        window.location.reload();
+                    }
+                }, 3000);
+            }
+        });
     });
+      $('button[name=edit_coupon]').on('click', function() {
+        // Get form values
+        let id = $('input[name=id]').val();
+        let ma = $('input[name=ma]').val();
+        let loai = $('select[name=loai]').val();
+        let kieu = $('select[name=apdung]').val();
+        let giam = $('input[name=giam]').val().replace(/[^0-9]/g, '');
+        let min_price = $('input[name=min_price]').val().replace(/[^0-9]/g, '');
+        let max_price = $('input[name=max_price]').val().replace(/[^0-9]/g, '');
+        let allow_combination = $('input[name=allow_combination]').is(':checked') ? 1 : 0;
+        let max_uses_per_user = $('input[name=max_uses_per_user]').val().replace(/[^0-9]/g, '');
+        let max_global_uses = $('input[name=max_global_uses]').val().replace(/[^0-9]/g, '');
+        let time_start = $('input[name=time_start]').val();
+        let date_start = $('input[name=date_start]').val();
+        let time_expired = $('input[name=time_expired]').val();
+        let date_expired = $('input[name=date_expired]').val();
+        let main_product = '';
+        $('#list_product_main .li_product').each(function() {
+            main_product += $(this).attr('sp') + ',';
+        });
+
+        // Validations
+        let error = '';
+        if (ma.length !== 5) {
+            error = 'Mã coupon phải đúng 5 ký tự';
+            $('input[name=ma]').focus();
+        }
+
+        // Validate discount value
+        if (!giam || parseInt(giam) <= 0) {
+            error = 'Giá trị khuyến mại phải lớn hơn 0';
+            $('input[name=giam]').focus();
+        }
+        // Validate percentage discount (max 100%)
+        else if (loai === 'phantram' && parseInt(giam) > 100) {
+            error = 'Khuyến mại phần trăm không được vượt quá 100%';
+            $('input[name=giam]').focus();
+        }
+        // Validate min/max price
+        else if (min_price && max_price && parseInt(min_price) >= parseInt(max_price)) {
+            error = 'Giá trị đơn hàng tối thiểu phải nhỏ hơn giá trị tối đa';
+            $('input[name=min_price]').focus();
+        }
+        // Validate discount vs max price for fixed amount
+        else if (loai === 'tru' && max_price && parseInt(giam) >= parseInt(max_price)) {
+            error = 'Giá trị khuyến mại không được lớn hơn giá trị đơn hàng tối đa';
+            $('input[name=giam]').focus();
+        }
+        // Validate usage limits
+        else if (max_uses_per_user && max_global_uses && parseInt(max_uses_per_user) > parseInt(max_global_uses)) {
+            error = 'Giới hạn lượt sử dụng/tài khoản phải nhỏ hơn tổng lượt sử dụng';
+            $('input[name=max_uses_per_user]').focus();
+        }
+        // Validate positive numbers
+        else if ((min_price && parseInt(min_price) <= 0) ||
+                    (max_price && parseInt(max_price) <= 0) ||
+                    (max_uses_per_user && parseInt(max_uses_per_user) <= 0) ||
+                    (max_global_uses && parseInt(max_global_uses) <= 0)) {
+            error = 'Các giá trị số phải lớn hơn 0';
+        }
+        // Validate dates
+        else if (date_start && date_expired && time_start && time_expired) {
+            const startDate = new Date(
+                date_start.split('/').reverse().join('-') + 'T' + time_start
+            );
+            const expiryDate = new Date(
+                date_expired.split('/').reverse().join('-') + 'T' + time_expired
+            );
+            const now = new Date();
+
+            if (startDate >= expiryDate) {
+                error = 'Ngày hết hạn phải lớn hơn ngày bắt đầu';
+                $('input[name=date_expired]').focus();
+            } else if (expiryDate <= now) {
+                error = 'Ngày hết hạn phải lớn hơn ngày hiện tại';
+                $('input[name=date_expired]').focus();
+            }
+        }
+        // Validate product selection
+        else if (kieu === 'sanpham' && !main_product) {
+            error = 'Vui lòng chọn ít nhất một sản phẩm';
+        }
+
+        if (error) {
+            $('.load_overlay').show();
+            $('.load_process').fadeIn();
+            $('.load_note').html(error);
+            setTimeout(function() {
+                $('.load_process').hide();
+                $('.load_note').html('Hệ thống đang xử lý');
+                $('.load_overlay').hide();
+            }, 3000);
+            return;
+        }
+
+        // Proceed with AJAX submission
+        $('.load_overlay').show();
+        $('.load_process').fadeIn();
+        let form_data = new FormData();
+        form_data.append('action', 'edit_coupon');
+        form_data.append('id', id);
+        form_data.append('ma', ma);
+        form_data.append('loai', loai);
+        form_data.append('kieu', kieu);
+        form_data.append('giam', giam);
+        form_data.append('min_price', min_price);
+        form_data.append('max_price', max_price);
+        form_data.append('allow_combination', allow_combination);
+        form_data.append('max_uses_per_user', max_uses_per_user);
+        form_data.append('max_global_uses', max_global_uses);
+        form_data.append('sanpham', main_product);
+        form_data.append('time_start', time_start);
+        form_data.append('date_start', date_start);
+        form_data.append('time_expired', time_expired);
+        form_data.append('date_expired', date_expired);
+
+        $.ajax({
+            url: '/ncc/process.php',
+            type: 'post',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            success: function(kq) {
+                let info = JSON.parse(kq);
+                setTimeout(function() {
+                    $('.load_note').html(info.thongbao);
+                }, 1000);
+                setTimeout(function() {
+                    $('.load_process').hide();
+                    $('.load_note').html('Hệ thống đang xử lý');
+                    $('.load_overlay').hide();
+                    if (info.ok == 1) {
+                        window.location.href = '/ncc/list-coupon';
+                    }
+                }, 3000);
+            }
+        });
+    });
+    
     /////////////////////////////
     $('body').on('click', '.list_tab_noidung .li_tab_noidung', function () {
         id = $(this).attr('tab_id');
@@ -6765,66 +6919,7 @@ $(document).ready(function () {
 
     });
     /////////////////////////////
-    $('button[name=edit_coupon]').on('click', function () {
-        ma = $('input[name=ma]').val();
-        loai = $('select[name=loai]').val();
-        giam = $('input[name=giam]').val();
-        kieu = $('select[name=apdung]').val();
-        time_start = $('input[name=time_start]').val();
-        time_expired = $('input[name=time_expired]').val();
-        date_start = $('input[name=date_start]').val();
-        date_expired = $('input[name=date_expired]').val();
-        var main_product = '';
-        $('#list_product_main .li_product').each(function () {
-            main_product += $(this).attr('sp') + ',';
-        });
-        id = $('input[name=id]').val();
-        if (ma.length < 2) {
-            $('input[name=ma]').focus();
-        } else if (giam == '') {
-            $('input[name=giam]').focus();
-        } else {
-            $('.load_overlay').show();
-            $('.load_process').fadeIn();
-            var form_data = new FormData();
-            form_data.append('action', 'edit_coupon');
-            form_data.append('ma', ma);
-            form_data.append('loai', loai);
-            form_data.append('kieu', kieu);
-            form_data.append('giam', giam);
-            form_data.append('sanpham', main_product);
-            form_data.append('time_start', time_start);
-            form_data.append('date_start', date_start);
-            form_data.append('time_expired', time_expired);
-            form_data.append('date_expired', date_expired);
-            form_data.append('id', id);
-            $.ajax({
-                url: '/ncc/process.php',
-                type: 'post',
-                cache: false,
-                contentType: false,
-                processData: false,
-                data: form_data,
-                success: function (kq) {
-                    var info = JSON.parse(kq);
-                    setTimeout(function () {
-                        $('.load_note').html(info.thongbao);
-                    }, 1000);
-                    setTimeout(function () {
-                        $('.load_process').hide();
-                        $('.load_note').html('Hệ thống đang xử lý');
-                        $('.load_overlay').hide();
-                        if (info.ok == 1) {
-                            window.location.reload();
-                        } else {
-
-                        }
-                    }, 3000);
-                }
-
-            });
-        }
-    });
+  
     ///////////////////////////////
     $('button[name=edit_setting_img]').on('click', function () {
         name = $('input[name=id]').val();

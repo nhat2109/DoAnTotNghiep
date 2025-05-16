@@ -14,8 +14,7 @@ if ($action == 'check_exp') {
 		$thongbao = 'Shop chưa hết hạn';
 	}
 	echo json_encode(array('ok' => $ok, 'thongbao' => $thongbao));
-}
- else if ($action == 'checkout_complete') {
+} else if ($action == 'checkout_complete') {
 	$ho_ten = addslashes(strip_tags($_REQUEST['ho_ten'] ?? ''));
 	$email = addslashes(strip_tags($_REQUEST['email'] ?? ''));
 	$dien_thoai = addslashes(strip_tags($_REQUEST['dien_thoai'] ?? ''));
@@ -25,11 +24,81 @@ if ($action == 'check_exp') {
 	$thanhtoan = addslashes(strip_tags($_REQUEST['thanhtoan'] ?? 'cod'));
 	$ghi_chu = addslashes(strip_tags($_REQUEST['ghi_chu'] ?? ''));
 	$coupon = $_SESSION['coupon'] ?? '';
-	$phi_ship = intval($_REQUEST['phi_ship'] ?? 0);
+	$phi_ship = intval($_REQUEST['phi_ship'] ?? 28000);
+	$tamtinh = intval($_REQUEST['tamtinh'] ?? 0);
+	$giam = intval($_REQUEST['giam'] ?? 0);
+	$tongtien = intval($_REQUEST['tongtien'] ?? 0);
+	$shop = addslashes(strip_tags($_REQUEST['shop'] ?? ''));
+	if (isset($_COOKIE['user_id'])) {
+		$tach_token = json_decode($check->token_login_decode($_COOKIE['user_id']), true);
+		$user_id = $tach_token['user_id'];
+	} else {
+		$user_id = 0;
+	}
+	function updateVoucherUsage($voucher_code, $user_id)
+	{
+		global $conn;
+		$user_id = ($user_id === null || $user_id === '') ? 0 : intval($user_id);
+		$voucher_code = mysqli_real_escape_string($conn, $voucher_code);
 
-	// Xóa dòng lấy phi_ship từ request
-	// $phi_ship = intval($_REQUEST['phi_ship'] ?? 28000); // Bỏ dòng này
+		mysqli_query($conn, "START TRANSACTION");
+		$max_attempts = 3; // Số lần thử tối đa để tránh deadlock
+		$attempt = 0;
 
+		while ($attempt < $max_attempts) {
+			$query = "SELECT id, current_uses, max_global_uses, max_uses_per_user FROM coupon WHERE ma = '$voucher_code' FOR UPDATE";
+			$result = mysqli_query($conn, $query);
+			$voucher = mysqli_fetch_assoc($result);
+
+			if ($voucher && $voucher['current_uses'] < $voucher['max_global_uses']) {
+				$new_uses = $voucher['current_uses'] + 1;
+				$update_query = "UPDATE coupon SET current_uses = '$new_uses' WHERE id = '{$voucher['id']}' AND current_uses = '{$voucher['current_uses']}'";
+				if (mysqli_query($conn, $update_query)) {
+					if ($user_id > 0) {
+						$voucher_id = mysqli_real_escape_string($conn, $voucher['id']);
+						mysqli_query($conn, "INSERT INTO voucher_usage (voucher_id, user_id, use_date) VALUES ('$voucher_id', '$user_id', UNIX_TIMESTAMP())");
+					}
+					mysqli_query($conn, "COMMIT");
+					return true;
+				}
+			} else {
+				mysqli_query($conn, "ROLLBACK");
+				return false;
+			}
+			function getUserVoucherUses($user_id, $voucher_code)
+			{
+				global $conn;
+				$user_id = intval($user_id);
+				$voucher_code = mysqli_real_escape_string($conn, $voucher_code);
+
+				$query = "SELECT COUNT(*) AS uses FROM voucher_usage vu 
+						JOIN coupon c ON vu.voucher_id = c.id 
+						WHERE vu.user_id = $user_id AND c.ma = '$voucher_code'";
+				$result = mysqli_query($conn, $query);
+				if ($result && mysqli_num_rows($result) > 0) {
+					$row = mysqli_fetch_assoc($result);
+					return (int) ($row['uses'] ?? 0);
+				}
+				return 0;
+			}
+			$uses_by_user = ($user_id > 0) ? getUserVoucherUses($user_id, $voucher_code) : 0;
+			if ($voucher['current_uses'] >= $voucher['max_global_uses'] && $voucher['max_global_uses'] > 0) {
+				mysqli_query($conn, "ROLLBACK");
+				return false;
+			}
+			if ($user_id > 0 && $uses_by_user >= $voucher['max_uses_per_user'] && $voucher['max_uses_per_user'] > 0) {
+				mysqli_query($conn, "ROLLBACK");
+				return false;
+			}
+			$attempt++;
+			if ($attempt < $max_attempts) {
+				usleep(100000); // Chờ 100ms trước khi thử lại
+			}
+		}
+
+		mysqli_query($conn, "ROLLBACK");
+		return false;
+	}
 	if (strlen($ho_ten) < 4) {
 		$ok = 0;
 		$thongbao = 'Vui lòng nhập họ và tên';
@@ -45,6 +114,12 @@ if ($action == 'check_exp') {
 	} elseif ($huyen == 0) {
 		$ok = 0;
 		$thongbao = 'Vui lòng chọn Quận/Huyện';
+	} else if (!in_array($thanhtoan, ['cod', 'bank'])) {
+		echo json_encode(['ok' => 0, 'thongbao' => 'Phương thức thanh toán không hợp lệ']);
+		exit();
+	} else if ($phi_ship < 0) {
+		echo json_encode(['ok' => 0, 'thongbao' => 'Phí vận chuyển không hợp lệ']);
+		exit();
 	} else {
 		if (count($_SESSION['cart']) == 0) {
 			$ok = 0;
@@ -62,11 +137,13 @@ if ($action == 'check_exp') {
 				$ok = 0;
 				$thongbao = 'Thất bại! Không có sản phẩm hợp lệ trong giỏ hàng';
 			} else {
+				// Tính toán giỏ hàng
 				$hientai = time();
-				$tamtinh = 0;
-				$giam = 0;
+				$tamtinh_server = 0;
+				$giam_server = 0;
 				$can_nang = 0;
 				$list = '';
+				$k = 0;
 
 				// Debug: Ghi log $_SESSION['cart']
 				file_put_contents('debug.log', "SESSION CART Process: " . print_r($_SESSION['cart'], true) . "\n", FILE_APPEND);
@@ -79,7 +156,10 @@ if ($action == 'check_exp') {
 					$r_cart = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM sanpham_shop WHERE id='$id_sp' AND shop='$shop'"));
 					if (!$r_cart)
 						continue;
-
+					if (isset($r_cart['so_luong']) && $r_cart['so_luong'] < $cart_item['quantity']) {
+						echo json_encode(['ok' => 0, 'thongbao' => "Sản phẩm {$r_cart['tieu_de']} không đủ số lượng trong kho"]);
+						exit();
+					}
 					// Tính tổng cân nặng
 					$can_nang += floatval(str_replace(',', '.', $r_cart['can_nang'])) * $cart_item['quantity'];
 
@@ -94,7 +174,8 @@ if ($action == 'check_exp') {
 						'thanhtien' => number_format(floatval($cart_item['gia_moi']) * $cart_item['quantity'])
 					];
 
-					$tamtinh += floatval($cart_item['gia_moi']) * $cart_item['quantity'];
+					//$tamtinh += floatval($cart_item['gia_moi']) * $cart_item['quantity'];
+					$tamtinh_server += floatval($cart_item['gia_moi']) * $cart_item['quantity'];
 
 					$unique_key = $id_sp . '_' . ($cart_item['ten_color'] ?? '') . '_' . ($cart_item['ten_size'] ?? '');
 					if ($k == 1) {
@@ -107,11 +188,16 @@ if ($action == 'check_exp') {
 
 				// Tính giảm giá từ coupon
 				if (isset($_SESSION['coupon'])) {
+					if (!updateVoucherUsage($coupon, $user_id)) {
+						echo json_encode(['ok' => 0, 'thongbao' => 'Voucher đã đạt giới hạn sử dụng.']);
+						exit();
+					}
 					$thongtin_counpon = mysqli_query($conn, "SELECT *,count(*) AS total FROM coupon WHERE ma='{$_SESSION['coupon']}' AND shop='$shop'");
 					$r_coupon = mysqli_fetch_assoc($thongtin_counpon);
 					if ($r_coupon['total'] > 0 && $r_coupon['expired'] > time()) {
 						if ($r_coupon['kieu'] == 'all') {
-							$giam = $r_coupon['loai'] == 'phantram' ? ceil(($tamtinh / 100) * $r_coupon['giam']) : $r_coupon['giam'];
+							//$giam = $r_coupon['loai'] == 'phantram' ? ceil(($tamtinh / 100) * $r_coupon['giam']) : $r_coupon['giam'];
+							$giam_server = $r_coupon['loai'] == 'phantram' ? ceil(($tamtinh_server / 100) * $r_coupon['giam']) : $r_coupon['giam'];
 						} elseif ($r_coupon['kieu'] == 'sanpham') {
 							$tach_list_id = explode(',', $list_id);
 							$tach_sanpham_id = explode(',', $r_coupon['sanpham']);
@@ -120,30 +206,27 @@ if ($action == 'check_exp') {
 								foreach ($_SESSION['cart'] as $item) {
 									if ($item['sp_id'] == $id_sp) {
 										$thanhtien = floatval($item['gia_moi']) * $item['quantity'];
-										$giam += $r_coupon['loai'] == 'phantram' ? ceil(($thanhtien / 100) * $r_coupon['giam']) : $r_coupon['giam'];
+										//	$giam += $r_coupon['loai'] == 'phantram' ? ceil(($thanhtien / 100) * $r_coupon['giam']) : $r_coupon['giam'];
+										$giam_server += $r_coupon['loai'] == 'phantram' ? ceil(($thanhtien / 100) * $r_coupon['giam']) : $r_coupon['giam'];
 									}
 								}
 							}
 						}
 						$coupon = $_SESSION['coupon'];
 					} else {
-						$giam = 0;
+						$giam_server = 0;
 						$coupon = '';
+						unset($_SESSION['coupon']);
 					}
 				}
 
-				$tongtien = $tamtinh - $giam + $phi_ship;
+				$tongtien_server = $tamtinh_server - $giam_server + $phi_ship;
+				$tamtinh = $tamtinh_server;
+				$giam = $giam_server;
+				$tongtien = $tongtien_server;
 
-				// Debug: Ghi log trước khi insert
 				file_put_contents('debug.log', "Sanpham: $sanpham\nTamtinh: $tamtinh\nGiam: $giam\nPhi_ship: $phi_ship\nTongtien: $tongtien\n", FILE_APPEND);
 
-				// Lưu vào database
-				if (isset($_COOKIE['user_id'])) {
-					$tach_token = json_decode($check->token_login_decode($_COOKIE['user_id']), true);
-					$user_id = $tach_token['user_id'];
-				} else {
-					$user_id = 0;
-				}
 
 				$ma_don = intval($shop . $check->random_number(3));
 				$thongtin_tichdiem = mysqli_query($conn, "SELECT *,count(*) AS total FROM caidat_tichdiem WHERE shop='$shop'");
@@ -153,6 +236,7 @@ if ($action == 'check_exp') {
 				$ok = 1;
 				$thongbao = 'Đang chuyển hướng...';
 				mysqli_query($conn, "INSERT INTO donhang_shop(ma_don,shop,user_id,ho_ten,email,dien_thoai,dia_chi,tinh,huyen,sanpham,tamtinh,coupon,giam,phi_ship,tongtien,status,thanhtoan,date_post,ghi_chu) VALUES ('$ma_don','$shop','$user_id','$ho_ten','$email','$dien_thoai','$dia_chi','$tinh','$huyen','$sanpham','$tamtinh','$coupon','$giam','$phi_ship','$tongtien','0','$thanhtoan'," . time() . ",'$ghi_chu')");
+
 				$noidung_notification = "Bạn có đơn hàng mới: #$ma_don - " . $ho_ten . " - " . $dien_thoai;
 				$date_post = time();
 				mysqli_query($conn, "INSERT INTO notification (user_id, sp_id, noi_dung, doc, bo_phan, admin, date_post) VALUES ('$user_id', '$ma_don', '$noidung_notification', '', 'donhang', '0', '$date_post')");
@@ -167,38 +251,154 @@ if ($action == 'check_exp') {
 		}
 	}
 	echo json_encode(['ok' => $ok, 'thongbao' => $thongbao]);
-} 
-else if ($action == 'load_huyen') {
+} else if ($action == 'load_huyen') {
 	$tinh = intval($_REQUEST['tinh']);
 	$thongtin = mysqli_query($conn, "SELECT * FROM huyen_moi WHERE tinh='$tinh' ORDER BY tieu_de ASC");
 	while ($r_tt = mysqli_fetch_assoc($thongtin)) {
 		$list .= '<option value="' . $r_tt['id'] . '">' . $r_tt['tieu_de'] . '</option>';
 	}
 	echo json_encode(array('list' => $list));
-} else if ($action == 'apply_coupon') {
-	$coupon = addslashes(strip_tags($_REQUEST['coupon']));
-	if (empty($shop)) {
-		$ok = 0;
-		$thongbao = 'Thông tin cửa hàng không hợp lệ';
-	} else {
-		$thongtin_counpon = mysqli_query($conn, "SELECT *,count(*) AS total FROM coupon WHERE ma='$coupon' AND shop='$shop'");
-		$r_coupon = mysqli_fetch_assoc($thongtin_counpon);
-		if ($r_coupon['total'] == 0) {
-			$ok = 0;
-			$thongbao = 'Mã giảm giá không tồn tại';
-		} else {
-			if ($r_coupon['expired'] > time()) {
-				$_SESSION['coupon'] = $r_coupon['ma'];
-				$thongbao = 'Đã áp dụng mã giảm giá';
-				$ok = 1;
-			} else {
-				$ok = 0;
-				$thongbao = 'Mã giảm giá đã hết hạn sử dụng';
-			}
+} 
+else if ($action == 'apply_coupon') {
+    $coupon = mysqli_real_escape_string($conn, trim($_REQUEST['coupon'] ?? ''));
+    $response = ['ok' => 0, 'thongbao' => ''];
+
+    if (empty($shop)) {
+        $response['thongbao'] = 'Thông tin cửa hàng không hợp lệ';
+        echo json_encode($response);
+        exit();
+    }
+
+    // Kiểm tra giỏ hàng
+    if (empty($_SESSION['cart'])) {
+        $response['thongbao'] = 'Giỏ hàng trống, không thể áp dụng mã giảm giá';
+        echo json_encode($response);
+        exit();
+    }
+
+    // Lấy user_id
+    $user_id = 0;
+    if (isset($_COOKIE['user_id'])) {
+        $tach_token = json_decode($check->token_login_decode($_COOKIE['user_id']), true);
+        $user_id = $tach_token['user_id'] ?? 0;
+    }
+
+    // Kiểm tra mã đã được áp dụng
+    if (isset($_SESSION['coupon']) && $_SESSION['coupon'] === $coupon) {
+        $response['thongbao'] = 'Mã giảm giá đã được áp dụng';
+        echo json_encode($response);
+        exit();
+    }
+
+    // Truy vấn coupon
+    $stmt = $conn->prepare("SELECT * FROM coupon WHERE ma = ? AND shop = ?");
+    $stmt->bind_param("ss", $coupon, $shop);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $r_coupon = $result->fetch_assoc();
+    $stmt->close();
+
+    if (!$r_coupon) {
+        $response['thongbao'] = 'Mã giảm giá không tồn tại';
+        echo json_encode($response);
+        exit();
+    }
+
+    // Kiểm tra thời hạn
+    if ($r_coupon['expired'] < time()) {
+        $response['thongbao'] = 'Mã giảm giá đã hết hạn sử dụng';
+        echo json_encode($response);
+        exit();
+    }
+
+    // Kiểm tra giới hạn sử dụng toàn cầu
+    $max_global_uses = (int)($r_coupon['max_global_uses'] ?? 0);
+    $current_uses = (int)($r_coupon['current_uses'] ?? 0);
+    if ($max_global_uses > 0 && $current_uses >= $max_global_uses) {
+        $response['thongbao'] = 'Mã giảm giá đã đạt giới hạn sử dụng tổng cộng';
+        echo json_encode($response);
+        exit();
+    }
+	function getUserVoucherUses($user_id, $voucher_code) {
+		global $conn;
+		$user_id = intval($user_id);
+		$voucher_code = mysqli_real_escape_string($conn, $voucher_code);
+		
+		$query = "SELECT COUNT(*) AS uses FROM voucher_usage vu 
+				JOIN coupon c ON vu.voucher_id = c.id 
+				WHERE vu.user_id = $user_id AND c.ma = '$voucher_code'";
+		$result = mysqli_query($conn, $query);
+		if ($result && mysqli_num_rows($result) > 0) {
+			$row = mysqli_fetch_assoc($result);
+			return (int)($row['uses'] ?? 0);
 		}
+		return 0;
 	}
-	echo json_encode(array('ok' => $ok, 'thongbao' => $thongbao));
-} else if ($action == 'add_muakem') {
+    // Kiểm tra giới hạn sử dụng mỗi người
+    $max_uses_per_user = (int)($r_coupon['max_uses_per_user'] ?? 0);
+    if ($user_id > 0 && $max_uses_per_user > 0) {
+        $user_uses = getUserVoucherUses($user_id, $coupon);
+        if ($user_uses >= $max_uses_per_user) {
+            $response['thongbao'] = 'Bạn đã đạt giới hạn sử dụng cho mã giảm giá này';
+            echo json_encode($response);
+            exit();
+        }
+    }
+
+    // Tính tổng giá trị đơn hàng
+    $tamtinh = 0;
+    $applicable_total = 0;
+    $valid_products = [];
+    foreach ($_SESSION['cart'] as $item) {
+        if (isset($item['sp_id']) && is_numeric($item['sp_id'])) {
+            $tamtinh += floatval($item['gia_moi']) * $item['quantity'];
+            $valid_products[] = $item['sp_id'];
+        }
+    }
+
+    // Kiểm tra điều kiện giá trị đơn hàng
+    $min_price = (int)($r_coupon['min_price'] ?? 0);
+    $max_price = (int)($r_coupon['max_price'] ?? 0);
+    $kieu = $r_coupon['kieu'] ?? 'all';
+
+    if ($kieu === 'sanpham') {
+        $tach_sanpham = !empty($r_coupon['sanpham']) ? explode(',', $r_coupon['sanpham']) : [];
+        $valid_products = array_intersect($valid_products, $tach_sanpham);
+        if (empty($valid_products)) {
+            $response['thongbao'] = 'Mã giảm giá không áp dụng cho sản phẩm trong giỏ hàng';
+            echo json_encode($response);
+            exit();
+        }
+        foreach ($_SESSION['cart'] as $item) {
+            if (in_array($item['sp_id'], $valid_products)) {
+                $applicable_total += floatval($item['gia_moi']) * $item['quantity'];
+            }
+        }
+    } else {
+        $applicable_total = $tamtinh;
+    }
+
+    if (($min_price > 0 && $applicable_total < $min_price) || ($max_price > 0 && $applicable_total > $max_price)) {
+        $response['thongbao'] = 'Giá trị đơn hàng không đủ điều kiện áp dụng mã giảm giá';
+        echo json_encode($response);
+        exit();
+    }
+
+    // Kiểm tra allow_combination (nếu cần)
+    $allow_combination = (int)($r_coupon['allow_combination'] ?? 0);
+    if (!$allow_combination && isset($_SESSION['coupon']) && $_SESSION['coupon'] !== $coupon) {
+        $response['thongbao'] = 'Mã giảm giá này không thể kết hợp với mã khác';
+        echo json_encode($response);
+        exit();
+    }
+
+    // Áp dụng mã giảm giá
+    $_SESSION['coupon'] = $r_coupon['ma'];
+    $response['ok'] = 1;
+    $response['thongbao'] = 'Đã áp dụng mã giảm giá';
+    echo json_encode($response);
+}
+ else if ($action == 'add_muakem') {
 	$main_product = intval($_REQUEST['main_product']);
 	$list_id = addslashes(strip_tags($_REQUEST['list_id']));
 	$hientai = time();
@@ -265,7 +465,7 @@ else if ($action == 'load_huyen') {
 			'ten_color' => $ten_color,
 			'ten_size' => $ten_size,
 			'gia_moi' => $gia_moi,
-			'variant_id' =>$variant_id,
+			'variant_id' => $variant_id,
 			'flash_sale' => ($loai == 'flash_sale') ? 1 : 0
 		];
 	} else {
@@ -295,7 +495,7 @@ else if ($action == 'load_huyen') {
 					'ten_size' => '',
 					'gia_moi' => 0,
 					'flash_sale' => 0,
-					'variant_id' =>$variant_id,
+					'variant_id' => $variant_id,
 				];
 			}
 		}
@@ -316,7 +516,6 @@ else if ($action == 'load_huyen') {
 				$list_check_product[] = json_decode($r_ck['sub_product'], true);
 			}
 		}
-		
 	}
 
 	$valid_ids = array_unique($valid_ids);
@@ -329,12 +528,12 @@ else if ($action == 'load_huyen') {
 	$list_c = [];
 	foreach ($list_check_product as $value) {
 		foreach ($value as $k => $v) {
-				$list_c[$k] = $v;
+			$list_c[$k] = $v;
 		}
 	}
 	if (is_array($list_c[$sp_id][0])) {
 		foreach ($list_c[$sp_id] as $variant) {
-			if ((int)$variant['variant_id'] === (int)$variant_id) {
+			if ((int) $variant['variant_id'] === (int) $variant_id) {
 				$price_deal = $variant['gia'];
 			}
 		}
@@ -342,7 +541,7 @@ else if ($action == 'load_huyen') {
 		foreach ($_SESSION['cart'] as $key => $value) {
 			if ($list_c[$value['sp_id']][0]) {
 				foreach ($list_c[$value['sp_id']] as $variant) {
-					if ((int)$variant['variant_id'] === (int)$value['variant_id']) {
+					if ((int) $variant['variant_id'] === (int) $value['variant_id']) {
 						$price_deal = $variant['gia'];
 					}
 				}
@@ -369,15 +568,13 @@ else if ($action == 'load_huyen') {
 					$r_cart['thanhtien'] = 0;
 					$r_cart['gia_moi'] = 0;
 					$r_cart['variant_info'] = '';
-				}
-				 elseif (isset($list_c[$id_sp]) && $value['flash_sale'] == 1) {
+				} elseif (isset($list_c[$id_sp]) && $value['flash_sale'] == 1) {
 					$r_cart['ten_sanpham'] = '<span class="color_red">[Flash Sale]</span> ' . $r_cart['tieu_de'];
 					$tongtien += $value['gia_moi'] * $value['quantity'];
 					$r_cart['thanhtien'] = number_format($value['gia_moi'] * $value['quantity']);
 					$r_cart['gia_moi'] = number_format($value['gia_moi']);
 					$r_cart['variant_info'] = 'Màu: ' . $value['ten_color'] . ' - Size: ' . $value['ten_size'];
-				}
-				 else {
+				} else {
 					$r_cart['ten_sanpham'] = $r_cart['tieu_de'];
 					$gia_variant = $value['gia_moi'];
 					$tongtien += $gia_variant * $value['quantity'];
@@ -666,7 +863,7 @@ else if ($action == 'load_huyen') {
 					$r_cart['ten_sanpham'] = '<span class="color_red">[Flash Sale]</span> ' . $r_cart['tieu_de'];
 					if ($list_c[$value['sp_id']][0]) {
 						foreach ($list_c[$value['sp_id']] as $variant) {
-							if ((int)$variant['variant_id'] === (int)$value['variant_id']) {
+							if ((int) $variant['variant_id'] === (int) $value['variant_id']) {
 								$gia_flash = $variant['gia'];
 							}
 						}
@@ -1541,7 +1738,7 @@ else if ($action == 'load_huyen') {
 	$colors = [];
 	$sizes = [];
 	$kho_total = 0;
-	$deal_sp=[];
+	$deal_sp = [];
 	$hientai = time();
 
 	$sql = "SELECT * FROM deal WHERE date_start <= ? AND date_end >= ? AND FIND_IN_SET(?, main_product) AND shop = ?";
@@ -1549,9 +1746,9 @@ else if ($action == 'load_huyen') {
 	$stmt_deal = $conn->prepare($sql);
 	$stmt_deal->bind_param("iiss", $hientai, $hientai, $sp_id, $shop);
 	$stmt_deal->execute();
-	
+
 	$result = $stmt_deal->get_result();
-	$data = $result->fetch_assoc(); 
+	$data = $result->fetch_assoc();
 	$sub_product_arr = json_decode($data['sub_product'], true);
 
 	while ($r_phanloai = $thongtin_phanloai->fetch_assoc()) {
@@ -1562,7 +1759,7 @@ else if ($action == 'load_huyen') {
 			foreach ($sub_product_arr[$sp_id] as $variant) {
 				if ($variant['variant_id'] == $variant_id) {
 					$kho_total += $r_phanloai['kho_sanpham_shop'];
-	
+
 					$variants[] = [
 						'variant_id' => $variant['variant_id'],
 						'color' => $r_phanloai['color'],
@@ -1578,7 +1775,7 @@ else if ($action == 'load_huyen') {
 						'ten_color' => $r_phanloai['ten_color'],
 						'ma_mau' => $r_phanloai['ma_mau'],
 					];
-	
+
 					$sizes[$r_phanloai['size']] = [
 						'ten_size' => $r_phanloai['ten_size'],
 					];
@@ -1597,12 +1794,12 @@ else if ($action == 'load_huyen') {
 				'gia_moi' => $r_phanloai['gia_moi'],
 				'gia_cu' => $gia_cu,
 			];
-	
+
 			$colors[$r_phanloai['color']] = [
 				'ten_color' => $r_phanloai['ten_color'],
 				'ma_mau' => $r_phanloai['ma_mau'],
 			];
-	
+
 			$sizes[$r_phanloai['size']] = [
 				'ten_size' => $r_phanloai['ten_size'],
 			];
@@ -1664,17 +1861,17 @@ else if ($action == 'load_huyen') {
 	// Chuẩn bị dữ liệu thay thế
 	$hientai = time();
 	$id_sp = $r_tt['id'];
-	
+
 	$sql = "SELECT COUNT(*) as total FROM deal 
 			WHERE date_start <= '$hientai' 
 			  AND date_end >= '$hientai' 
 			  AND shop = '$shop' 
 			  AND FIND_IN_SET($id_sp, main_product) 
 			  AND loai = 'flash_sale'";
-	
+
 	$result = mysqli_query($conn, $sql);
 	$row = mysqli_fetch_assoc($result);
-	
+
 	$loai = ($row['total'] > 0) ? 'flash_sale' : '';
 	$replace = [
 		'id' => $r_tt['id'],
@@ -1689,13 +1886,13 @@ else if ($action == 'load_huyen') {
 		'option_mau' => $option_mau,
 		'option_size' => $option_size,
 		'list_anh' => $list_anh,
-		'loai' =>$loai,
+		'loai' => $loai,
 		'kho' => $kho_total,
 		'quantity_default' => 1,
 		'disabled' => $disabled,
 		'text_button' => $text_button,
 		'hotline_number' => preg_replace('/[^0-9]/', '', $index_setting['hotline']),
-		'script_variants' => '<script>window.variants = ' . json_encode($variants) . ';</script>'///// 26-5
+		'script_variants' => '<script>window.variants = ' . json_encode($variants) . ';</script>' ///// 26-5
 
 	];
 
@@ -1720,7 +1917,7 @@ else if ($action == 'load_huyen') {
 	// $data_ship = $class_supership->get_tax($sender_province,$sender_district,$receiver_province,$receiver_district,$weight, $amount, $accessToken);
 	$data_ship = $class_supership->get_tax($sender_province, $sender_district, $receiver_province, $receiver_district, $weight, $amount, $accessToken);
 	$phi_ship = $data_ship['results'][0]['fee'];
-	
+
 	echo json_encode([
 		'ok' => 1,
 		'fee' => $phi_ship,
@@ -1736,214 +1933,213 @@ else if ($action == 'load_huyen') {
 	// 	'fee'=> $data_ship
 	// ]);
 } else if ($action == 'search_suggestions') {
-    $keyword = addslashes(strip_tags($_REQUEST['keyword'] ?? ''));
-    $list_muakem_id = $_REQUEST['list_muakem_id'] ?? ''; // Giả sử dữ liệu được gửi qua request
-    $list_tang_id = $_REQUEST['list_tang_id'] ?? '';
-    $list_flashsale_id = $_REQUEST['list_flashsale_id'] ?? '';
-    $list_c = $_REQUEST['list_c'] ?? []; // Giả sử list_c là mảng, cần xử lý phù hợp
-    
-    $class_index = $tlca_do->load_skin($s, 'class_shop');
-  $suggestions = $class_index->get_search_suggestions($conn, $s, $shop, $keyword);
-    echo json_encode($suggestions);
+	$keyword = addslashes(strip_tags($_REQUEST['keyword'] ?? ''));
+	$list_muakem_id = $_REQUEST['list_muakem_id'] ?? ''; // Giả sử dữ liệu được gửi qua request
+	$list_tang_id = $_REQUEST['list_tang_id'] ?? '';
+	$list_flashsale_id = $_REQUEST['list_flashsale_id'] ?? '';
+	$list_c = $_REQUEST['list_c'] ?? []; // Giả sử list_c là mảng, cần xử lý phù hợp
+
+	$class_index = $tlca_do->load_skin($s, 'class_shop');
+	$suggestions = $class_index->get_search_suggestions($conn, $s, $shop, $keyword);
+	echo json_encode($suggestions);
 } else if ($action == 'show_cart') {
-        global $conn, $skin, $s, $shop;
+	global $conn, $skin, $s, $shop;
 
-    $list_shopcart = '';
-    $list_shopcart_mobile = '';
-    $list_cart = '';
-    $tongtien = 0;
-    $hientai = time();
+	$list_shopcart = '';
+	$list_shopcart_mobile = '';
+	$list_cart = '';
+	$tongtien = 0;
+	$hientai = time();
 
-    // Check if cart is empty
-    if (empty($_SESSION['cart'])) {
-        echo json_encode([
-            'ok' => 0,
-            'list_shopcart' => '',
-            'list_shopcart_mobile' => '',
-            'list_cart' => '',
-            'total_cart' => 0,
-            'tongtien' => '0 đ',
-            'thongbao' => 'Giỏ hàng của bạn đang trống'
-        ]);
-        exit;
-    }
+	// Check if cart is empty
+	if (empty($_SESSION['cart'])) {
+		echo json_encode([
+			'ok' => 0,
+			'list_shopcart' => '',
+			'list_shopcart_mobile' => '',
+			'list_cart' => '',
+			'total_cart' => 0,
+			'tongtien' => '0 đ',
+			'thongbao' => 'Giỏ hàng của bạn đang trống'
+		]);
+		exit;
+	}
 
-    // Collect product IDs
-    $list_id = '';
-    foreach ($_SESSION['cart'] as $item) {
-        if (isset($item['sp_id']) && !empty($item['sp_id'])) {
-            $list_id .= mysqli_real_escape_string($conn, $item['sp_id']) . ',';
-        }
-    }
+	// Collect product IDs
+	$list_id = '';
+	foreach ($_SESSION['cart'] as $item) {
+		if (isset($item['sp_id']) && !empty($item['sp_id'])) {
+			$list_id .= mysqli_real_escape_string($conn, $item['sp_id']) . ',';
+		}
+	}
 
-    if (empty($list_id)) {
-        echo json_encode([
-            'ok' => 0,
-            'list_shopcart' => '',
-            'list_shopcart_mobile' => '',
-            'list_cart' => '',
-            'total_cart' => 0,
-            'tongtien' => '0 đ',
-            'thongbao' => 'Không có sản phẩm hợp lệ trong giỏ hàng'
-        ]);
-        exit;
-    }
+	if (empty($list_id)) {
+		echo json_encode([
+			'ok' => 0,
+			'list_shopcart' => '',
+			'list_shopcart_mobile' => '',
+			'list_cart' => '',
+			'total_cart' => 0,
+			'tongtien' => '0 đ',
+			'thongbao' => 'Không có sản phẩm hợp lệ trong giỏ hàng'
+		]);
+		exit;
+	}
 
-    $list_id = substr($list_id, 0, -1);
-    $query = "SELECT * FROM sanpham_shop WHERE id IN ($list_id) AND shop=? ORDER BY FIELD(id, $list_id)";
-    $stmt = mysqli_prepare($conn, $query);
-    mysqli_stmt_bind_param($stmt, "s", $shop);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
+	$list_id = substr($list_id, 0, -1);
+	$query = "SELECT * FROM sanpham_shop WHERE id IN ($list_id) AND shop=? ORDER BY FIELD(id, $list_id)";
+	$stmt = mysqli_prepare($conn, $query);
+	mysqli_stmt_bind_param($stmt, "s", $shop);
+	mysqli_stmt_execute($stmt);
+	$result = mysqli_stmt_get_result($stmt);
 
-    if (!$result) {
-        echo json_encode([
-            'ok' => 0,
-            'thongbao' => 'Lỗi truy vấn cơ sở dữ liệu: ' . mysqli_error($conn)
-        ]);
-        exit;
-    }
+	if (!$result) {
+		echo json_encode([
+			'ok' => 0,
+			'thongbao' => 'Lỗi truy vấn cơ sở dữ liệu: ' . mysqli_error($conn)
+		]);
+		exit;
+	}
 
-    // Handle muakem deals
-    $list_main_id = '';
-    $list_id_mk = '';
-    $list_sub_product = [];
-    if (isset($_SESSION['muakem']) && !empty($_SESSION['main_product'])) {
-        foreach ($_SESSION['main_product'] as $value) {
-            $list_main_id .= mysqli_real_escape_string($conn, $value) . ',';
-            $query = "SELECT * FROM deal WHERE FIND_IN_SET(?, main_product)>0 AND date_start<=? AND date_end>=? AND loai='muakem' AND shop=? ORDER BY id DESC LIMIT 1";
-            $stmt = mysqli_prepare($conn, $query);
-            mysqli_stmt_bind_param($stmt, "siss", $value, $hientai, $hientai, $shop);
-            mysqli_stmt_execute($stmt);
-            $thongtin_muakem = mysqli_stmt_get_result($stmt);
-            if ($r_mk = mysqli_fetch_assoc($thongtin_muakem)) {
-                $list_id_mk .= $r_mk['sub_id'] . ',';
-                $list_sub_product[] = json_decode($r_mk['sub_product'], true);
-            }
-        }
-        $list_s = [];
-        foreach ($list_sub_product as $value) {
-            foreach ($value as $k => $v) {
-                $list_s[$k] = $v;
-            }
-        }
-        $list_main_id = rtrim($list_main_id, ',');
-        $tach_list_main_id = explode(',', $list_main_id);
-        $list_id_mk = rtrim($list_id_mk, ',');
-        $tach_list_id_mk = explode(',', $list_id_mk);
-    }
+	// Handle muakem deals
+	$list_main_id = '';
+	$list_id_mk = '';
+	$list_sub_product = [];
+	if (isset($_SESSION['muakem']) && !empty($_SESSION['main_product'])) {
+		foreach ($_SESSION['main_product'] as $value) {
+			$list_main_id .= mysqli_real_escape_string($conn, $value) . ',';
+			$query = "SELECT * FROM deal WHERE FIND_IN_SET(?, main_product)>0 AND date_start<=? AND date_end>=? AND loai='muakem' AND shop=? ORDER BY id DESC LIMIT 1";
+			$stmt = mysqli_prepare($conn, $query);
+			mysqli_stmt_bind_param($stmt, "siss", $value, $hientai, $hientai, $shop);
+			mysqli_stmt_execute($stmt);
+			$thongtin_muakem = mysqli_stmt_get_result($stmt);
+			if ($r_mk = mysqli_fetch_assoc($thongtin_muakem)) {
+				$list_id_mk .= $r_mk['sub_id'] . ',';
+				$list_sub_product[] = json_decode($r_mk['sub_product'], true);
+			}
+		}
+		$list_s = [];
+		foreach ($list_sub_product as $value) {
+			foreach ($value as $k => $v) {
+				$list_s[$k] = $v;
+			}
+		}
+		$list_main_id = rtrim($list_main_id, ',');
+		$tach_list_main_id = explode(',', $list_main_id);
+		$list_id_mk = rtrim($list_id_mk, ',');
+		$tach_list_id_mk = explode(',', $list_id_mk);
+	}
 
-    // Handle flash sale products
-    $list_check_product = [];
-    foreach ($_SESSION['cart'] as $item) {
-        if (isset($item['flash_sale']) && $item['flash_sale'] == 1 && isset($item['sp_id'])) {
-            $query = "SELECT * FROM deal WHERE FIND_IN_SET(?, main_product)>0 AND date_start<=? AND date_end>=? AND loai='flash_sale' AND shop=? ORDER BY id DESC LIMIT 1";
-            $stmt = mysqli_prepare($conn, $query);
-            mysqli_stmt_bind_param($stmt, "siss", $item['sp_id'], $hientai, $hientai, $shop);
-            mysqli_stmt_execute($stmt);
-            $thongtin_check = mysqli_stmt_get_result($stmt);
-            if ($r_ck = mysqli_fetch_assoc($thongtin_check)) {
-                $list_check_product[] = json_decode($r_ck['sub_product'], true);
-            }
-        }
-    }
-    $list_c = [];
-    foreach ($list_check_product as $value) {
-        foreach ($value as $k => $v) {
-            $list_c[$k] = $v;
-        }
-    }
+	// Handle flash sale products
+	$list_check_product = [];
+	foreach ($_SESSION['cart'] as $item) {
+		if (isset($item['flash_sale']) && $item['flash_sale'] == 1 && isset($item['sp_id'])) {
+			$query = "SELECT * FROM deal WHERE FIND_IN_SET(?, main_product)>0 AND date_start<=? AND date_end>=? AND loai='flash_sale' AND shop=? ORDER BY id DESC LIMIT 1";
+			$stmt = mysqli_prepare($conn, $query);
+			mysqli_stmt_bind_param($stmt, "siss", $item['sp_id'], $hientai, $hientai, $shop);
+			mysqli_stmt_execute($stmt);
+			$thongtin_check = mysqli_stmt_get_result($stmt);
+			if ($r_ck = mysqli_fetch_assoc($thongtin_check)) {
+				$list_check_product[] = json_decode($r_ck['sub_product'], true);
+			}
+		}
+	}
+	$list_c = [];
+	foreach ($list_check_product as $value) {
+		foreach ($value as $k => $v) {
+			$list_c[$k] = $v;
+		}
+	}
 
-    while ($r_cart = mysqli_fetch_assoc($result)) {
-        $id_sp = $r_cart['id'];
-        foreach ($_SESSION['cart'] as $key => $item) {
-            if (isset($item['sp_id']) && $item['sp_id'] == $id_sp) {
-                $r_cart['quantity'] = $item['quantity'];
-                $r_cart['color'] = $item['color'] ?? '';
-                $r_cart['size'] = $item['size'] ?? '';
-                $r_cart['variant_info'] = 'Màu: ' . ($item['ten_color'] ?? '') . ' - Size: ' . ($item['ten_size'] ?? '');
+	while ($r_cart = mysqli_fetch_assoc($result)) {
+		$id_sp = $r_cart['id'];
+		foreach ($_SESSION['cart'] as $key => $item) {
+			if (isset($item['sp_id']) && $item['sp_id'] == $id_sp) {
+				$r_cart['quantity'] = $item['quantity'];
+				$r_cart['color'] = $item['color'] ?? '';
+				$r_cart['size'] = $item['size'] ?? '';
+				$r_cart['variant_info'] = 'Màu: ' . ($item['ten_color'] ?? '') . ' - Size: ' . ($item['ten_size'] ?? '');
 
-                if (isset($item['tang']) && $item['tang'] == 1) {
-                    $r_cart['ten_sanpham'] = '<span class="color_red">[Quà tặng]</span> ' . $r_cart['tieu_de'];
-                    $r_cart['thanhtien'] = 0;
-                    $r_cart['gia_moi'] = 0;
-                    $r_cart['variant_info'] = '';
-                } elseif (isset($tach_list_id_mk) && in_array($id_sp, $tach_list_id_mk)) {
-                    $r_cart['ten_sanpham'] = '<span class="color_red">[Deal sốc]</span> ' . $r_cart['tieu_de'];
-                    if (!empty($list_s[$id_sp]['gia'])) {
-                        $gia_deal = preg_replace('/[^0-9]/', '', $list_s[$id_sp]['gia']);
-                        $tongtien += $gia_deal * $item['quantity'];
-                        $r_cart['thanhtien'] = number_format($gia_deal * $item['quantity']);
-                        $r_cart['gia_moi'] = number_format($gia_deal);
-                    } else {
-                        $gia_moi = $r_cart['gia_moi'] - ($r_cart['gia_moi'] / 100) * $list_s[$id_sp]['sale'];
-                        $tongtien += $gia_moi * $item['quantity'];
-                        $r_cart['thanhtien'] = number_format($gia_moi * $item['quantity']);
-                        $r_cart['gia_moi'] = number_format($gia_moi);
-                    }
-                } elseif (isset($list_c[$id_sp])) {
-                    $r_cart['ten_sanpham'] = '<span class="color_red">[Flash Sale]</span> ' . $r_cart['tieu_de'];
-                    $gia_flash = 0;
-                    if (isset($list_c[$id_sp][0]) && is_array($list_c[$id_sp])) {
-                        foreach ($list_c[$id_sp] as $variant) {
-                            if ((int)$variant['variant_id'] === (int)($item['variant_id'] ?? 0)) {
-                                $gia_flash = preg_replace('/[^0-9]/', '', $variant['gia']);
-                            }
-                        }
-                    }
-                    if ($gia_flash == 0) {
-                        $gia_flash = $r_cart['gia_moi'] * 0.8; // Fallback to 20% discount
-                    }
-                    $tongtien += $gia_flash * $item['quantity'];
-                    $r_cart['thanhtien'] = number_format($gia_flash * $item['quantity']);
-                    $r_cart['gia_moi'] = number_format($gia_flash);
-                } else {
-                    $r_cart['ten_sanpham'] = $r_cart['tieu_de'];
-                    $gia_variant = $item['gia_moi'] ?? $r_cart['gia_moi'];
-                    $tongtien += $gia_variant * $item['quantity'];
-                    $r_cart['thanhtien'] = number_format($gia_variant * $item['quantity']);
-                    $r_cart['gia_moi'] = number_format($gia_variant);
-                }
+				if (isset($item['tang']) && $item['tang'] == 1) {
+					$r_cart['ten_sanpham'] = '<span class="color_red">[Quà tặng]</span> ' . $r_cart['tieu_de'];
+					$r_cart['thanhtien'] = 0;
+					$r_cart['gia_moi'] = 0;
+					$r_cart['variant_info'] = '';
+				} elseif (isset($tach_list_id_mk) && in_array($id_sp, $tach_list_id_mk)) {
+					$r_cart['ten_sanpham'] = '<span class="color_red">[Deal sốc]</span> ' . $r_cart['tieu_de'];
+					if (!empty($list_s[$id_sp]['gia'])) {
+						$gia_deal = preg_replace('/[^0-9]/', '', $list_s[$id_sp]['gia']);
+						$tongtien += $gia_deal * $item['quantity'];
+						$r_cart['thanhtien'] = number_format($gia_deal * $item['quantity']);
+						$r_cart['gia_moi'] = number_format($gia_deal);
+					} else {
+						$gia_moi = $r_cart['gia_moi'] - ($r_cart['gia_moi'] / 100) * $list_s[$id_sp]['sale'];
+						$tongtien += $gia_moi * $item['quantity'];
+						$r_cart['thanhtien'] = number_format($gia_moi * $item['quantity']);
+						$r_cart['gia_moi'] = number_format($gia_moi);
+					}
+				} elseif (isset($list_c[$id_sp])) {
+					$r_cart['ten_sanpham'] = '<span class="color_red">[Flash Sale]</span> ' . $r_cart['tieu_de'];
+					$gia_flash = 0;
+					if (isset($list_c[$id_sp][0]) && is_array($list_c[$id_sp])) {
+						foreach ($list_c[$id_sp] as $variant) {
+							if ((int) $variant['variant_id'] === (int) ($item['variant_id'] ?? 0)) {
+								$gia_flash = preg_replace('/[^0-9]/', '', $variant['gia']);
+							}
+						}
+					}
+					if ($gia_flash == 0) {
+						$gia_flash = $r_cart['gia_moi'] * 0.8; // Fallback to 20% discount
+					}
+					$tongtien += $gia_flash * $item['quantity'];
+					$r_cart['thanhtien'] = number_format($gia_flash * $item['quantity']);
+					$r_cart['gia_moi'] = number_format($gia_flash);
+				} else {
+					$r_cart['ten_sanpham'] = $r_cart['tieu_de'];
+					$gia_variant = $item['gia_moi'] ?? $r_cart['gia_moi'];
+					$tongtien += $gia_variant * $item['quantity'];
+					$r_cart['thanhtien'] = number_format($gia_variant * $item['quantity']);
+					$r_cart['gia_moi'] = number_format($gia_variant);
+				}
 
-                // Replace templates
-                $template = (isset($item['tang']) && $item['tang'] == 1) ? '_tang' : '';
-                $list_shopcart .= $skin->skin_replace("skin_shop/{$s}/tpl/box_li/li_shopcart{$template}", $r_cart);
-                $list_cart .= $skin->skin_replace("skin_shop/{$s}/tpl/box_li/li_cart{$template}", $r_cart);
-                $list_shopcart_mobile .= $skin->skin_replace("skin_shop/{$s}/tpl/box_li/li_shopcart_mobile{$template}", $r_cart);
-            }
-        }
-    }
+				// Replace templates
+				$template = (isset($item['tang']) && $item['tang'] == 1) ? '_tang' : '';
+				$list_shopcart .= $skin->skin_replace("skin_shop/{$s}/tpl/box_li/li_shopcart{$template}", $r_cart);
+				$list_cart .= $skin->skin_replace("skin_shop/{$s}/tpl/box_li/li_cart{$template}", $r_cart);
+				$list_shopcart_mobile .= $skin->skin_replace("skin_shop/{$s}/tpl/box_li/li_shopcart_mobile{$template}", $r_cart);
+			}
+		}
+	}
 
-    $total_price = number_format($tongtien) . ' đ';
+	$total_price = number_format($tongtien) . ' đ';
 
-    echo json_encode([
-        'ok' => 1,
-        'list_shopcart' => $list_shopcart,
-        'list_shopcart_mobile' => $list_shopcart_mobile,
-        'list_cart' => $list_cart,
-        'total_cart' => count($_SESSION['cart']),
-        'tongtien' => $total_price,
-        'thongbao' => 'Cập nhật giỏ hàng thành công'
-    ]);
-    exit;
+	echo json_encode([
+		'ok' => 1,
+		'list_shopcart' => $list_shopcart,
+		'list_shopcart_mobile' => $list_shopcart_mobile,
+		'list_cart' => $list_cart,
+		'total_cart' => count($_SESSION['cart']),
+		'tongtien' => $total_price,
+		'thongbao' => 'Cập nhật giỏ hàng thành công'
+	]);
+	exit;
 } else if ($action == 'remove_cart' && isset($_POST['id'])) {
-        $product_id = mysqli_real_escape_string($conn, $_POST['id']);
+	$product_id = mysqli_real_escape_string($conn, $_POST['id']);
 
-        if (isset($_SESSION['cart'][$product_id])) {
-            unset($_SESSION['cart'][$product_id]);
-            echo json_encode([
-                'ok' => 1,
-                'total_cart' => count($_SESSION['cart']),
-                'thongbao' => 'Xóa sản phẩm thành công'
-            ]);
-        } else {
-            echo json_encode([
-                'ok' => 0,
-                'thongbao' => 'Sản phẩm không tồn tại trong giỏ hàng'
-            ]);
-        }
-        exit;
+	if (isset($_SESSION['cart'][$product_id])) {
+		unset($_SESSION['cart'][$product_id]);
+		echo json_encode([
+			'ok' => 1,
+			'total_cart' => count($_SESSION['cart']),
+			'thongbao' => 'Xóa sản phẩm thành công'
+		]);
+	} else {
+		echo json_encode([
+			'ok' => 0,
+			'thongbao' => 'Sản phẩm không tồn tại trong giỏ hàng'
+		]);
+	}
+	exit;
 } else {
 	echo "Không có hành động nào được xử lý";
 }
-
