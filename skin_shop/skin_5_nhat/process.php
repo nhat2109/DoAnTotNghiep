@@ -243,12 +243,11 @@ if ($action == 'check_exp') {
 						$vnp_TmnCode = '8TKOSK63';
 						$vnp_HashSecret = 'KWVSKMORO004EISIYKM91EVS2X5GSLH0';
 						$vnp_Url = 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html';
-						$vnp_Returnurl = 'http://' . $_SERVER['HTTP_HOST'] . '/vnpay_php/vnpay_return.php';
+						$vnp_Returnurl = 'https://giaodiennhat.vn/checkout.html?step=3';
 						
 						// Tạo URL thanh toán VNPay
-						require_once($_SERVER['DOCUMENT_ROOT'] . '/vnpay_php/vnpay_create_payment.php');
-						$payment_url = createOrderVnpay($ma_don, $vnp_TmnCode, $vnp_HashSecret, $vnp_Url, $vnp_Returnurl, $tongtien);
-						
+						//require_once($_SERVER['DOCUMENT_ROOT'] . '/vnpay_php/vnpay_create_payment.php');
+						$payment_url = $class_index->createOrderVnpay($ma_don, $vnp_TmnCode, $vnp_HashSecret, $vnp_Url, $vnp_Returnurl, $tongtien);
 						echo json_encode(['ok' => 1, 'thongbao' => 'Đang chuyển hướng tới VNPay...', 'redirect' => $payment_url]);
 					} else {
 						echo json_encode(['ok' => 1, 'thongbao' => 'Đang chuyển hướng...']);
@@ -2174,28 +2173,3 @@ else {
 	echo "Không có hành động nào được xử lý";
 }
 
-function createOrder($conn, $user_id, $payment_method, $total_amount, $shipping_fee, $discount_amount) {
-    $stmt = mysqli_prepare($conn, "
-        INSERT INTO orders (
-            user_id, 
-            payment_method,
-            total_amount,
-            shipping_fee,
-            discount_amount,
-            status,
-            created_at
-        ) VALUES (?, ?, ?, ?, ?, 'pending', NOW())
-    ");
-    
-    if (!$stmt) {
-        return false;
-    }
-    
-    mysqli_stmt_bind_param($stmt, "isddd", $user_id, $payment_method, $total_amount, $shipping_fee, $discount_amount);
-    
-    if (mysqli_stmt_execute($stmt)) {
-        return mysqli_insert_id($conn);
-    }
-    
-    return false;
-}

@@ -1906,10 +1906,103 @@
         }
 
         .payment-method-info {
-            background: #f9f9f9;
-            padding: 15px;
-            border-radius: 4px;
-            margin-top: 10px;
+            background: #ecfdf5;
+            padding: 10px 15px;
+            border-radius: 6px;
+            color: #059669;
+            font-size: 0.875rem;
+        }
+
+        /* Step Footer */
+        .step-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 20px;
+            border-top: 1px solid #edf2f7;
+        }
+
+        .step-footer-info {
+            display: flex;
+            align-items: center;
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+
+        .step-footer-info .icon {
+            margin-right: 8px;
+        }
+
+        .step-footer-continue-btn {
+            background: #4CAF50;
+            padding: 12px 20px;
+            font-size: 1rem;
+        }
+
+        /* Footer */
+        .main-footer {
+            text-align: center;
+            color: #64748b;
+            font-size: 0.75rem;
+            padding: 20px 0;
+        }
+
+        .success-header {
+            background: linear-gradient(135deg, #00b09b, #96c93d);
+            padding: 30px 20px;
+            text-align: center;
+            color: #fff;
+            position: relative;
+        }
+
+        .success-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .step-footer-continue-btn {
+            background: #4CAF50;
+            padding: 12px 25px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .step-footer-continue-btn:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 767px) {
+            .content-box-row {
+                padding: 10px;
+            }
+
+            .step-footer {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .step-footer-continue-btn {
+                width: 100%;
+            }
         }
 
         .order-summary-section {
@@ -2528,10 +2621,12 @@
                                     </path>
                                     <path class="checkmark_check" d="M18 28.97l8.525 8.525L41.46 22.5"></path>
                                 </svg>
+
                                 <div class="os-header-heading">
                                     <h2 class="os-header-title">Đặt hàng thành công</h2>
                                     <span class="os-order-number">Mã đơn hàng #{ma_don}</span>
                                     <span class="os-description">Cám ơn bạn đã mua hàng!</span>
+
                                 </div>
                             </div>
                         </div>
@@ -2558,7 +2653,9 @@
                                                 <div class="payment-method-info">
                                                     <p>{phuongthuc}</p>
                                                     <p style="margin-top: 10px;">{nganhang}</p>
+                                                    <span style="margin-top: 10px;">Trạng thái: {tinhtrang}</span>
                                                 </div>
+
                                             </div>
                                         </div>
                                     </div>

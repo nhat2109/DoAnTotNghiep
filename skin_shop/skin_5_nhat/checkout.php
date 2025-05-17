@@ -514,9 +514,44 @@ $replace = [
 
 if ($step == 3) {
     // Giữ nguyên logic step 3
+   if (isset($_GET['vnp_TxnRef']) && isset($_GET['vnp_ResponseCode'])) {
+        $order_id = intval($_GET['vnp_TxnRef']);
+        $payment_status = ($_GET['vnp_ResponseCode'] == '00') ? 'completed' : 'failed';
+        $amount = isset($_GET['vnp_Amount']) ? ($_GET['vnp_Amount'] / 100) : 0;
+        $transaction_id = $_GET['vnp_TransactionNo'] ?? null;
+
+        // Kiểm tra xem đã có bản ghi chưa
+        $stmt = $conn->prepare("SELECT COUNT(*) FROM order_payments WHERE order_id = ? AND payment_method = 'vnpay'");
+        $stmt->bind_param("i", $order_id);
+        $stmt->execute();
+        $stmt->bind_result($count);
+        $stmt->fetch();
+        $stmt->close();
+
+        if ($count == 0) {
+            // Insert dữ liệu
+            $stmt = $conn->prepare("INSERT INTO order_payments (order_id, payment_method, amount, transaction_id, payment_status, created_at, updated_at)
+                                    VALUES (?, 'vnpay', ?, ?, ?, NOW(), NOW())");
+            $stmt->bind_param("idss", $order_id, $amount, $transaction_id, $payment_status); // Đúng số lượng biến
+            if ($stmt->execute()) {
+                // echo "Insert thành công.";
+            } else {
+                // echo "Lỗi insert: " . $stmt->error;
+            }
+            $stmt->close();
+        } else {
+            // echo "Đã có bản ghi thanh toán cho đơn hàng này bằng vnpay.";
+        }
+    } else {
+        echo "Thiếu tham số.";
+    }
+    // var_dump(($_GET));
+    // die;
     if (isset($_SESSION['ma_don'])) {
         $thongtin_order = mysqli_query($conn, "SELECT * FROM donhang_shop WHERE ma_don='{$_SESSION['ma_don']}'");
         $r_order = mysqli_fetch_assoc($thongtin_order);
+        $thongtin_payments = mysqli_query($conn, "SELECT * FROM order_payments WHERE order_id='{$_SESSION['ma_don']}'");
+        $r_payments = mysqli_fetch_assoc($thongtin_payments);
         $replace['ho_ten'] = $r_order['ho_ten'];
         $replace['email'] = $r_order['email'];
         $replace['dien_thoai'] = $r_order['dien_thoai'];
@@ -526,12 +561,21 @@ if ($step == 3) {
         $r_h = mysqli_fetch_assoc($thontin_huyen);
         $replace['tinh'] = $r_h['ten_tinh'];
         $replace['huyen'] = $r_h['tieu_de'];
-        if ($r_order['thanhtoan'] == 'chuyenkhoan') {
-            $replace['phuongthuc'] = 'Chuyển khoản ngân hàng';
-            $replace['nganhang'] = $index_setting['nganhang'];
+        
+        if ($r_order['thanhtoan'] == 'vnpay') {
+            $replace['phuongthuc'] = '<img src="/skin_shop/skin_5_nhat/tpl/css/images/Icon-VNPAY-QR.png" alt="VNPay" style="vertical-align: middle; width: 24px; height: 24px; margin-right: 8px;"> Thanh toán qua VNPAY';
+            $replace['nganhang'] = 'Ngân hàng ' . ($_GET['vnp_BankCode']?? 'N/A');
         } else {
             $replace['phuongthuc'] = 'Thanh toán khi nhận hàng';
             $replace['nganhang'] = '';
+        }
+        if ($r_payments['payment_status'] == 'completed') {
+            $replace['tinhtrang'] = 'Đã thanh toán';
+        } elseif ($r_payments['payment_status'] == 'failed') {
+            $replace['tinhtrang'] = 'Thanh toán thất bại';
+        } 
+        else {
+            $replace['tinhtrang'] = 'Chưa thanh toán';
         }
         $tach_sanpham = json_decode($r_order['sanpham'], true);
         $list_product_step_3 = '';
