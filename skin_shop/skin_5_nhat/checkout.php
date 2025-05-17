@@ -425,6 +425,8 @@ if (strlen($list_ma_giam) < 10) {
 } else {
     $box_ma_giam = $skin->skin_normal('skin_shop/' . $s . '/tpl/box_ma_giam');
 }
+// vnpay
+
 $google_analytics = str_replace('<script>// <![CDATA[', '<script>', $index_setting['google_analytics']);
 $google_analytics = str_replace('// ]]>', '', $google_analytics);
 $script_chat = str_replace('<script>// <![CDATA[', '<script>', $index_setting['script_footer']);

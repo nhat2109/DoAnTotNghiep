@@ -821,7 +821,13 @@ $(document).ready(function () {
   });
   //////////////////////////
 
-  $("#checkout_complete").on("click", function () {
+  $('#checkout_complete').on('click', function() {
+    var $form = $('form');
+    var $btn = $(this);
+    var $btnContent = $btn.find('.btn-content');
+    var $btnSpinner = $btn.find('.btn-spinner');
+    
+    // Get all required values
     var ho_ten = $("input[name=ho_ten]").val().trim();
     var email = $("input[name=email]").val().trim();
     var dien_thoai = $("input[name=dien_thoai]").val().trim();
@@ -832,120 +838,133 @@ $(document).ready(function () {
     var ghi_chu = $("textarea[name=ghi_chu]").val().trim();
     var shop = $("input[name=shop]").val();
     var phi_ship = $('.phi_ship[name="phi_ship"]').val();
-    parseInt($("input[name=phi_ship_raw]").val()) ||
-      parseInt(
-        $("#phi_ship")
-          .text()
-          .replace(/[^0-9]/g, "")
-      ) ||
-      28000;
-    var tamtinh =
-      parseInt(
-        $(".tamtinh")
-          .text()
-          .replace(/[^0-9]/g, "")
-      ) || 0;
-    var giam =
-      parseInt(
-        $("#total_coupon")
-          .text()
-          .replace(/[^0-9]/g, "")
-      ) || 0;
-    var tongtien =
-      parseInt(
-        $(".tongtien")
-          .text()
-          .replace(/[^0-9]/g, "")
-      ) || 0;
-    var error = false;
-    if (ho_ten.length < 4) {
-      $("input[name=ho_ten]").focus();
-      showError("Vui lòng nhập họ và tên (ít nhất 4 ký tự)");
-      error = true;
-    } else if (dien_thoai.length < 8 || !/^[0-9]+$/.test(dien_thoai)) {
-      $("input[name=dien_thoai]").focus();
-      showError("Vui lòng nhập số điện thoại hợp lệ (ít nhất 8 số)");
-      error = true;
-    } else if (dia_chi.length < 10) {
-      $("input[name=dia_chi]").focus();
-      showError("Vui lòng nhập địa chỉ (ít nhất 10 ký tự)");
-      error = true;
-    } else if (!tinh || tinh === "") {
-      showError("Vui lòng chọn Tỉnh/Thành phố");
-      error = true;
-    } else if (!huyen || huyen === "") {
-      showError("Vui lòng chọn Quận/Huyện");
-      error = true;
-    } else if (!thanhtoan) {
-      showError("Vui lòng chọn phương thức thanh toán");
-      error = true;
+    var tamtinh = parseInt($(".tamtinh").text().replace(/[^0-9]/g, "")) || 0;
+    var giam = parseInt($("#total_coupon").text().replace(/[^0-9]/g, "")) || 0;
+    var tongtien = parseInt($(".tongtien").text().replace(/[^0-9]/g, "")) || 0;
+    
+    // Validate form
+    if (!validateForm()) {
+        return false;
     }
-
-    if (!error) {
-      $(".load_overlay").show();
-      $(".load_process").fadeIn();
-
-      $.ajax({
-        url: "/process.php",
-        type: "post",
-        data: {
-          action: "checkout_complete",
-          ho_ten: ho_ten,
-          email: email,
-          dien_thoai: dien_thoai,
-          dia_chi: dia_chi,
-          tinh: tinh,
-          huyen: huyen,
-          thanhtoan: thanhtoan,
-          ghi_chu: ghi_chu,
-          shop: shop,
-          phi_ship: phi_ship,
-          tamtinh: tamtinh,
-          giam: giam,
-          tongtien: tongtien,
-        },
-        success: function (kq) {
-          try {
-            var info = JSON.parse(kq);
-            if (info.ok == 1) {
-              setTimeout(function () {
-                $(".load_note").html(info.thongbao);
-              }, 1000);
-              setTimeout(function () {
-                window.location.href = "/checkout.html?step=3";
-              }, 3000);
-            } else {
-              setTimeout(function () {
-                $(".load_note").html(info.thongbao);
-              }, 1000);
-              setTimeout(function () {
-                $(".load_process").hide();
-                $(".load_note").html("Hệ thống đang xử lý");
-                $(".load_overlay").hide();
-              }, 3000);
+    
+    // Show loading state
+    $(".load_overlay").show();
+    $(".load_process").fadeIn();
+    $btn.addClass('btn-loading');
+    $btnContent.hide();
+    $btnSpinner.show();
+    
+    // Prepare form data
+    var formData = new FormData();
+    formData.append('action', 'checkout_complete');
+    formData.append('ho_ten', ho_ten);
+    formData.append('email', email);
+    formData.append('dien_thoai', dien_thoai);
+    formData.append('dia_chi', dia_chi);
+    formData.append('tinh', tinh);
+    formData.append('huyen', huyen);
+    formData.append('thanhtoan', thanhtoan);
+    formData.append('ghi_chu', ghi_chu);
+    formData.append('shop', shop);
+    formData.append('phi_ship', phi_ship);
+    formData.append('tamtinh', tamtinh);
+    formData.append('giam', giam);
+    formData.append('tongtien', tongtien);
+    
+    // Submit form
+    $.ajax({
+        url: '/process.php',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+            try {
+                var result = JSON.parse(response);
+                if (result.error) {
+                    showError(result.error);
+                } else if (result.ok == 1) {
+                    setTimeout(function() {
+                        $(".load_note").html(result.thongbao);
+                    }, 1000);
+                    setTimeout(function() {
+                        if (thanhtoan === 'vnpay') {
+                            window.location.href = result.redirect;
+                        } else {
+                            window.location.href = "/checkout.html?step=3";
+                        }
+                    }, 2000);
+                } else {
+                    setTimeout(function() {
+                        $(".load_note").html(result.thongbao);
+                    }, 1000);
+                    setTimeout(function() {
+                        $(".load_process").hide();
+                        $(".load_note").html("Hệ thống đang xử lý");
+                        $(".load_overlay").hide();
+                    }, 2000);
+                }
+            } catch (e) {
+                showError('Có lỗi xảy ra, vui lòng thử lại');
             }
-          } catch (e) {
-            showError("Dữ liệu trả về không hợp lệ, vui lòng thử lại!");
-          }
         },
-        error: function () {
-          showError("Có lỗi xảy ra, vui lòng thử lại!");
+        error: function() {
+            showError('Có lỗi xảy ra, vui lòng thử lại');
         },
-      });
-    }
+        complete: function() {
+            // Reset button state
+            $btn.removeClass('btn-loading');
+            $btnContent.show();
+            $btnSpinner.hide();
+        }
+    });
   });
 
-  // Hàm hiển thị thông báo lỗi
+  function validateForm() {
+    var isValid = true;
+    var ho_ten = $("input[name=ho_ten]").val().trim();
+    var dien_thoai = $("input[name=dien_thoai]").val().trim();
+    var dia_chi = $("input[name=dia_chi]").val().trim();
+    var tinh = $("select[name=tinh]").val();
+    var huyen = $("select[name=huyen]").val();
+    var thanhtoan = $("input[name=thanhtoan]:checked").val();
+    
+    if (ho_ten.length < 4) {
+        $("input[name=ho_ten]").focus();
+        showError("Vui lòng nhập họ và tên (ít nhất 4 ký tự)");
+        isValid = false;
+    } else if (dien_thoai.length < 8 || !/^[0-9]+$/.test(dien_thoai)) {
+        $("input[name=dien_thoai]").focus();
+        showError("Vui lòng nhập số điện thoại hợp lệ (ít nhất 8 số)");
+        isValid = false;
+    } else if (dia_chi.length < 10) {
+        $("input[name=dia_chi]").focus();
+        showError("Vui lòng nhập địa chỉ (ít nhất 10 ký tự)");
+        isValid = false;
+    } else if (!tinh || tinh === "") {
+        showError("Vui lòng chọn Tỉnh/Thành phố");
+        isValid = false;
+    } else if (!huyen || huyen === "") {
+        showError("Vui lòng chọn Quận/Huyện");
+        isValid = false;
+    } else if (!thanhtoan) {
+        showError("Vui lòng chọn phương thức thanh toán");
+        isValid = false;
+    }
+    
+    return isValid;
+  }
+
   function showError(message) {
     $(".load_overlay").show();
     $(".load_process").fadeIn();
-    setTimeout(function () {
-      $(".load_note").html(message);
+    setTimeout(function() {
+        $(".load_note").html(message);
     }, 1000);
-    setTimeout(function () {
-      $(".load_process").hide();
-      $(".load_note").html("Hệ thống đang xử lý");
-      $(".load_overlay").hide();
+    setTimeout(function() {
+        $(".load_process").hide();
+        $(".load_note").html("Hệ thống đang xử lý");
+        $(".load_overlay").hide();
     }, 3000);
   }
 

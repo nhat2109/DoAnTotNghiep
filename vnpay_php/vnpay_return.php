@@ -1,105 +1,102 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-        <meta name="description" content="">
-        <meta name="author" content="">
-        <title>VNPAY RESPONSE</title>
-        <!-- Bootstrap core CSS -->
-        <link href="/vnpay_php/assets/bootstrap.min.css" rel="stylesheet"/>
-        <!-- Custom styles for this template -->
-        <link href="/vnpay_php/assets/jumbotron-narrow.css" rel="stylesheet">         
-        <script src="/vnpay_php/assets/jquery-1.11.3.min.js"></script>
-    </head>
-    <body>
-        <?php
-        require_once("./config.php");
-        $vnp_SecureHash = $_GET['vnp_SecureHash'];
-        $inputData = array();
-        foreach ($_GET as $key => $value) {
-            if (substr($key, 0, 4) == "vnp_") {
-                $inputData[$key] = $value;
-            }
+<?php
+session_start();
+require_once("./config.php");
+
+// Lấy dữ liệu từ VNPay
+$vnp_ResponseCode = $_GET['vnp_ResponseCode'];
+$vnp_TxnRef = $_GET['vnp_TxnRef'];
+$vnp_Amount = $_GET['vnp_Amount'];
+$vnp_SecureHash = $_GET['vnp_SecureHash'];
+
+// Debug GET parameters
+file_put_contents('vnpay_debug.log', "GET Parameters: " . print_r($_GET, true) . "\n", FILE_APPEND);
+
+// Xác thực chữ ký
+$inputData = array();
+foreach ($_GET as $key => $value) {
+    if (substr($key, 0, 4) == "vnp_" && $key != "vnp_SecureHash" && $key != "vnp_SecureHashType") {
+        $inputData[$key] = $value;
+    }
+}
+ksort($inputData);
+$hashData = "";
+$i = 0;
+foreach ($inputData as $key => $value) {
+    if ($i == 1) {
+        $hashData .= '&' . urlencode($key) . '=' . urlencode($value);
+    } else {
+        $hashData .= urlencode($key) . '=' . urlencode($value);
+        $i = 1;
+    }
+}
+$secureHash = hash_hmac('sha512', $hashData, $vnp_HashSecret);
+
+// Debug hash data and signatures
+file_put_contents('vnpay_debug.log', "Hash Data: $hashData\nSecure Hash: $secureHash\nVNP Secure Hash: $vnp_SecureHash\n", FILE_APPEND);
+
+// Kết nối database
+$conn = mysqli_connect("localhost", "root", "", "doantotnghiep");
+if (!$conn) {
+    file_put_contents('vnpay_debug.log', "Connection failed: " . mysqli_connect_error() . "\n", FILE_APPEND);
+    die("Connection failed: " . mysqli_connect_error());
+}
+
+if ($secureHash == $vnp_SecureHash) {
+    if ($vnp_ResponseCode == '00') {
+        // Thanh toán thành công
+        $order_id = $vnp_TxnRef;
+        $payment_status = 'success';
+        $amount = $vnp_Amount / 100;
+        $transaction_id = $_GET['vnp_TransactionNo'];
+
+        // Debug payment data
+        file_put_contents('vnpay_debug.log', "Order ID: $order_id, Amount: $amount, Transaction ID: $transaction_id, Payment Status: $payment_status\n", FILE_APPEND);
+
+        // Cập nhật trạng thái đơn hàng trong donhang_shop
+        $stmt = mysqli_prepare($conn, "UPDATE donhang_shop SET status = '1', thanhtoan = 'vnpay' WHERE ma_don = ?");
+        mysqli_stmt_bind_param($stmt, "s", $order_id);
+        if (!mysqli_stmt_execute($stmt)) {
+            file_put_contents('vnpay_debug.log', "Error updating donhang_shop: " . mysqli_error($conn) . "\n", FILE_APPEND);
+            header('Location: https://giaodiennhat.vn/checkout.html?error=update_failed');
+            exit();
         }
-        
-        unset($inputData['vnp_SecureHash']);
-        ksort($inputData);
-        $i = 0;
-        $hashData = "";
-        foreach ($inputData as $key => $value) {
-            if ($i == 1) {
-                $hashData = $hashData . '&' . urlencode($key) . "=" . urlencode($value);
-            } else {
-                $hashData = $hashData . urlencode($key) . "=" . urlencode($value);
-                $i = 1;
-            }
+        mysqli_stmt_close($stmt);
+
+        // Lưu thông tin thanh toán
+        $stmt = mysqli_prepare($conn, "
+            INSERT INTO order_payments (
+                order_id,
+                payment_method,
+                amount,
+                transaction_id,
+                payment_status,
+                created_at
+            ) VALUES (?, 'vnpay', ?, ?, ?, NOW())
+        ");
+        mysqli_stmt_bind_param($stmt, "sdss", $order_id, $amount, $transaction_id, $payment_status);
+        if (!mysqli_stmt_execute($stmt)) {
+            file_put_contents('vnpay_debug.log', "Error inserting into order_payments: " . mysqli_error($conn) . "\n", FILE_APPEND);
+            header('Location: https://giaodiennhat.vn/checkout.html?error=insert_payment_failed');
+            exit();
         }
+        mysqli_stmt_close($stmt);
 
-        $secureHash = hash_hmac('sha512', $hashData, $vnp_HashSecret);
-        ?>
-        <!--Begin display -->
-        <div class="container">
-            <div class="header clearfix">
-                <h3 class="text-muted">VNPAY RESPONSE</h3>
-            </div>
-            <div class="table-responsive">
-                <div class="form-group">
-                    <label >Mã đơn hàng:</label>
+        // Lưu mã đơn vào session
+        $_SESSION['ma_don'] = $order_id;
+        file_put_contents('vnpay_debug.log', "Session ma_don set to: " . $_SESSION['ma_don'] . "\n", FILE_APPEND);
 
-                    <label><?php echo $_GET['vnp_TxnRef'] ?></label>
-                </div>    
-                <div class="form-group">
-
-                    <label >Số tiền:</label>
-                    <label><?php echo $_GET['vnp_Amount'] ?></label>
-                </div>  
-                <div class="form-group">
-                    <label >Nội dung thanh toán:</label>
-                    <label><?php echo $_GET['vnp_OrderInfo'] ?></label>
-                </div> 
-                <div class="form-group">
-                    <label >Mã phản hồi (vnp_ResponseCode):</label>
-                    <label><?php echo $_GET['vnp_ResponseCode'] ?></label>
-                </div> 
-                <div class="form-group">
-                    <label >Mã GD Tại VNPAY:</label>
-                    <label><?php echo $_GET['vnp_TransactionNo'] ?></label>
-                </div> 
-                <div class="form-group">
-                    <label >Mã Ngân hàng:</label>
-                    <label><?php echo $_GET['vnp_BankCode'] ?></label>
-                </div> 
-                <div class="form-group">
-                    <label >Thời gian thanh toán:</label>
-                    <label><?php echo $_GET['vnp_PayDate'] ?></label>
-                </div> 
-                <div class="form-group">
-                    <label >Kết quả:</label>
-                    <label>
-                        <?php
-                        if ($secureHash == $vnp_SecureHash) {
-                            if ($_GET['vnp_ResponseCode'] == '00') {
-                                echo "<span style='color:blue'>GD Thanh cong</span>";
-                            } else {
-                                echo "<span style='color:red'>GD Khong thanh cong</span>";
-                            }
-                        } else {
-                            echo "<span style='color:red'>Chu ky khong hop le</span>";
-                        }
-                        ?>
-
-                    </label>
-                </div> 
-            </div>
-            <p>
-                &nbsp;
-            </p>
-            <footer class="footer">
-                   <p>&copy; VNPAY <?php echo date('Y')?></p>
-            </footer>
-        </div>  
-    </body>
-</html>
+        header('Location: https://giaodiennhat.vn/checkout.html?step=3');
+        exit();
+    } else {
+        // Thanh toán thất bại
+        file_put_contents('vnpay_debug.log', "Payment failed with response code: $vnp_ResponseCode\n", FILE_APPEND);
+        header('Location: https://giaodiennhat.vn/checkout.html?error=payment_failed');
+        exit();
+    }
+} else {
+    // Chữ ký không hợp lệ
+    file_put_contents('vnpay_debug.log', "Invalid signature. Calculated: $secureHash, Received: $vnp_SecureHash\n", FILE_APPEND);
+    header('Location: https://giaodiennhat.vn/checkout.html?error=invalid_signature');
+    exit();
+}
+?>

@@ -2275,10 +2275,10 @@
                                         </div>
                                         <div class="radio-wrapper">
                                             <div class="radio-input">
-                                                <input type="radio" class="input-radio" name="thanhtoan" value="chuyenkhoan">
+                                                <input type="radio" class="input-radio" name="thanhtoan" value="vnpay">
                                             </div>
                                             <div class="radio-label">
-                                                <span class="radio-label-primary">Chuyển khoản ngân hàng</span>
+                                                <span class="radio-label-primary">Thanh toán qua VNPay</span>
                                             </div>
                                         </div>
                                     </div>

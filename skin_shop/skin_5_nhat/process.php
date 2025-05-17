@@ -114,7 +114,7 @@ if ($action == 'check_exp') {
 	} elseif ($huyen == 0) {
 		$ok = 0;
 		$thongbao = 'Vui lòng chọn Quận/Huyện';
-	} else if (!in_array($thanhtoan, ['cod', 'bank'])) {
+	} else if (!in_array($thanhtoan, ['cod', 'bank', 'vnpay'])) {
 		echo json_encode(['ok' => 0, 'thongbao' => 'Phương thức thanh toán không hợp lệ']);
 		exit();
 	} else if ($phi_ship < 0) {
@@ -174,7 +174,6 @@ if ($action == 'check_exp') {
 						'thanhtien' => number_format(floatval($cart_item['gia_moi']) * $cart_item['quantity'])
 					];
 
-					//$tamtinh += floatval($cart_item['gia_moi']) * $cart_item['quantity'];
 					$tamtinh_server += floatval($cart_item['gia_moi']) * $cart_item['quantity'];
 
 					$unique_key = $id_sp . '_' . ($cart_item['ten_color'] ?? '') . '_' . ($cart_item['ten_size'] ?? '');
@@ -196,7 +195,6 @@ if ($action == 'check_exp') {
 					$r_coupon = mysqli_fetch_assoc($thongtin_counpon);
 					if ($r_coupon['total'] > 0 && $r_coupon['expired'] > time()) {
 						if ($r_coupon['kieu'] == 'all') {
-							//$giam = $r_coupon['loai'] == 'phantram' ? ceil(($tamtinh / 100) * $r_coupon['giam']) : $r_coupon['giam'];
 							$giam_server = $r_coupon['loai'] == 'phantram' ? ceil(($tamtinh_server / 100) * $r_coupon['giam']) : $r_coupon['giam'];
 						} elseif ($r_coupon['kieu'] == 'sanpham') {
 							$tach_list_id = explode(',', $list_id);
@@ -206,17 +204,11 @@ if ($action == 'check_exp') {
 								foreach ($_SESSION['cart'] as $item) {
 									if ($item['sp_id'] == $id_sp) {
 										$thanhtien = floatval($item['gia_moi']) * $item['quantity'];
-										//	$giam += $r_coupon['loai'] == 'phantram' ? ceil(($thanhtien / 100) * $r_coupon['giam']) : $r_coupon['giam'];
 										$giam_server += $r_coupon['loai'] == 'phantram' ? ceil(($thanhtien / 100) * $r_coupon['giam']) : $r_coupon['giam'];
 									}
 								}
 							}
 						}
-						$coupon = $_SESSION['coupon'];
-					} else {
-						$giam_server = 0;
-						$coupon = '';
-						unset($_SESSION['coupon']);
 					}
 				}
 
@@ -246,12 +238,29 @@ if ($action == 'check_exp') {
 					unset($_SESSION['coupon']);
 					unset($_SESSION['main_product']);
 					unset($_SESSION['muakem']);
+					if ($thanhtoan == 'vnpay') {
+						// Cấu hình VNPay
+						$vnp_TmnCode = '8TKOSK63';
+						$vnp_HashSecret = 'KWVSKMORO004EISIYKM91EVS2X5GSLH0';
+						$vnp_Url = 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html';
+						$vnp_Returnurl = 'http://' . $_SERVER['HTTP_HOST'] . '/vnpay_php/vnpay_return.php';
+						
+						// Tạo URL thanh toán VNPay
+						require_once($_SERVER['DOCUMENT_ROOT'] . '/vnpay_php/vnpay_create_payment.php');
+						$payment_url = createOrderVnpay($ma_don, $vnp_TmnCode, $vnp_HashSecret, $vnp_Url, $vnp_Returnurl, $tongtien);
+						
+						echo json_encode(['ok' => 1, 'thongbao' => 'Đang chuyển hướng tới VNPay...', 'redirect' => $payment_url]);
+					} else {
+						echo json_encode(['ok' => 1, 'thongbao' => 'Đang chuyển hướng...']);
+					}
+					exit();
 				}
 			}
 		}
 	}
 	echo json_encode(['ok' => $ok, 'thongbao' => $thongbao]);
-} else if ($action == 'load_huyen') {
+} 
+else if ($action == 'load_huyen') {
 	$tinh = intval($_REQUEST['tinh']);
 	$thongtin = mysqli_query($conn, "SELECT * FROM huyen_moi WHERE tinh='$tinh' ORDER BY tieu_de ASC");
 	while ($r_tt = mysqli_fetch_assoc($thongtin)) {
@@ -2140,6 +2149,53 @@ else if ($action == 'apply_coupon') {
 		]);
 	}
 	exit;
-} else {
+} 
+// else if ($action == 'vnpay') {
+//     // Cấu hình VNPay
+//     $vnp_TmnCode = '8TKOSK63';
+//     $vnp_HashSecret = 'KWVSKMORO004EISIYKM91EVS2X5GSLH0';
+//     $vnp_Url = 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html';
+//     $vnp_Returnurl = 'http://' . $_SERVER['HTTP_HOST'] . '/vnpay_php/vnpay_return.php';
+    
+//     // Tạo đơn hàng trước
+//     $order_id = createOrder($conn, $user_id, $payment_method, $total_amount, $shipping_fee, $discount_amount);
+    
+//     if ($order_id) {
+//         require_once($_SERVER['DOCUMENT_ROOT'] . '/vnpay_php/vnpay_create_payment.php');
+//         $payment_url = createOrderVnpay($order_id, $vnp_TmnCode, $vnp_HashSecret, $vnp_Url, $vnp_Returnurl, $tongtien);
+//         echo json_encode(['ok' => 1, 'redirect_url' => $payment_url]);
+//         exit;
+//     } else {
+//         echo json_encode(['ok' => 0, 'msg' => 'Không thể tạo đơn hàng']);
+//         exit;
+//     }
+// } 
+else {
 	echo "Không có hành động nào được xử lý";
+}
+
+function createOrder($conn, $user_id, $payment_method, $total_amount, $shipping_fee, $discount_amount) {
+    $stmt = mysqli_prepare($conn, "
+        INSERT INTO orders (
+            user_id, 
+            payment_method,
+            total_amount,
+            shipping_fee,
+            discount_amount,
+            status,
+            created_at
+        ) VALUES (?, ?, ?, ?, ?, 'pending', NOW())
+    ");
+    
+    if (!$stmt) {
+        return false;
+    }
+    
+    mysqli_stmt_bind_param($stmt, "isddd", $user_id, $payment_method, $total_amount, $shipping_fee, $discount_amount);
+    
+    if (mysqli_stmt_execute($stmt)) {
+        return mysqli_insert_id($conn);
+    }
+    
+    return false;
 }
