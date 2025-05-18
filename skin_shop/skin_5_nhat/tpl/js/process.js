@@ -561,13 +561,14 @@ $(document).ready(function () {
               info.tamtinh
             );
 
-            console.log("Đã xóa sản phẩm");
+            // console.log("Đã xóa sản phẩm");
           } else {
             $(".cart_page_mobile").html("");
             $(".cart-items").html("<p>Giỏ hàng của bạn trống.</p>");
             $(".count_item_pr").html("0");
             $("#popup-cart .cart-popup-count").html("0");
             $(".cart-summary-section .total .price").html("0 ₫");
+            $(".summary-item .price").html("0 ₫");
             $(".totals_price").html("0 ₫");
             $(".totals_price_mobile").html("0 ₫");
           }
@@ -661,6 +662,7 @@ $(document).ready(function () {
             $("#popup-cart .cart-popup-count").html("0");
             $(".cart-summary-section .total .price").html("0 ₫");
             $(".totals_price").html("0 ₫");
+            $(".cart-total .total-price").html("0 ₫");
             $(".totals_price_mobile").html("0 ₫");
           }
         } else {
@@ -700,6 +702,8 @@ $(document).ready(function () {
           $("#popup-cart .cart-popup-count").html("0");
           $(".totals_price").html("0");
           $(".totals_price_mobile").html("0");
+          $(".totals_price").html("0 ₫");
+          $(".cart-total .total-price").html("0 ₫");
         }
       },
     });

@@ -571,6 +571,9 @@ class class_shop extends class_manage{
                     $r_tt['status'] = 'Đã nhận hàng';
                     break;
                 case 6:
+                    $r_tt['status'] = 'Yêu cầu hoàn đơn';
+                    break;
+                case 7:
                     $r_tt['status'] = 'Đã hoàn đơn';
                     break;
             }

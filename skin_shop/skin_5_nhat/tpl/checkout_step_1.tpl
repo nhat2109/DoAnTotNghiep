@@ -6,301 +6,308 @@
     <title>
         Thanh toán đơn hàng
     </title>
-    
+
     <meta name="description" content="Tổng kho hàng - Thanh toán đơn hàng">
-    <style>     
+    <style>
+        /* Reset và cải thiện body */
+        body {
+            color: #333333;
+            background: #f5f5f5 !important;
+            font-size: 14px;
+            font-family: 'Helvetica Neue', sans-serif;
+            line-height: 1.5em;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+        }
 
-           /* Reset và cải thiện body */
-body {
-    color: #333333;
-    background: #f5f5f5 !important;
-    font-size: 14px;
-    font-family: 'Helvetica Neue', sans-serif;
-    line-height: 1.5em;
-    margin: 0;
-    padding: 0;
-    -webkit-font-smoothing: antialiased;
-}
+        /* Header chính */
+        .main-header {
+            border-bottom: 1px solid #e6e6e6;
+            background: #ffffff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
 
-/* Header chính */
-.main-header {
-    border-bottom: 1px solid #e6e6e6;
-    background: #ffffff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
+        .logo-text {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333333;
+            margin: 0;
+        }
 
-.logo-text {
-    font-size: 24px;
-    font-weight: 600;
-    color: #333333;
-    margin: 0;
-}
+        .breadcrumb {
+            margin-top: 10px;
+        }
 
-.breadcrumb {
-    margin-top: 10px;
-}
+        .breadcrumb-item {
+            font-size: 12px;
+            color: #999999;
+        }
 
-.breadcrumb-item {
-    font-size: 12px;
-    color: #999999;
-}
+        .breadcrumb-item-current {
+            color: #333333;
+            font-weight: 600;
+        }
 
-.breadcrumb-item-current {
-    color: #333333;
-    font-weight: 600;
-}
+        /* Sidebar - Thông tin đơn hàng */
+        .sidebar {
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
 
-/* Sidebar - Thông tin đơn hàng */
-.sidebar {
-    background: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-}
+        .sidebar-content {
+            padding: 0;
+        }
 
-.sidebar-content {
-    padding: 0;
-}
+        .order-summary-sections {
+            border: none !important;
+        }
 
-.order-summary-sections {
-    border: none !important;
-}
+        .product-table {
+            margin-bottom: 20px;
+        }
 
-.product-table {
-    margin-bottom: 20px;
-}
+        .product-table td {
+            padding: 10px 0;
+            vertical-align: middle;
+        }
 
-.product-table td {
-    padding: 10px 0;
-    vertical-align: middle;
-}
+        .product-thumbnail {
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
 
-.product-thumbnail {
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
+        .total-line-table {
+            margin-top: 20px;
+        }
 
-.total-line-table {
-    margin-top: 20px;
-}
+        .total-line td {
+            padding: 8px 0;
+            font-size: 14px;
+        }
 
-.total-line td {
-    padding: 8px 0;
-    font-size: 14px;
-}
+        .total-line-name {
+            color: #737373;
+        }
 
-.total-line-name {
-    color: #737373;
-}
+        .order-summary-emphasis {
+            color: #333333;
+            font-weight: 600;
+        }
 
-.order-summary-emphasis {
-    color: #333333;
-    font-weight: 600;
-}
+        .payment-due-label-total {
+            font-size: 16px;
+            color: #333333;
+        }
 
-.payment-due-label-total {
-    font-size: 16px;
-    color: #333333;
-}
+        .payment-due-price {
+            font-size: 20px;
+            font-weight: 600;
+            color: #4CAF50;
+        }
 
-.payment-due-price {
-    font-size: 20px;
-    font-weight: 600;
-    color: #4CAF50;
-}
+        /* Main Content */
+        .main-content {
+            padding: 20px 0;
+        }
 
-/* Main Content */
-.main-content {
-    padding: 20px 0;
-}
+        .section {
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
 
-.section {
-    background: #ffffff;
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333333;
+            margin-bottom: 15px;
+        }
 
-.section-title {
-    font-size: 18px;
-    font-weight: 600;
-    color: #333333;
-    margin-bottom: 15px;
-}
+        /* Form nhập liệu */
+        .fieldset {
+            margin: 0;
+        }
 
-/* Form nhập liệu */
-.fieldset {
-    margin: 0;
-}
+        .field {
+            margin-bottom: 15px;
+        }
 
-.field {
-    margin-bottom: 15px;
-}
+        .field-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #737373;
+            margin-bottom: 5px;
+            display: block;
+        }
 
-.field-label {
-    font-size: 13px;
-    font-weight: 500;
-    color: #737373;
-    margin-bottom: 5px;
-    display: block;
-}
+        .field-input {
+            border: 1px solid #e6e6e6 !important;
+            border-radius: 6px !important;
+            padding: 10px 15px !important;
+            font-size: 14px !important;
+            transition: all 0.2s ease;
+            background: #fafafa;
+        }
 
-.field-input {
-    border: 1px solid #e6e6e6 !important;
-    border-radius: 6px !important;
-    padding: 10px 15px !important;
-    font-size: 14px !important;
-    transition: all 0.2s ease;
-    background: #fafafa;
-}
+        .field-input:focus {
+            border-color: #4CAF50 !important;
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2) !important;
+            background: #ffffff;
+        }
 
-.field-input:focus {
-    border-color: #4CAF50 !important;
-    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2) !important;
-    background: #ffffff;
-}
+        textarea.field-input {
+            min-height: 80px;
+            background: #fafafa;
+        }
 
-textarea.field-input {
-    min-height: 80px;
-    background: #fafafa;
-}
+        /* Phương thức thanh toán */
+        .ctrl_payment_method {
+            padding: 0;
+        }
 
-/* Phương thức thanh toán */
-.ctrl_payment_method {
-    padding: 0;
-}
+        .radio-wrapper {
+            border: 1px solid #e6e6e6;
+            border-radius: 6px;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            background: #fafafa;
+            transition: all 0.2s ease;
+        }
 
-.radio-wrapper {
-    border: 1px solid #e6e6e6;
-    border-radius: 6px;
-    padding: 12px 15px;
-    margin-bottom: 10px;
-    background: #fafafa;
-    transition: all 0.2s ease;
-}
+        .radio-wrapper:hover {
+            border-color: #4CAF50;
+            background: #ffffff;
+        }
 
-.radio-wrapper:hover {
-    border-color: #4CAF50;
-    background: #ffffff;
-}
+        .radio-input .input-radio {
+            width: 16px;
+            height: 16px;
+            border: 2px solid #d9d9d9;
+        }
 
-.radio-input .input-radio {
-    width: 16px;
-    height: 16px;
-    border: 2px solid #d9d9d9;
-}
+        .radio-input .input-radio:checked {
+            box-shadow: 0 0 0 4px #4CAF50 inset;
+            border-color: #4CAF50;
+        }
 
-.radio-input .input-radio:checked {
-    box-shadow: 0 0 0 4px #4CAF50 inset;
-    border-color: #4CAF50;
-}
+        .radio-label-primary {
+            font-size: 14px;
+            font-weight: 500;
+            color: #333333;
+        }
 
-.radio-label-primary {
-    font-size: 14px;
-    font-weight: 500;
-    color: #333333;
-}
+        /* Nút hành động */
+        .step-footer,
+        .sidebar-footer {
+            border-top: none;
+            padding: 20px 0;
+            margin-top: 20px;
+        }
 
-/* Nút hành động */
-.step-footer, .sidebar-footer {
-    border-top: none;
-    padding: 20px 0;
-    margin-top: 20px;
-}
+        .step-footer-continue-btn,
+        .sidebar-footer-continue-btn {
+            background: #4CAF50 !important;
+            color: #ffffff !important;
+            padding: 12px 30px !important;
+            border-radius: 6px !important;
+            font-size: 14px !important;
+            font-weight: 600 !important;
+            transition: all 0.3s ease !important;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
 
-.step-footer-continue-btn, .sidebar-footer-continue-btn {
-    background: #4CAF50 !important;
-    color: #ffffff !important;
-    padding: 12px 30px !important;
-    border-radius: 6px !important;
-    font-size: 14px !important;
-    font-weight: 600 !important;
-    transition: all 0.3s ease !important;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
+        .step-footer-continue-btn:hover,
+        .sidebar-footer-continue-btn:hover {
+            background: #45a049 !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
 
-.step-footer-continue-btn:hover, .sidebar-footer-continue-btn:hover {
-    background: #45a049 !important;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
+        .step-footer-previous-link,
+        .sidebar-footer-previous-link {
+            color: #4CAF50 !important;
+            font-weight: 500;
+            border: 1px solid #4CAF50 !important;
+            padding: 10px 20px !important;
+            border-radius: 6px !important;
+            transition: all 0.3s ease;
+        }
 
-.step-footer-previous-link, .sidebar-footer-previous-link {
-    color: #4CAF50 !important;
-    font-weight: 500;
-    border: 1px solid #4CAF50 !important;
-    padding: 10px 20px !important;
-    border-radius: 6px !important;
-    transition: all 0.3s ease;
-}
+        .step-footer-previous-link:hover,
+        .sidebar-footer-previous-link:hover {
+            background: #f5f5f5 !important;
+            text-decoration: none !important;
+        }
 
-.step-footer-previous-link:hover, .sidebar-footer-previous-link:hover {
-    background: #f5f5f5 !important;
-    text-decoration: none !important;
-}
+        /* Mã giảm giá */
+        .box_ma_giam {
+            background: #f5f5f5;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
 
-/* Mã giảm giá */
-.box_ma_giam {
-    background: #f5f5f5;
-    border-radius: 6px;
-    margin-bottom: 15px;
-}
+        .box_ma_giam .box_title {
+            background: #4CAF50;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 8px 15px;
+        }
 
-.box_ma_giam .box_title {
-    background: #4CAF50;
-    font-size: 14px;
-    font-weight: 600;
-    padding: 8px 15px;
-}
+        .box_ma_giam .li_ma_giam {
+            padding: 8px 15px;
+            font-size: 13px;
+        }
 
-.box_ma_giam .li_ma_giam {
-    padding: 8px 15px;
-    font-size: 13px;
-}
+        .box_ma_giam .li_ma_giam span {
+            background: #ff4444;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
 
-.box_ma_giam .li_ma_giam span {
-    background: #ff4444;
-    padding: 3px 8px;
-    border-radius: 4px;
-    font-size: 12px;
-}
+        /* Responsive */
+        @media (max-width: 999px) {
+            .main-content {
+                padding: 15px;
+            }
 
-/* Responsive */
-@media (max-width: 999px) {
-    .main-content {
-        padding: 15px;
-    }
+            .section {
+                padding: 15px;
+            }
 
-    .section {
-        padding: 15px;
-    }
+            .step-footer,
+            .sidebar-footer {
+                flex-direction: column;
+                gap: 10px;
+            }
 
-    .step-footer, .sidebar-footer {
-        flex-direction: column;
-        gap: 10px;
-    }
+            .step-footer-continue-btn,
+            .sidebar-footer-continue-btn {
+                width: 100%;
+            }
 
-    .step-footer-continue-btn, .sidebar-footer-continue-btn {
-        width: 100%;
-    }
+            .step-footer-previous-link,
+            .sidebar-footer-previous-link {
+                width: 100%;
+                text-align: center;
+            }
+        }
 
-    .step-footer-previous-link, .sidebar-footer-previous-link {
-        width: 100%;
-        text-align: center;
-    }
-}
+        @media (min-width: 1000px) {
+            .main {
+                padding-right: 30px;
+            }
 
-@media (min-width: 1000px) {
-    .main {
-        padding-right: 30px;
-    }
-
-    .sidebar {
-        padding-left: 30px;
-    }
-}
+            .sidebar {
+                padding-left: 30px;
+            }
+        }
 
 
         .btn {
@@ -1149,8 +1156,8 @@ textarea.field-input {
 
         .sidebar .sidebar-content .order-summary .order-summary-sections .order-summary-section {
             border-top: 1px solid;
-          
-          
+
+
             border-color: #e1e1e1;
         }
 
@@ -1204,7 +1211,7 @@ textarea.field-input {
             margin: auto;
         }
 
-       
+
 
         .sidebar .sidebar-content .order-summary .product .product-image .product-thumbnail::after {
             content: '';
@@ -1217,6 +1224,7 @@ textarea.field-input {
             border-radius: 8px;
             box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1) inset;
         }
+
         .product-thumbnail-quantity {
             position: absolute;
             right: 1px !important;
@@ -1230,7 +1238,7 @@ textarea.field-input {
             background: rgba(153, 153, 153, 0.9);
             color: #fff;
             text-align: center;
-}
+        }
 
         .sidebar .sidebar-content .order-summary .product .product-description {
             width: 100%;
@@ -2096,7 +2104,7 @@ textarea.field-input {
         .box_ma_giam .li_ma_giam span {
             background: #f00;
             color: #fff;
-            padding:2px 10px;
+            padding: 2px 10px;
             border-radius: 5px;
             text-transform: uppercase;
         }
@@ -2178,7 +2186,7 @@ textarea.field-input {
         }
 
         textarea.field-input {
-           
+
             resize: vertical;
         }
 
@@ -2196,7 +2204,7 @@ textarea.field-input {
         /* Điều chỉnh width cho container */
         .section {
             width: 100%;
-           
+
         }
 
         .section-header {
@@ -2288,7 +2296,6 @@ textarea.field-input {
             background: #f8f9fa;
             text-decoration: none;
         }
-        
     </style>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2, user-scalable=no">
 </head>
@@ -2342,7 +2349,7 @@ textarea.field-input {
                     <div class="order-summary">
                         <div class="order-summary-sections">
                             <div class="order-summary-section order-summary-section-discount"
-                                data-order-summary-section="discount" >
+                                data-order-summary-section="discount">
                                 {box_ma_giam}
                                 <form id="form_discount_add" accept-charset="UTF-8" method="post">
                                     <input name="utf8" type="hidden" value="✓">
@@ -2437,14 +2444,15 @@ textarea.field-input {
                                             <td class="total-line-price">
                                                 <span class="order-summary-emphasis fee-ship"
                                                     data-checkout-total-shipping-target="0">{phi_ship}</span>
-                                                    <input class="phi_ship" type="hidden" name="phi_ship"
+                                                <input class="phi_ship" type="hidden" name="phi_ship"
                                                     value="{phi_ship}">
                                             </td>
                                         </tr>
                                         <tr class="total-line total-line-subtotal">
                                             <td class="total-line-name">Giảm giá</td>
                                             <td class="total-line-price">
-                                                <span class="order-summary-emphasis" id="total_coupon">{giam_hienthi}₫</span>
+                                                <span class="order-summary-emphasis"
+                                                    id="total_coupon">{giam_hienthi}₫</span>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -2456,13 +2464,14 @@ textarea.field-input {
                                             <td class="total-line-name payment-due">
                                                 <span class="payment-due-price">{tongtien}₫</span>
                                                 <input class="tongtien" type="hidden" name="tongtien"
-                                                       value="{tongtien}">
+                                                    value="{tongtien}">
                                             </td>
                                         </tr>
                                     </tfoot>
                                 </table>
                                 <div class="sidebar-footer">
-                                    <button type="button" id="checkout_complete" class="sidebar-footer-continue-btn btn">
+                                    <button type="button" id="checkout_complete"
+                                        class="sidebar-footer-continue-btn btn">
                                         <span class="btn-content">Hoàn tất đơn hàng</span>
                                         <i class="btn-spinner icon icon-button-spinner"></i>
                                     </button>
@@ -2498,7 +2507,8 @@ textarea.field-input {
                                 <div class="section-content section-customer-information no-mb">
                                     <div class="fieldset">
                                         <div class="field field-show-floating-label">
-                                            <label class="field-label" for="billing_address_full_name">Họ và tên <span class="required">*</span></label>
+                                            <label class="field-label" for="billing_address_full_name">Họ và tên <span
+                                                    class="required">*</span></label>
                                             <div class="field-input-wrapper">
                                                 <input placeholder="Họ và tên" autocapitalize="off" spellcheck="false"
                                                     class="field-input" size="30" type="text" name="ho_ten"
@@ -2506,7 +2516,8 @@ textarea.field-input {
                                             </div>
                                         </div>
                                         <div class="field field-third field-show-floating-label">
-                                            <label class="field-label" for="billing_address_phone">Số điện thoại <span class="required">*</span></label>
+                                            <label class="field-label" for="billing_address_phone">Số điện thoại <span
+                                                    class="required">*</span></label>
                                             <div class="field-input-wrapper">
                                                 <input placeholder="Số điện thoại" autocapitalize="off"
                                                     spellcheck="false" class="field-input" size="30" maxlength="15"
@@ -2514,31 +2525,35 @@ textarea.field-input {
                                             </div>
                                         </div>
                                         <div class="field field-third field-show-floating-label">
-                                            <label class="field-label" for="customer_shipping_province">Tỉnh/thành<span class="required">*</span></label>
+                                            <label class="field-label" for="customer_shipping_province">Tỉnh/thành<span
+                                                    class="required">*</span></label>
                                             <div class="field-input-wrapper field-input-wrapper-select">
-                                                <select class="field-input" id="customer_shipping_province" name="tinh" value="{tinh}">
+                                                <select class="field-input" id="customer_shipping_province" name="tinh"
+                                                    value="{tinh}">
                                                     <option value="0" selected>Chọn tỉnh / thành</option>
                                                     {option_tinh}
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="field field-third field-show-floating-label">
-                                            <label class="field-label" for="customer_shipping_district">Quận / huyện<span class="required">*</span></label>
+                                            <label class="field-label" for="customer_shipping_district">Quận /
+                                                huyện<span class="required">*</span></label>
                                             <div class="field-input-wrapper field-input-wrapper-select">
-                                                <select class="field-input" id="customer_shipping_district"
-                                                    name="huyen" value="{huyen}">
+                                                <select class="field-input" id="customer_shipping_district" name="huyen"
+                                                    value="{huyen}">
                                                     <option value="">Chọn quận / huyện</option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="field field-show-floating-label">
-                                            <label class="field-label" for="billing_address_address1">Địa chỉ đầy đủ <span class="required">*</span></label>
+                                            <label class="field-label" for="billing_address_address1">Địa chỉ đầy đủ
+                                                <span class="required">*</span></label>
                                             <div class="field-input-wrapper">
                                                 <input placeholder="Địa chỉ" autocapitalize="off" spellcheck="false"
                                                     class="field-input" size="30" type="text" name="dia_chi"
                                                     value="{dia_chi}">
                                             </div>
-                                       </div>
+                                        </div>
                                         <div class="field field-show-floating-label">
                                             <label class="field-label" for="checkout_user_email">Email</label>
                                             <div class="field-input-wrapper">
@@ -2559,7 +2574,8 @@ textarea.field-input {
                                     <div class="ctrl_payment_method">
                                         <div class="radio-wrapper">
                                             <div class="radio-input">
-                                                <input type="radio" class="input-radio" name="thanhtoan" value="cod" checked>
+                                                <input type="radio" class="input-radio" name="thanhtoan" value="cod"
+                                                    checked>
                                             </div>
                                             <div class="radio-label">
                                                 <span class="radio-label-primary">Thanh toán khi nhận hàng (COD)</span>
@@ -2648,11 +2664,11 @@ textarea.field-input {
     </style>
     <script>
         const sender_province = '{sender_province}';
-        const sender_district ='{sender_district}';
-        const weight = {weight};
-        const amount = {amount};
-        const giam = {giam};
-        $(document).ready(function() {
+        const sender_district = '{sender_district}';
+        const weight = { weight };
+        const amount = { amount };
+        const giam = { giam };
+        $(document).ready(function () {
             var $provinceSelect = $('#customer_shipping_province[name="tinh"]');
             var $districtSelect = $('#customer_shipping_district[name="huyen"]');
             function setSelectValue($select, value) {
@@ -2674,7 +2690,7 @@ textarea.field-input {
         function formatCurrency(amount) {
             return amount.toLocaleString('vi-VN') + ' đ';
         }
-        $(document).ready(function() {
+        $(document).ready(function () {
             var provinceSelect_tinh = $('#customer_shipping_province[name="tinh"]');
             var districtSelect_huyen = $('#customer_shipping_district[name="huyen"]');
             var order_summary_emphasis = $('.fee-ship');
@@ -2686,69 +2702,70 @@ textarea.field-input {
                 var huyenText = $(this).find("option:selected").text();
                 // Gửi AJAX
                 $.ajax({
-                    url: '/process.php', 
+                    url: '/process.php',
                     method: 'POST',
                     data: {
-                        action:'fee_ship',
-                        sender_province:sender_province,
-                        sender_district:sender_district,
+                        action: 'fee_ship',
+                        sender_province: sender_province,
+                        sender_district: sender_district,
                         receiver_province: tinhText,
                         receiver_district: huyenText,
-                        weight:weight,
-                        amount:amount
+                        weight: weight,
+                        amount: amount
                     },
-                    success: function(response) {
+                    success: function (response) {
                         var info = JSON.parse(response);
-                        if (info.ok == 1){
+                        if (info.ok == 1) {
                             order_summary_emphasis
                                 .html(formatCurrency(info.fee))
                                 .attr('data-checkout-total-shipping-target', info.fee);
                             var total = amount + info.fee - giam;
                             payment_due_price
-                                 .html(formatCurrency(total))
+                                .html(formatCurrency(total))
                             $('.phi_ship[name="phi_ship"]').val(info.fee);
                         }
                     },
-                    error: function(xhr) {
+                    error: function (xhr) {
                         console.error('Lỗi:', xhr.responseText);
                     }
                 });
             });
         });
-    
+
     </script>
     <script>
-       document.addEventListener("DOMContentLoaded", function () {
-    const couponElements = document.querySelectorAll(".box_ma_giam .li_ma_giam");
-    
-    if (couponElements.length === 0) return; // Không có mã giảm giá, thoát sớm
+        document.addEventListener("DOMContentLoaded", function () {
+            const couponElements = document.querySelectorAll(".box_ma_giam .li_ma_giam");
 
-    let maxValue = 0;
-    const valueMap = [];
+            if (couponElements.length === 0) return; 
 
-    // Lặp qua các mã để tìm giá trị cao nhất
-    couponElements.forEach(el => {
-        const valueEl = el.querySelector(".coupon_value");
-        if (valueEl) {
-            const text = valueEl.textContent.trim();
-            const number = parseInt(text.replace(/[^0-9]/g, ""), 10);
-            if (!isNaN(number)) {
-                valueMap.push({ el, number });
-                if (number > maxValue) maxValue = number;
-            }
-        }
-    });
+            let maxValue = 0;
+            const valueMap = [];
 
-    // Áp dụng kiểu hiển thị
-    valueMap.forEach(({ el, number }) => {
-        el.style.display = "flex"; // Đảm bảo tất cả đều hiển thị
-        el.style.opacity = number === maxValue ? "1" : "0.5"; // Cao nhất: opacity 1, còn lại: opacity 0.5
-    });
-});
+            
+            couponElements.forEach(el => {
+                const valueEl = el.querySelector(".coupon_value");
+                if (valueEl) {
+                    const text = valueEl.textContent.trim();
+                    const number = parseInt(text.replace(/[^0-9]/g, ""), 10);
+                    if (!isNaN(number)) {
+                        valueMap.push({ el, number });
+                        if (number > maxValue) maxValue = number;
+                    }
+                }
+            });
+
+            
+            valueMap.forEach(({ el, number }) => {
+                el.style.display = "flex"; 
+                el.style.opacity = number === maxValue ? "1" : "0.5";
+            });
+        });
 
     </script>
 
 </body>
 
 </html>
+
 </html>

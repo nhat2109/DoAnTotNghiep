@@ -163,13 +163,15 @@
 <div class="box_right">
 	<div class="box_right_content">
 		<div class="box_profile" style="width: 100%;padding: 10px;">
-			<div class="page_title page_title_2" style="justify-content: center; margin-top: 40px;">
-				<h1 class="undefined">Danh sách đơn hàng Website</h1>
-			</div>
+			
 
 			<form id="search_donhang_ncc" onsubmit="return false;">
+				
 				<input type="hidden" name="action" value="search_donhang_ncc">
 				<div class="filter_wrapper">
+					
+					<!-- <h1 class="undefined">Danh sách đơn hàng Website</h1> -->
+					
 					<div class="filter_section">
 						<div class="search_section">
 							<div class="box_search">
@@ -185,7 +187,8 @@
 								<option value="3">Yêu cầu hủy đơn</option>
 								<option value="4">Đã hủy đơn</option>
 								<option value="5">Giao thành công</option>
-								<option value="6">Đã hoàn đơn</option>
+								<option value="6">Yêu cầu hoàn đơn</option>
+								<option value="7">Đã hoàn đơn</option>  
 							</select>
 						</div>
 						<div class="filter_item date_range">
@@ -201,7 +204,7 @@
 
 			<div id="list_donhang_content">
 				<table class="list_baiviet">
-					<thead style="position: sticky;z-index: 1000;top: 10px;">
+					<thead style="position: sticky;z-index: 10;top: 10px;">
 						<tr>
 							<th style="text-align: center;width: 50px;" class="hide_mobile">STT</th>
 							<th style="text-align: left;">Mã đơn</th>

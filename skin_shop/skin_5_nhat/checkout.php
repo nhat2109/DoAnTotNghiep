@@ -33,6 +33,7 @@ while ($r_km = mysqli_fetch_assoc($thongtin_khuyenmai)) {
     $list_km[$ma]['giam'] = $r_km['giam'];
     $list_km[$ma]['loai'] = $r_km['loai'];
     $list_km[$ma]['kieu'] = $r_km['kieu'];
+    // voucher
     $list_km[$ma]['min_price'] = $r_km['min_price'];
     $list_km[$ma]['max_price'] = $r_km['max_price'];
     $list_km[$ma]['max_uses_per_user'] = $r_km['max_uses_per_user'];
@@ -143,7 +144,7 @@ if ($step == 1 || !$step) {
     $list_product = '';
     $can_nang = 0;
     $trongluong = 0;
-    //nccncc
+    //ncc
     function getCtvProvinceDistrict($conn, $user_id)
     {
         $stmt = mysqli_prepare($conn, "
@@ -239,6 +240,7 @@ if ($step == 1 || !$step) {
             return "Không tìm thấy tỉnh/huyện cho user";
         }
     }
+    // voucher
     $list_giam_titles = [];
     $data_receiver = getReceiverProvinceDistrict($conn, $user_id);
     while ($r_cart = mysqli_fetch_assoc($thongtin_cart)) {
@@ -264,7 +266,7 @@ if ($step == 1 || !$step) {
                     $tamtinh += $gia_moi * $value['quantity'];
                     $r_cart['thanhtien'] = number_format($gia_moi * $value['quantity']);
                     $r_cart['gia_moi'] = number_format($gia_moi);
-
+                    // voucher
                     foreach ($list_km as $kkk => $vvv) {
                         if ($vvv['kieu'] == 'all') {
                             if ($vvv['loai'] == 'phantram') {
@@ -339,6 +341,7 @@ if ($step == 1 || !$step) {
     //     $thanhtoan = 'cod';
     // }
 }
+// voucher
 function getUserVoucherUses($user_id, $voucher_code)
 {
     global $conn;
@@ -356,7 +359,7 @@ function getUserVoucherUses($user_id, $voucher_code)
     return 0;
 }
 
-
+// voucher
 if ($tamtinh <= 0) {
     $list_ma_giam = '';
 } else {
@@ -425,7 +428,6 @@ if (strlen($list_ma_giam) < 10) {
 } else {
     $box_ma_giam = $skin->skin_normal('skin_shop/' . $s . '/tpl/box_ma_giam');
 }
-// vnpay
 
 $google_analytics = str_replace('<script>// <![CDATA[', '<script>', $index_setting['google_analytics']);
 $google_analytics = str_replace('// ]]>', '', $google_analytics);
@@ -543,7 +545,7 @@ if ($step == 3) {
             // echo "Đã có bản ghi thanh toán cho đơn hàng này bằng vnpay.";
         }
     } else {
-        echo "Thiếu tham số.";
+        // echo "Thiếu tham số.";
     }
     // var_dump(($_GET));
     // die;

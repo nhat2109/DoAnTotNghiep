@@ -1,0 +1,29 @@
+<div class="li_product swiper-slide">
+    <div class="product-content">
+        <div class="product-thumbnail">
+            <a href="/product/{link}.html">
+                <!-- <img class="product-frame" src="/skin/css/images/frame_2.png?v=113"> -->
+                <img class="minh_hoa" src="{minh_hoa}">
+            </a>
+            {label_sale}
+            <div class="product-action">
+                <div class="group_action">
+                    <button class="btn-views q_add_to_cart active" pl="{pl}" sp_id="{id}" title="Thêm vào giỏ hàng">
+                        <i class="fa fa-cart-plus"></i>
+                    </button>
+                    <a title="Xem nhanh" href="javascript:;" sp_id="{id}" class="xem_nhanh btn-circle btn-views">
+                        <i class="fa fa-eye"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="product-info">
+            <h3 class="product-name"><a href="/product/{link}.html" title="">{tieu_de}</a></h3>
+            <div class="price-box">
+                <span class="price">{gia_moi}₫</span>
+                <span class="compare-price">{gia_cu}₫</span>
+            </div>
+            <img class="product-badge" src="/skin/css/images/label_1.png?v=113" alt="Flash Sale">
+        </div>
+    </div>
+</div>

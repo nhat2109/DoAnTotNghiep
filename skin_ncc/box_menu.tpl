@@ -290,7 +290,7 @@
 </div>
 
 <div class="main_menu_box">
-	<div class="title_box">Quản Lý Shop NCC</div>
+	<div class="title_box">Quản Lý Shop</div>
 	<div class="list_menu">
 		<div class="li_menu"><a href="/ncc/profile"><span class="left"><i class="icon icon-user"></i>Hồ sơ thông
 					tin</span></a></div>

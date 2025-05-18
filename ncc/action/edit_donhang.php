@@ -63,5 +63,26 @@
 	$r_h = mysqli_fetch_assoc($thontin_huyen);
 	$r_tt['tinh'] = $r_h['ten_tinh'];
 	$r_tt['huyen'] = $r_h['tieu_de'];
+	//
+	$thongtin_payments = mysqli_query($conn, "SELECT * FROM order_payments WHERE order_id='$r_tt[ma_don]'");
+	$r_payments = mysqli_fetch_assoc($thongtin_payments);
+	if ($r_payments['payment_status'] == 'completed') {
+		$tinhtrang = 'Đã thanh toán';
+		$tinhtrang_class = 'status-completed';
+	} elseif ($r_payments['payment_status'] == 'failed') {
+		$tinhtrang = 'Thanh toán thất bại';
+		$tinhtrang_class = 'status-failed';
+	} else {
+		$tinhtrang = 'Chưa thanh toán';
+		$tinhtrang_class = 'status-pending';
+	}
+	$transaction_id = $r_payments['transaction_id'];
+	$ngaythanhtoan=$r_payments['created_at'];
+	$r_tt['phuongthuc'] =$r_tt['thanhtoan'];
+	$r_tt['tinhtrang'] = $tinhtrang;
+	$r_tt['tinhtrang_class'] = $tinhtrang_class;
+	$r_tt['transaction_id']=$transaction_id;
+	$r_tt['ngaythanhtoan'] =$ngaythanhtoan;
+
 	$thaythe['box_right'] = $skin->skin_replace('skin_ncc/box_action/edit_donhang', $r_tt);
 ?>

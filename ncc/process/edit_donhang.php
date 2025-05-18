@@ -55,7 +55,7 @@
 						$thongbao = 'Thất bại! Không thể lưu trạng thái này';
 					}
 				} else if ($status == 5) {
-					if ($r_tt['status'] != 3 AND $r_tt['status'] != 4 AND $r_tt['status'] != 6) {
+					if ($r_tt['status'] != 3 AND $r_tt['status'] != 4 AND $r_tt['status'] != 7 AND $r_tt['status'] != 6 AND $r_tt['status'] != 0) {
 						mysqli_query($conn, "UPDATE donhang_shop SET status='$status' WHERE id='$id' AND shop='$user_id'");
 						if ($r_tt['status'] != 5) {
 							$thongtin_tichdiem = mysqli_query($conn, "SELECT *,count(*) AS total FROM tich_diem_shop WHERE don='{$r_tt['ma_don']}' AND user_id='{$r_tt['user_id']}'");
@@ -80,19 +80,24 @@
 						$thongbao = 'Thất bại! Không thể lưu trạng thái này';
 					}
 				} else if ($status == 6) {
-					if ($r_tt['status'] == 3) {
-						$ok = 0;
-						$thongbao = 'Thất bại! Đơn hàng này đang yêu cầu hủy';
-					} else if ($r_tt['status'] == 4) {
-						$ok = 0;
-						$thongbao = 'Thất bại! Đơn hàng này đã bị hủy';
-					} else if ($r_tt['status'] == 5) {
-						$ok = 0;
-						$thongbao = 'Thất bại! Đơn hàng này đã hoàn thành';
-					} else {
-						mysqli_query($conn, "UPDATE donhang SET status='$status' WHERE id='$id' AND shop='$user_id'");
+					if ($r_tt['status'] == 5) {
+						mysqli_query($conn, "UPDATE donhang_shop SET status='$status' WHERE id='$id' AND shop='$user_id'");
 						$thongbao = 'Lưu thay đổi thành công';
 						$ok = 1;
+					} 
+					else {
+						$ok = 0;
+						$thongbao = 'Thất bại! Không thể lưu trạng thái này';
+					}
+				} 
+				else if ($status == 7) {
+					if ($r_tt['status'] == 6) {
+						mysqli_query($conn, "UPDATE donhang_shop SET status='$status' WHERE id='$id' AND shop='$user_id'");
+						$thongbao = 'Lưu thay đổi thành công';
+						$ok = 1;
+					} else {
+						$ok = 0;
+						$thongbao = 'Thất bại! Không thể lưu trạng thái này';
 					}
 				}
 			}

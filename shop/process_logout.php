@@ -8,5 +8,5 @@ $replace=array(
 	'thongbao'=>$thongbao,
 	'link'=>'/'
 );
-echo $skin->skin_replace('skin_shop/skin_1/tpl/chuyenhuong',$replace);
+echo $skin->skin_replace('skin_shop/skin_5_nhat/tpl/chuyenhuong',$replace);
 ?>

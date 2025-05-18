@@ -171,6 +171,7 @@ if ($action == 'check_exp') {
 						'size' => $cart_item['ten_size'] ?? '',
 						'gia_moi' => number_format(floatval($cart_item['gia_moi'])),
 						'minh_hoa' => $r_cart['minh_hoa'],
+						'link' => $r_cart['link'],
 						'thanhtien' => number_format(floatval($cart_item['gia_moi']) * $cart_item['quantity'])
 					];
 

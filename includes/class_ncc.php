@@ -2301,10 +2301,16 @@
 				} else if ($r_tt['status'] == 5) {
 					$r_tt['status'] = 'Giao thành công';
 					$r_tt['huy'] = '';
-				} else if ($r_tt['status'] == 6) {
+				} 
+				else if ($r_tt['status'] == 6) {
+					$r_tt['status'] = 'Yêu cầu hoàn đơn';
+					$r_tt['huy'] = '';
+				} 
+				else if ($r_tt['status'] == 7) {
 					$r_tt['status'] = 'Đã hoàn đơn';
 					$r_tt['huy'] = '';
-				} else {
+				} 
+				else {
 					$r_tt['status'] = 'Chờ xử lý';
 				}
 				$tach_sanpham = json_decode($r_tt['sanpham'], true);
@@ -4870,9 +4876,14 @@
 					$r_tt['status'] = 'Giao thành công';
 					$r_tt['huy'] = '';
 				} else if ($r_tt['status'] == 6) {
+					$r_tt['status'] = 'Yêu cầu hoàn đơn';
+					$r_tt['huy'] = '';
+				} 
+				else if ($r_tt['status'] == 7) {
 					$r_tt['status'] = 'Đã hoàn đơn';
 					$r_tt['huy'] = '';
-				} else {
+				} 
+				else {
 					$r_tt['status'] = 'Chờ xử lý';
 				}
 				$tach_sanpham = json_decode($r_tt['sanpham'], true);
@@ -4919,10 +4930,16 @@
 				} else if ($r_tt['status'] == 5) {
 					$r_tt['status'] = 'Giao thành công';
 					$r_tt['huy'] = '';
-				} else if ($r_tt['status'] == 6) {
+				} 
+				else if ($r_tt['status'] == 6) {
+					$r_tt['status'] = 'Yêu cầu hoàn đơn';
+					$r_tt['huy'] = '';
+				} 
+				else if ($r_tt['status'] == 7) {
 					$r_tt['status'] = 'Đã hoàn đơn';
 					$r_tt['huy'] = '';
-				} else {
+				} 
+				else {
 					$r_tt['huy'] = '<a href="javascript:;" onclick="confirm_action(\'huy_donhang_drop\', \'Hủy đơn hàng drop\', \'' . $r_tt['id'] . '\')" class="del">hủy</a>';
 					$r_tt['status'] = 'Chờ xử lý';
 				}
@@ -4997,10 +5014,16 @@
 				} else if ($r_tt['status'] == 5) {
 					$r_tt['status'] = 'Giao thành công';
 					$r_tt['huy'] = '';
-				} else if ($r_tt['status'] == 6) {
+				} 
+				else if ($r_tt['status'] == 6) {
+					$r_tt['status'] = 'Yêu cầu hoàn đơn';
+					$r_tt['huy'] = '';
+				} 
+				else if ($r_tt['status'] == 7) {
 					$r_tt['status'] = 'Đã hoàn đơn';
 					$r_tt['huy'] = '';
-				} else if ($r_tt['status'] == 0) {
+				} 
+				else if ($r_tt['status'] == 0) {
 					$r_tt['status'] = 'Chờ xử lý';
 				}
 				$tach_sanpham = json_decode($r_tt['sanpham'], true);
@@ -5123,10 +5146,16 @@
 				} else if ($r_tt['status'] == 5) {
 					$r_tt['status'] = 'Giao thành công';
 					$r_tt['huy'] = '';
-				} else if ($r_tt['status'] == 6) {
+				} 
+				else if ($r_tt['status'] == 6) {
+					$r_tt['status'] = 'Yêu cầu hoàn đơn';
+					$r_tt['huy'] = '';
+				} 
+				else if ($r_tt['status'] == 7) {
 					$r_tt['status'] = 'Đã hoàn đơn';
 					$r_tt['huy'] = '';
-				} else {
+				} 
+				else {
 					$r_tt['huy'] = '<a href="javascript:;" onclick="confirm_action(\'huy_donhang_socdo\', \'Hủy đơn hàng\', \'' . $r_tt['id'] . '\')" class="del">hủy</a>';
 					$r_tt['status'] = 'Chờ xử lý';
 				}
