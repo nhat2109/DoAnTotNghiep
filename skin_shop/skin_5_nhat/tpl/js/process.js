@@ -212,26 +212,26 @@ $(document).ready(function () {
       },
     });
   }, 3000);
-  setTimeout(function () {
-    $.ajax({
-      url: "/process.php",
-      type: "post",
-      data: {
-        action: "check_exp",
-      },
-      success: function (kq) {
-        var info = JSON.parse(kq);
-        if (info.ok == 0) {
-          $(".load_overlay").show();
-          $(".load_process").fadeIn();
-          $(".load_note").html(info.thongbao);
-          setTimeout(function () {
-            window.location.href = "https://socdo.vn/";
-          }, 3000);
-        }
-      },
-    });
-  }, 1000);
+  // setTimeout(function () {
+  //   $.ajax({
+  //     url: "/process.php",
+  //     type: "post",
+  //     data: {
+  //       action: "check_exp",
+  //     },
+  //     success: function (kq) {
+  //       var info = JSON.parse(kq);
+  //       if (info.ok == 0) {
+  //         $(".load_overlay").show();
+  //         $(".load_process").fadeIn();
+  //         $(".load_note").html(info.thongbao);
+  //         setTimeout(function () {
+  //           window.location.href = "https://socdo.vn/";
+  //         }, 3000);
+  //       }
+  //     },
+  //   });
+  // }, 1000);
   $(".box_popup .box_title i").click(function () {
     $(".box_popup").fadeOut();
   });

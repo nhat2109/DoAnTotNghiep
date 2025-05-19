@@ -4,14 +4,14 @@
   <div class="loadpage">
     <div class="content_loadpage">
       <div class="logox">
-        <a href="/ncc/dashboard"><img src="/skin_ncc/css/images/logo.png" alt="logo"></a>
+        <!-- <a href="/ncc/dashboard"><img src="/skin_ncc/css/images/logo.png" alt="logo"></a> -->
       </div>
       <div class="loadx"></div>
     </div>
   </div>
   <div class="page_body">
     <div class="logo_mobile">
-      <a href="/ncc/dashboard"><img src="/skin_ncc/css/images/logo.png" alt="logo"></a>
+      <!-- <a href="/ncc/dashboard"><img src="/skin_ncc/css/images/logo.png" alt="logo"></a> -->
       <div class="slogan"><a href="/">Đơn vị tiên phong về TMĐT hàng hóa chính hãng</a></div>
     </div>
 

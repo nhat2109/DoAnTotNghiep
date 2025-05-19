@@ -707,107 +707,107 @@
 			return $list;
 		}
 		///////////////////
-		function thongke_doanhthu_socdo($conn, $list_id, $dau, $cuoi)
-		{
-			$skin = $this->load('class_skin_cpanel');
-			$check = $this->load('class_check');
-			$start = $page * $limit - $limit;
-			$thongtin = mysqli_query($conn, "SELECT * FROM donhang WHERE FIND_IN_SET('$list_id', shop_id) > 0 AND date_post>='$dau' AND date_post<='$cuoi'");
-			while ($r_tt = mysqli_fetch_assoc($thongtin)) {
-				$ngay = date('d', $r_tt['date_post']);
-				$ngay = intval($ngay);
-				if ($r_tt['status'] == 6) {
-					$hoan++;
-					$doanhthu_hoan += $r_tt['tongtien'];
-				} else if ($r_tt['status'] == 5) {
-					$hoanthanh++;
-					$doanhthu_hoanthanh += $r_tt['tongtien'];
-				} else if ($r_tt['status'] == 4) {
-					$huy++;
-					$doanhthu_huy += $r_tt['tongtien'];
-				} else if ($r_tt['status'] == 3) {
-					$yeucau_huy++;
-					$doanhthu_yeucau_huy += $r_tt['tongtien'];
-				} else if ($r_tt['status'] == 2) {
-					$vanchuyen++;
-					$doanhthu_vanchuyen += $r_tt['tongtien'];
-				} else if ($r_tt['status'] == 1) {
-					$tiepnhan++;
-					$doanhthu_tiepnhan += $r_tt['tongtien'];
-				} else if ($r_tt['status'] == 0) {
-					$cho++;
-					$doanhthu_cho += $r_tt['tongtien'];
-				}
-			}
-			$info = array(
-				'donhang_hoanthanh' => $hoanthanh,
-				'doanhthu_hoanthanh' => $doanhthu_hoanthanh,
-				'donhang_vanchuyen' => $vanchuyen,
-				'doanhthu_vanchuyen' => $doanhthu_vanchuyen,
-				'donhang_huy' => $huy,
-				'doanhthu_huy' => $doanhthu_huy,
-				'donhang_hoan' => $hoan,
-				'doanhthu_hoan' => $doanhthu_hoan,
-				'donhang_cho' => $cho,
-				'doanhthu_cho' => $doanhthu_cho,
-				'donhang_yeucau_huy' => $yeucau_huy,
-				'doanhthu_yeucau_huy' => $doanhthu_yeucau_huy,
-				'donhang_tiepnhan' => $tiepnhan,
-				'doanhthu_tiepnhan' => $doanhthu_tiepnhan,
-			);
-			return json_encode($info);
-		}
+		// function thongke_doanhthu_socdo($conn, $list_id, $dau, $cuoi)
+		// {
+		// 	$skin = $this->load('class_skin_cpanel');
+		// 	$check = $this->load('class_check');
+		// 	$start = $page * $limit - $limit;
+		// 	$thongtin = mysqli_query($conn, "SELECT * FROM donhang WHERE FIND_IN_SET('$list_id', shop_id) > 0 AND date_post>='$dau' AND date_post<='$cuoi'");
+		// 	while ($r_tt = mysqli_fetch_assoc($thongtin)) {
+		// 		$ngay = date('d', $r_tt['date_post']);
+		// 		$ngay = intval($ngay);
+		// 		if ($r_tt['status'] == 6) {
+		// 			$hoan++;
+		// 			$doanhthu_hoan += $r_tt['tongtien'];
+		// 		} else if ($r_tt['status'] == 5) {
+		// 			$hoanthanh++;
+		// 			$doanhthu_hoanthanh += $r_tt['tongtien'];
+		// 		} else if ($r_tt['status'] == 4) {
+		// 			$huy++;
+		// 			$doanhthu_huy += $r_tt['tongtien'];
+		// 		} else if ($r_tt['status'] == 3) {
+		// 			$yeucau_huy++;
+		// 			$doanhthu_yeucau_huy += $r_tt['tongtien'];
+		// 		} else if ($r_tt['status'] == 2) {
+		// 			$vanchuyen++;
+		// 			$doanhthu_vanchuyen += $r_tt['tongtien'];
+		// 		} else if ($r_tt['status'] == 1) {
+		// 			$tiepnhan++;
+		// 			$doanhthu_tiepnhan += $r_tt['tongtien'];
+		// 		} else if ($r_tt['status'] == 0) {
+		// 			$cho++;
+		// 			$doanhthu_cho += $r_tt['tongtien'];
+		// 		}
+		// 	}
+		// 	$info = array(
+		// 		'donhang_hoanthanh' => $hoanthanh,
+		// 		'doanhthu_hoanthanh' => $doanhthu_hoanthanh,
+		// 		'donhang_vanchuyen' => $vanchuyen,
+		// 		'doanhthu_vanchuyen' => $doanhthu_vanchuyen,
+		// 		'donhang_huy' => $huy,
+		// 		'doanhthu_huy' => $doanhthu_huy,
+		// 		'donhang_hoan' => $hoan,
+		// 		'doanhthu_hoan' => $doanhthu_hoan,
+		// 		'donhang_cho' => $cho,
+		// 		'doanhthu_cho' => $doanhthu_cho,
+		// 		'donhang_yeucau_huy' => $yeucau_huy,
+		// 		'doanhthu_yeucau_huy' => $doanhthu_yeucau_huy,
+		// 		'donhang_tiepnhan' => $tiepnhan,
+		// 		'doanhthu_tiepnhan' => $doanhthu_tiepnhan,
+		// 	);
+		// 	return json_encode($info);
+		// }
 		///////////////////
-		function thongke_doanhthu_aff($conn, $list_id, $dau, $cuoi)
-		{
-			$skin = $this->load('class_skin_cpanel');
-			$check = $this->load('class_check');
-			$start = $page * $limit - $limit;
-			$thongtin = mysqli_query($conn, "SELECT * FROM donhang WHERE ncc='0' AND utm_source IN ($list_id) AND date_post>='$dau' AND date_post<='$cuoi'");
-			while ($r_tt = mysqli_fetch_assoc($thongtin)) {
-				$ngay = date('d', $r_tt['date_post']);
-				$ngay = intval($ngay);
-				if ($r_tt['status'] == 6) {
-					$hoan++;
-					$doanhthu_hoan += $r_tt['tongtien'];
-				} else if ($r_tt['status'] == 5) {
-					$hoanthanh++;
-					$doanhthu_hoanthanh += $r_tt['tongtien'];
-				} else if ($r_tt['status'] == 4) {
-					$huy++;
-					$doanhthu_huy += $r_tt['tongtien'];
-				} else if ($r_tt['status'] == 3) {
-					$yeucau_huy++;
-					$doanhthu_yeucau_huy += $r_tt['tongtien'];
-				} else if ($r_tt['status'] == 2) {
-					$vanchuyen++;
-					$doanhthu_vanchuyen += $r_tt['tongtien'];
-				} else if ($r_tt['status'] == 1) {
-					$tiepnhan++;
-					$doanhthu_tiepnhan += $r_tt['tongtien'];
-				} else if ($r_tt['status'] == 0) {
-					$cho++;
-					$doanhthu_cho += $r_tt['tongtien'];
-				}
-			}
-			$info = array(
-				'donhang_hoanthanh' => $hoanthanh,
-				'doanhthu_hoanthanh' => $doanhthu_hoanthanh,
-				'donhang_vanchuyen' => $vanchuyen,
-				'doanhthu_vanchuyen' => $doanhthu_vanchuyen,
-				'donhang_huy' => $huy,
-				'doanhthu_huy' => $doanhthu_huy,
-				'donhang_hoan' => $hoan,
-				'doanhthu_hoan' => $doanhthu_hoan,
-				'donhang_cho' => $cho,
-				'doanhthu_cho' => $doanhthu_cho,
-				'donhang_yeucau_huy' => $yeucau_huy,
-				'doanhthu_yeucau_huy' => $doanhthu_yeucau_huy,
-				'donhang_tiepnhan' => $tiepnhan,
-				'doanhthu_tiepnhan' => $doanhthu_tiepnhan,
-			);
-			return json_encode($info);
-		}
+		// function thongke_doanhthu_aff($conn, $list_id, $dau, $cuoi)
+		// {
+		// 	$skin = $this->load('class_skin_cpanel');
+		// 	$check = $this->load('class_check');
+		// 	$start = $page * $limit - $limit;
+		// 	$thongtin = mysqli_query($conn, "SELECT * FROM donhang WHERE ncc='0' AND utm_source IN ($list_id) AND date_post>='$dau' AND date_post<='$cuoi'");
+		// 	while ($r_tt = mysqli_fetch_assoc($thongtin)) {
+		// 		$ngay = date('d', $r_tt['date_post']);
+		// 		$ngay = intval($ngay);
+		// 		if ($r_tt['status'] == 6) {
+		// 			$hoan++;
+		// 			$doanhthu_hoan += $r_tt['tongtien'];
+		// 		} else if ($r_tt['status'] == 5) {
+		// 			$hoanthanh++;
+		// 			$doanhthu_hoanthanh += $r_tt['tongtien'];
+		// 		} else if ($r_tt['status'] == 4) {
+		// 			$huy++;
+		// 			$doanhthu_huy += $r_tt['tongtien'];
+		// 		} else if ($r_tt['status'] == 3) {
+		// 			$yeucau_huy++;
+		// 			$doanhthu_yeucau_huy += $r_tt['tongtien'];
+		// 		} else if ($r_tt['status'] == 2) {
+		// 			$vanchuyen++;
+		// 			$doanhthu_vanchuyen += $r_tt['tongtien'];
+		// 		} else if ($r_tt['status'] == 1) {
+		// 			$tiepnhan++;
+		// 			$doanhthu_tiepnhan += $r_tt['tongtien'];
+		// 		} else if ($r_tt['status'] == 0) {
+		// 			$cho++;
+		// 			$doanhthu_cho += $r_tt['tongtien'];
+		// 		}
+		// 	}
+		// 	$info = array(
+		// 		'donhang_hoanthanh' => $hoanthanh,
+		// 		'doanhthu_hoanthanh' => $doanhthu_hoanthanh,
+		// 		'donhang_vanchuyen' => $vanchuyen,
+		// 		'doanhthu_vanchuyen' => $doanhthu_vanchuyen,
+		// 		'donhang_huy' => $huy,
+		// 		'doanhthu_huy' => $doanhthu_huy,
+		// 		'donhang_hoan' => $hoan,
+		// 		'doanhthu_hoan' => $doanhthu_hoan,
+		// 		'donhang_cho' => $cho,
+		// 		'doanhthu_cho' => $doanhthu_cho,
+		// 		'donhang_yeucau_huy' => $yeucau_huy,
+		// 		'doanhthu_yeucau_huy' => $doanhthu_yeucau_huy,
+		// 		'donhang_tiepnhan' => $tiepnhan,
+		// 		'doanhthu_tiepnhan' => $doanhthu_tiepnhan,
+		// 	);
+		// 	return json_encode($info);
+		// }
 		///////////////////
 		function thongke_doanhthu($conn, $list_id, $dau, $cuoi)
 		{
@@ -818,7 +818,7 @@
 			while ($r_tt = mysqli_fetch_assoc($thongtin)) {
 				$ngay = date('d', $r_tt['date_post']);
 				$ngay = intval($ngay);
-				if ($r_tt['status'] == 6) {
+				if ($r_tt['status'] == 7) {
 					$hoan++;
 					$doanhthu_hoan += $r_tt['tongtien'];
 				} else if ($r_tt['status'] == 5) {
@@ -2207,70 +2207,70 @@
 		}
 
 		// Lấy đơn hàng mới nhất trong ngày 
-		function list_donhang_moi_socdo($conn, $shop, $page, $limit)
-		{
-			$skin = $this->load('class_skin_cpanel');
-			$check = $this->load('class_check');
+		// function list_donhang_moi_socdo($conn, $shop, $page, $limit)
+		// {
+		// 	$skin = $this->load('class_skin_cpanel');
+		// 	$check = $this->load('class_check');
 
-			$start = $page * $limit - $limit;
-			$index = $start;
-			$start_of_day = strtotime(date('Y-m-d 00:00:00'));
-			$end_of_day   = strtotime(date('Y-m-d 23:59:59'));
+		// 	$start = $page * $limit - $limit;
+		// 	$index = $start;
+		// 	$start_of_day = strtotime(date('Y-m-d 00:00:00'));
+		// 	$end_of_day   = strtotime(date('Y-m-d 23:59:59'));
 
-			$sql = "
-			SELECT donhang.*, user_info.avatar 
-			FROM donhang 
-			LEFT JOIN user_info ON donhang.user_id = user_info.user_id 
-			WHERE FIND_IN_SET('$shop', shop_id) > 0
-			  AND donhang.date_post >= '$start_of_day' 
-			  AND donhang.date_post <= '$end_of_day'
-			ORDER BY donhang.date_post ASC
-		";
+		// 	$sql = "
+		// 	SELECT donhang.*, user_info.avatar 
+		// 	FROM donhang 
+		// 	LEFT JOIN user_info ON donhang.user_id = user_info.user_id 
+		// 	WHERE FIND_IN_SET('$shop', shop_id) > 0
+		// 	  AND donhang.date_post >= '$start_of_day' 
+		// 	  AND donhang.date_post <= '$end_of_day'
+		// 	ORDER BY donhang.date_post ASC
+		// ";
 
-			$result = mysqli_query($conn, $sql);
-			$total = mysqli_num_rows($result);
+		// 	$result = mysqli_query($conn, $sql);
+		// 	$total = mysqli_num_rows($result);
 
-			if ($total == 0) {
-				$list = '<p><center>Chưa có đơn nào trong ngày, cần cố gắng hơn!</center></p>';
-				$list_slide = '';
-			} else {
-				$list_items = [];
-				$list_items_slide = [];
-				$order_count = [];
+		// 	if ($total == 0) {
+		// 		$list = '<p><center>Chưa có đơn nào trong ngày, cần cố gắng hơn!</center></p>';
+		// 		$list_slide = '';
+		// 	} else {
+		// 		$list_items = [];
+		// 		$list_items_slide = [];
+		// 		$order_count = [];
 
-				while ($order = mysqli_fetch_assoc($result)) {
-					$index++;
-					$order['i'] = $index;
-					$order['dien_thoai'] = substr($order['dien_thoai'], 0, -3) . 'xxx';
-					$order['tong_tien'] = number_format($order['tongtien']) . 'đ';
-					$order['date_post'] = $check->chat_update($order['date_post']);
+		// 		while ($order = mysqli_fetch_assoc($result)) {
+		// 			$index++;
+		// 			$order['i'] = $index;
+		// 			$order['dien_thoai'] = substr($order['dien_thoai'], 0, -3) . 'xxx';
+		// 			$order['tong_tien'] = number_format($order['tongtien']) . 'đ';
+		// 			$order['date_post'] = $check->chat_update($order['date_post']);
 
-					if ($order['user_id'] > 0) {
-						$uid = $order['user_id'];
-						$order_count[$uid]++;
-						if ($order_count[$uid] > 1) {
-							$noi_dung = 'Vừa có <b>đơn hàng thứ ' . $order_count[$uid] . '</b> trong ngày';
-						} else {
-							$noi_dung = 'Vừa có đơn hàng';
-						}
-					} else {
-						$noi_dung = 'Vừa có đơn hàng';
-					}
+		// 			if ($order['user_id'] > 0) {
+		// 				$uid = $order['user_id'];
+		// 				$order_count[$uid]++;
+		// 				if ($order_count[$uid] > 1) {
+		// 					$noi_dung = 'Vừa có <b>đơn hàng thứ ' . $order_count[$uid] . '</b> trong ngày';
+		// 				} else {
+		// 					$noi_dung = 'Vừa có đơn hàng';
+		// 				}
+		// 			} else {
+		// 				$noi_dung = 'Vừa có đơn hàng';
+		// 			}
 
-					$order['noi_dung'] = $noi_dung;
-					$list_items[] = $skin->skin_replace('skin_ncc/box_action/li_donhang', $order);
-					$list_items_slide[] = $skin->skin_replace('skin_ncc/box_action/li_donhang_slide', $order);
-				}
+		// 			$order['noi_dung'] = $noi_dung;
+		// 			$list_items[] = $skin->skin_replace('skin_ncc/box_action/li_donhang', $order);
+		// 			$list_items_slide[] = $skin->skin_replace('skin_ncc/box_action/li_donhang_slide', $order);
+		// 		}
 
-				$list = implode('', array_reverse($list_items));
-				$list_slide = implode('', array_reverse($list_items_slide));
-			}
+		// 		$list = implode('', array_reverse($list_items));
+		// 		$list_slide = implode('', array_reverse($list_items_slide));
+		// 	}
 
-			return json_encode([
-				'list' => $list,
-				'list_slide' => $list_slide
-			]);
-		}
+		// 	return json_encode([
+		// 		'list' => $list,
+		// 		'list_slide' => $list_slide
+		// 	]);
+		// }
 
 
 		////////////////////
@@ -3653,9 +3653,9 @@
 			$skin = $this->load('class_skin_cpanel');
 			$check = $this->load('class_check');
 			$start = $page * $limit - $limit;
-			$thongtin = mysqli_query($conn, "SELECT sanpham_shop.*, sanpham.gia_drop AS sanpham_gia_drop, sanpham.kho, ps.gia_drop AS phanloai_gia_drop, ps.gia_ctv, ps.gia_socdo
+			$thongtin = mysqli_query($conn, "SELECT sanpham_shop.*, ps.gia_ctv, ps.gia_socdo
 											FROM sanpham_shop 
-											LEFT JOIN sanpham ON sanpham_shop.sp_id = sanpham.id 
+											
 											LEFT JOIN (SELECT * FROM phanloai_sanpham_shop GROUP BY sp_id) AS ps ON sanpham_shop.id = ps.sp_id
 											WHERE sanpham_shop.shop = '$shop'
 											ORDER BY sanpham_shop.id DESC

@@ -65,7 +65,7 @@
 
 	#apply_filter {
 		padding: 8px 15px;
-		background-color: #4CAF50;
+		background: linear-gradient(90deg, #28a745, #34c759);
 		color: white;
 		border: none;
 		border-radius: 4px;
@@ -73,7 +73,7 @@
 	}
 
 	#apply_filter:hover {
-		background-color: #45a049;
+		    background: linear-gradient(90deg, #218838, #28a745);
 	}
 
 	/* Loading spinner */
@@ -154,11 +154,7 @@
 			display: none;
 		}
 	}
-	.list_baiviet tr:first-child {
-		position: initial; /* Ghi đè thuộc tính cũ */
-		top: auto;
-		background: white;
-	}
+	
 </style>
 <div class="box_right">
 	<div class="box_right_content">

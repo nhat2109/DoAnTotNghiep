@@ -7,7 +7,7 @@
 				<hr>
 			</div>
 			<table class="list_baiviet" style="padding: 0px 10px;">
-				<tr>
+				<thead>
 					<th style="text-align: center;width: 50px;" class="hide_mobile">STT</th>
 					<th style="text-align: center;width: 120px;" class="hide_mobile">Minh họa</th>
 					<th style="text-align: left;width: 150">Tiêu đề</th>
@@ -15,7 +15,7 @@
 					<th style="text-align: center;" class="hide_mobile">Link</th>
 					<th style="text-align: center;" class="hide_mobile">Thứ tự</th>
 					<th style="text-align: center;width: 160px;">Hành động</th>
-				</tr>
+				</thead>
 				{list_banner}
 			</table>
 		</div>

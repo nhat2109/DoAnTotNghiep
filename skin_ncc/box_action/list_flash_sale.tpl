@@ -12,13 +12,13 @@
 			}
 		</style>
 		<table class="list_baiviet">
-			<tr>
+			<thead>
 				<th style="text-align: center;width: 50px;" class="hide_mobile">ID</th>
 				<th style="text-align: left;">Tên chương trình</th>
 				<th style="text-align: center;" class="hide_mobile">Bắt đầu</th>
 				<th style="text-align: center;" class="hide_mobile">Kết thúc</th>
 				<th style="text-align: center;width: 100px;">Hành động</th>
-			</tr>
+			</thead>
 			{list_flash_sale}
 		</table>
 		{phantrang}

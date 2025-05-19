@@ -12,14 +12,14 @@
 			}
 		</style>
 		<table class="list_baiviet">
-			<tr>
+			<thead>
 				<th style="text-align: center;width: 50px;" class="hide_mobile">ID</th>
 				<th style="text-align: left;">Mã</th>
 				<th style="text-align: left;">Giảm</th>
 				<th style="text-align: center;" class="hide_mobile">Bắt đầu</th>
 				<th style="text-align: center;" class="hide_mobile">Hết hạn</th>
 				<th style="text-align: center;width: 100px;">Hành động</th>
-			</tr>
+			</thead>
 			{list_coupon}
 		</table>
 		{phantrang}

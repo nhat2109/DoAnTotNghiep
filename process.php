@@ -56,7 +56,8 @@ if ($action == 'get_popup') {
 		'content' => $content,
 	);
 	echo json_encode($info);
-} elseif ($action == 'filter_search') { // chức năng tìm kiếm nâng cao
+} 
+elseif ($action == 'filter_search') { // chức năng tìm kiếm nâng cao
 	$search_name = mysqli_real_escape_string($conn, $_REQUEST['key']);
 	$query = "SELECT `id`, `tieu_de` AS `title`, `gia_moi` AS `new_price`, `gia_cu` AS `old_price`, `anh` AS `image`, `link`, `minh_hoa`
               FROM `sanpham` 

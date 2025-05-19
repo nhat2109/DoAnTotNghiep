@@ -10,7 +10,7 @@
     <link rel="canonical" href="{link_xem}" />
     <meta name='revisit-after' content='1 days' />
     <meta name="robots" content="noodp,index,follow" />
-    <link rel="icon" href="/images/favicon.png" type="image/x-icon" />
+    <!-- <link rel="icon" href="/images/favicon.png" type="image/x-icon" /> -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="{title}">
     <meta property="og:image" content="{minh_hoa}">

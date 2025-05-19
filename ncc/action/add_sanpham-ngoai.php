@@ -2,9 +2,9 @@
 $thaythe['title'] = 'Thêm sản phẩm mới';
 $thaythe['title_action'] = 'Thêm sản phẩm mới';
 $id = intval($url_query['id']);
-$thongtin = mysqli_query($conn, "SELECT * FROM sanpham WHERE id='$id'");
-$r_tt = mysqli_fetch_assoc($thongtin);
-$r_tt['option_category'] = $class_index->list_div_category_sanpham($conn, $user_id, '');
+// $thongtin = mysqli_query($conn, "SELECT * FROM sanpham WHERE id='$id'");
+// $r_tt = mysqli_fetch_assoc($thongtin);
+// $r_tt['option_category'] = $class_index->list_div_category_sanpham($conn, $user_id, '');
 // huyphuc25/04/2025
 $tach_main_category = json_decode($class_index->list_div_main_category_sanpham($conn, $user_id, $r_tt['cat']), true);
 if ($tach_main_category['list_id']) {

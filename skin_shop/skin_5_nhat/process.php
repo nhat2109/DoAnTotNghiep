@@ -4,16 +4,16 @@ $class_index = $tlca_do->load_skin($s, 'class_shop');
 $check = $tlca_do->load('class_check');
 $class_supership = $tlca_do->load('class_supership');
 if ($action == 'check_exp') {
-	$thongtin_exp = mysqli_query($conn, "SELECT * FROM domain WHERE user_id='$shop'");
-	$r_exp = mysqli_fetch_assoc($thongtin_exp);
-	if ($r_exp['expired'] < time() and $r_exp['free'] == '0') {
-		$ok = 0;
-		$thongbao = 'Shop đã hết hạn lúc: ' . date('H:i:s d/m/Y', $r_exp['expired']);
-	} else {
-		$ok = 1;
-		$thongbao = 'Shop chưa hết hạn';
-	}
-	echo json_encode(array('ok' => $ok, 'thongbao' => $thongbao));
+	// $thongtin_exp = mysqli_query($conn, "SELECT * FROM domain WHERE user_id='$shop'");
+	// $r_exp = mysqli_fetch_assoc($thongtin_exp);
+	// if ($r_exp['expired'] < time() and $r_exp['free'] == '0') {
+	// 	$ok = 0;
+	// 	$thongbao = 'Shop đã hết hạn lúc: ' . date('H:i:s d/m/Y', $r_exp['expired']);
+	// } else {
+	// 	$ok = 1;
+	// 	$thongbao = 'Shop chưa hết hạn';
+	// }
+	// echo json_encode(array('ok' => $ok, 'thongbao' => $thongbao));
 } else if ($action == 'checkout_complete') {
 	$ho_ten = addslashes(strip_tags($_REQUEST['ho_ten'] ?? ''));
 	$email = addslashes(strip_tags($_REQUEST['email'] ?? ''));

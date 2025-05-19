@@ -12,13 +12,13 @@
 			}
 		</style>
 		<table class="list_baiviet">
-			<tr>
+			<thead>
 				<th style="text-align: center;width: 50px;" class="hide_mobile">ID</th>
 				<th style="text-align: left;">Tiêu đề</th>
 				<th style="text-align: left;">Danh mục mẹ</th>
 				<th style="text-align: center;" class="hide_mobile">Thứ tự</th>
 				<th style="text-align: center;width: 100px;">Hành động</th>
-			</tr>
+			</thead>
 			{list_theloai}
 		</table>
 		{phantrang}

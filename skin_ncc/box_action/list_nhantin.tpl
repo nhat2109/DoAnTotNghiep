@@ -12,11 +12,11 @@
 			}
 		</style>
 		<table class="list_baiviet">
-			<tr>
+			<thead>
 				<th style="text-align: center;width: 50px;" class="hide_mobile">STT</th>
 				<th style="text-align: left;">Email</th>
 				<th style="text-align: center;width: 100px;" class="hide_mobile">Thời gian</th>
-			</tr>
+			</thead>
 			{list_nhantin}
 		</table>
 		{phantrang}

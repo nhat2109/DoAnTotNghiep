@@ -8,7 +8,7 @@
             </div>
             <div class="form_group">
                 <div class="list_phanloai">
-                    <div class="th_phanloai">           
+                    <!-- <div class="th_phanloai">           
                         <div class="info_brand">Thương hiệu Sóc Đỏ</div>
                     </div>
                     <div class="li_phanloai">    
@@ -17,7 +17,7 @@
                             <input type="hidden" name="id_thuonghieu_socdo" value="0">
                             <div class="list_goiy scroll"></div>
                         </div>  
-                    </div> 
+                    </div>  -->
                 </div>
              
                 <div class="col_50">

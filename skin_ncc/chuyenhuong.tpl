@@ -16,7 +16,7 @@
 </head>
 <body>
 	<div class="main_thongbao">
-		<img src="/images/load.gif" alt="Loading" width="80">
+		<img src="/images/loaưd.gif" alt="Loading" width="80">
 		<div class="main_thongbao_content">{thongbao}</div>
 	</div>
 </body>

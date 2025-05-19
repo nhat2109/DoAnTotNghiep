@@ -12,7 +12,7 @@
 			}
 		</style>
 		<table class="list_baiviet">
-			<tr>
+			<thead>
 				<th style="text-align: center;width: 50px;" class="hide_mobile">STT</th>
 				<th style="text-align: left;">Họ và tên</th>
 				<th style="text-align: left;" class="hide_mobile">Email</th>
@@ -20,7 +20,7 @@
 				<th style="text-align: center;" class="hide_mobile">Trạng thái</th>
 				<th style="text-align: center;" class="hide_mobile">Thời gian</th>
 				<th style="text-align: center;width: 100px;">Hành động</th>
-			</tr>
+			</thead>
 			{list_lienhe}
 		</table>
 		{phantrang}

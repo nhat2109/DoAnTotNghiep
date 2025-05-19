@@ -9,9 +9,9 @@
 	$begin_time = $end_time - 31 * 24 * 3600;
 	$begin = date('d/m/Y', $begin_time);
 	$thongke = json_decode($class_index->thongke_doanhthu($conn,$user_id, $begin_time, $end_time), true);
-	$thongke_socdo = json_decode($class_index->thongke_doanhthu_socdo($conn,$user_id, $begin_time, $end_time), true);
-	$thongke_aff = json_decode($class_index->thongke_doanhthu_aff($conn,$user_id, $begin_time, $end_time), true);
-	$list_donhang=json_decode($class_index->list_donhang_moi_socdo($conn,$user_id, 1, 10),true);
+	// $thongke_socdo = json_decode($class_index->thongke_doanhthu_socdo($conn,$user_id, $begin_time, $end_time), true);
+	// $thongke_aff = json_decode($class_index->thongke_doanhthu_aff($conn,$user_id, $begin_time, $end_time), true);
+	// $list_donhang=json_decode($class_index->list_donhang_moi_socdo($conn,$user_id, 1, 10),true);
 	$list_donhang_cuaban=json_decode($class_index->list_donhang_moi($conn, $user_id, 1, 10),true);
 	$bien = array(
 		'footer' => $skin->skin_normal('skin_admin/footer'),

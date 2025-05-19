@@ -7,13 +7,13 @@
 		    <hr>
 		</div>
 		<table class="list_baiviet">
-			<tr>
+			<thead>
 				<th style="text-align: center;width: 50px;" class="hide_mobile">STT</th>
 				<th style="text-align: left;width: 180px;">Mục</th>
 				<th style="text-align: left;width: 400px;">Giá trị</th>
 				<th style="text-align: center;">Mô tả</th>
 				<th style="text-align: center;width: 80px;" class="mobile_action">Hành động</th>
-			</tr>
+			</thead>
 			{list_setting}
 		</table>
 		{phantrang}

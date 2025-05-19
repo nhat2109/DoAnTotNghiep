@@ -309,13 +309,7 @@
 					vertical-align: middle;
 				}
 
-				.list_baiviet tr:nth-child(even) {
-					background-color: #f8f9fa;
-				}
-
-				.list_baiviet tr:hover {
-					background-color: #f2f2f2;
-				}
+				
 
 				/* Status badges */
 				.status-pending,

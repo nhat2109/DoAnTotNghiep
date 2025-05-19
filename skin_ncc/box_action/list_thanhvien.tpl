@@ -17,7 +17,7 @@
 			}
 		</style>
 		<table class="list_baiviet">
-			<tr>
+			<thead>
 				<th style="text-align: center;width: 50px;" class="hide_mobile">STT</th>
 				<th style="text-align: left;">ID</th>
 				<th style="text-align: left;">Họ tên</th>
@@ -25,7 +25,7 @@
 				<th style="text-align: center;" class="hide_mobile">Tình trạng</th>
 				<th style="text-align: center;" class="hide_mobile">Đăng ký</th>
 				<th style="text-align: center;width: 140px;">Hành động</th>
-			</tr>
+			</thead>
 			{list_thanhvien}
 		</table>
 		{phantrang}

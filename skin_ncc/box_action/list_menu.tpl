@@ -12,14 +12,14 @@
 			}
 		</style>
 		<table class="list_baiviet">
-			<tr>
+			<thead>
 				<th style="text-align: center;width: 50px;" class="hide_mobile">STT</th>
 				<th style="text-align: left;">Tiêu đề</th>
 				<th style="text-align: left;" class="hide_mobile">Link</th>
 				<th style="text-align: center;" class="hide_mobile">Vị trí</th>
 				<th style="text-align: center;" class="hide_mobile">Thứ tự</th>
 				<th style="text-align: center;width: 100px;">Hành động</th>
-			</tr>
+			</thead>
 			{list_menu}
 		</table>
 		{phantrang}

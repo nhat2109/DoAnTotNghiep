@@ -6,7 +6,7 @@
     {title}
   </title>
   <meta charset='utf-8' />
-  <link rel="shortcut icon" href="/images/favicon.png" type="image/x-icon" />
+  <!-- <link rel="shortcut icon" href="/images/favicon.png" type="image/x-icon" /> -->
   <meta http-equiv='X-UA-Compatible' content='IE=edge' />
   <meta name='viewport' content='width=device-width, initial-scale=1' />
   <meta name='description' content='{description}'>

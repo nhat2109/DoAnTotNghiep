@@ -12,12 +12,12 @@
 			}
 		</style>
 		<table class="list_baiviet">
-			<tr>
+			<thead>
 				<th style="text-align: center;width: 50px;" class="hide_mobile">STT</th>
 				<th style="text-align: left;">Tên thương hiệu</th>
 				<th style="text-align: center;" class="hide_mobile">Thứ tự</th>
 				<th style="text-align: center;width: 100px;">Hành động</th>
-			</tr>
+			</thead>
 			{list_brand}
 		</table>
 		{phantrang}

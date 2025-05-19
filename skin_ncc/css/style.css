@@ -4775,7 +4775,7 @@ button.reg_leader i {
     text-align: center;
     padding-top: 5px !important;
 }
-
+/* 
 .list_baiviet {
     width: 100%;
     border-collapse: collapse;
@@ -4954,6 +4954,165 @@ button.reg_leader i {
     padding-left: 5px;
     padding-right: 5px;
     font-size: 12px;
+} */
+ 
+ .list_baiviet {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Font hiện đại */
+    background: #fff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Bóng đổ nhẹ */
+    border-radius: 10px; /* Bo góc bảng */
+    overflow: hidden; /* Ẩn tràn để bo góc hiệu quả */
+}
+
+.list_baiviet tr:nth-child(even) { /* Sửa để xen kẽ đúng từ hàng đầu tiên */
+    background: #edf2f7;
+}
+.list_baiviet thead {
+    position: sticky;
+    top: 10px;
+    z-index: 10;
+    background: linear-gradient(90deg, #4a90e2, #63b3ed); /* Gradient từ xanh dương nhạt sang đậm */
+}
+
+.list_baiviet tr {
+    height: 60px; /* Tăng chiều cao hàng */
+    transition: background 0.3s ease; /* Hiệu ứng hover mượt mà */
+}
+
+
+
+
+.list_baiviet th,
+.list_baiviet td {
+    padding: 12px 15px; /* Tăng padding cho không gian thoáng hơn */
+    text-align: left;
+    vertical-align: middle; /* Căn giữa theo chiều dọc */
+    border-bottom: 1px solid #e3e4e4; /* Đường viền dưới nhạt */
+}
+
+.list_baiviet th {
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase; /* Chữ in hoa cho tiêu đề */
+    letter-spacing: 0.5px; /* Khoảng cách chữ */
+}
+
+.list_baiviet td {
+    color: #495057;
+    font-size: 14px;
+}
+
+.list_baiviet td[style*="text-align: center"] {
+    text-align: center;
+}
+
+.list_baiviet td[style*="color: red"] {
+    color: #dc3545; /* Màu đỏ hiện đại cho mã đơn */
+    font-weight: 700;
+}
+
+.list_baiviet td strong {
+    color: #333; /* Màu đậm cho tên sản phẩm */
+    font-weight: 600;
+}
+
+.list_baiviet td span {
+    color: #666;
+    font-size: 12px;
+}
+
+.list_baiviet td a.edit {
+    color: #fff;
+    font-size: 12px;
+    background: linear-gradient(90deg, #28a745, #34c759); /* Gradient xanh lá */
+    padding: 6px 20px;
+    border-radius: 20px; /* Bo góc nút */
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: background 0.3s ease;
+}
+
+.list_baiviet td a.edit:hover {
+    background: linear-gradient(90deg, #218838, #28a745); /* Gradient đậm hơn khi hover */
+}
+
+.list_baiviet td a.del,
+.list_baiviet td a.tuchoi {
+    display: none; /* Ẩn các nút cũ nếu không sử dụng */
+}
+
+.list_baiviet td .loi_nhuan {
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #dc3545;
+    text-align: center;
+    color: #495057;
+    font-weight: normal;
+    margin-top: 10px;
+    border-radius: 5px;
+    background: #fff3f3; /* Nền nhạt cho vùng lợi nhuận */
+}
+
+.list_baiviet td .loi_nhuan span {
+    font-weight: 700;
+    color: #dc3545;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .list_baiviet .hide_mobile {
+        display: none; /* Ẩn cột trên mobile */
+    }
+
+    .list_baiviet th,
+    .list_baiviet td {
+        padding: 10px;
+    }
+
+    .list_baiviet tr {
+        height: 50px;
+    }
+
+    .list_baiviet td:nth-child(2),
+    .list_baiviet th:nth-child(2) {
+        width: 100px; /* Giữ cột mã đơn hiển thị */
+    }
+
+    .list_baiviet td:nth-child(4),
+    .list_baiviet th:nth-child(4) {
+        width: 150px; /* Tăng không gian cho cột sản phẩm */
+    }
+
+    .list_baiviet td:nth-child(7),
+    .list_baiviet th:nth-child(7) {
+        width: 100px; /* Giảm không gian cho cột hành động */
+    }
+}
+
+/* Thanh cuộn tùy chỉnh */
+
+
+.list_baiviet tbody::-webkit-scrollbar {
+    width: 8px;
+}
+
+.list_baiviet tbody::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.list_baiviet tbody::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.list_baiviet tbody::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }
 
 .list_nguoinhan {
@@ -9625,8 +9784,151 @@ input:checked+.slider:before {
     border-radius: 5px;
     cursor: pointer;
 }
-
 .page_body .box_right .box_right_content .box_profile .box_list_donhang {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.page_body .box_right .box_right_content .box_profile .box_list_donhang .box_list_right {
+    width: 100%; /* Chỉ có box_list_right, không cần chia 50% như box_list_left */
+    border: 1px solid #e5e5e5; /* Viền nhạt hơn */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* Bóng đổ nhẹ hơn */
+    border-radius: 8px; /* Bo góc nhẹ hơn */
+    padding: 15px; /* Giảm padding để giao diện gọn hơn */
+    background: #fff; /* Đảm bảo nền trắng */
+}
+
+.page_body .box_right .box_right_content .box_profile .box_list_donhang .box_list_right .title {
+    width: 100%;
+    font-weight: 700;
+    font-size: 16px; /* Kích thước chữ tiêu đề */
+    text-transform: uppercase;
+    color: #333; /* Màu chữ đậm hơn */
+    border-bottom: 1px solid #e0e0e0; /* Đường viền dưới nhạt hơn */
+    padding-bottom: 10px; /* Khoảng cách dưới tiêu đề */
+    margin-bottom: 15px; /* Khoảng cách giữa tiêu đề và danh sách */
+}
+
+.page_body .box_right .box_right_content .box_profile .box_list_donhang .box_list_right .list_donhang {
+    width: 100%;
+    height: 350px;
+    overflow-y: auto; /* Thanh cuộn dọc */
+    padding-right: 5px; /* Đảm bảo thanh cuộn không đè nội dung */
+}
+
+.page_body .box_right .box_right_content .box_profile .box_list_donhang .box_list_right .list_donhang .li_donhang {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 10px 0; /* Khoảng cách trên dưới mỗi mục */
+    border-bottom: 1px dashed #e0e0e0; /* Đường nét đứt nhạt hơn */
+    gap: 15px; /* Khoảng cách giữa avatar và thông tin */
+    align-items: center; /* Căn giữa theo chiều dọc */
+}
+
+.page_body .box_right .box_right_content .box_profile .box_list_donhang .box_list_right .list_donhang .li_donhang:last-of-type {
+    border-bottom: none; /* Không có đường viền cho mục cuối */
+}
+
+.page_body .box_right .box_right_content .box_profile .box_list_donhang .box_list_right .list_donhang .li_donhang .avatar_donhang {
+    width: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.page_body .box_right .box_right_content .box_profile .box_list_donhang .box_list_right .list_donhang .li_donhang .avatar_donhang img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #e5e5e5; /* Viền nhẹ cho avatar */
+}
+
+.page_body .box_right .box_right_content .box_profile .box_list_donhang .box_list_right .list_donhang .li_donhang .info_donhang {
+    width: calc(100% - 65px); /* Đảm bảo khoảng cách hợp lý với avatar */
+    display: flex;
+    flex-direction: column;
+    gap: 2px; /* Khoảng cách giữa các dòng thông tin */
+}
+
+.page_body .box_right .box_right_content .box_profile .box_list_donhang .box_list_right .list_donhang .li_donhang .info_donhang .ho_ten {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 5px; /* Khoảng cách giữa tên và thời gian */
+}
+
+.page_body .box_right .box_right_content .box_profile .box_list_donhang .box_list_right .list_donhang .li_donhang .info_donhang .ho_ten .left {
+    font-weight: 700;
+    font-size: 14px;
+    color: #333; /* Màu chữ đậm hơn */
+}
+
+.page_body .box_right .box_right_content .box_profile .box_list_donhang .box_list_right .list_donhang .li_donhang .info_donhang .ho_ten .time {
+    font-size: 12px;
+    color: #888; /* Màu xám nhạt cho thời gian */
+}
+
+.page_body .box_right .box_right_content .box_profile .box_list_donhang .box_list_right .list_donhang .li_donhang .info_donhang .dien_thoai {
+    width: 100%;
+    font-size: 13px;
+    font-style: italic;
+    font-weight: 600;
+    color: #333; /* Màu chữ đậm hơn */
+}
+
+.page_body .box_right .box_right_content .box_profile .box_list_donhang .box_list_right .list_donhang .li_donhang .info_donhang .noi_dung {
+    width: 100%;
+    font-size: 14px;
+    color: #555; /* Màu chữ nhạt hơn cho nội dung */
+}
+
+.page_body .box_right .box_right_content .box_profile .box_list_donhang .box_list_right .list_donhang .li_donhang .info_donhang .noi_dung span {
+    font-weight: 700;
+    color: #ff6200; /* Màu cam đậm cho giá trị */
+}
+
+/* Thanh cuộn tùy chỉnh */
+.page_body .box_right .box_right_content .box_profile .box_list_donhang .box_list_right .list_donhang::-webkit-scrollbar {
+    width: 6px;
+}
+
+.page_body .box_right .box_right_content .box_profile .box_list_donhang .box_list_right .list_donhang::-webkit-scrollbar-track {
+    background: #f5f5f5;
+    border-radius: 3px;
+}
+
+.page_body .box_right .box_right_content .box_profile .box_list_donhang .box_list_right .list_donhang::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 3px;
+}
+
+.page_body .box_right .box_right_content .box_profile .box_list_donhang .box_list_right .list_donhang::-webkit-scrollbar-thumb:hover {
+    background: #aaa;
+}
+
+/* Responsive */
+@media all and (max-width: 480px) {
+    .page_body .box_right .box_right_content .box_profile .box_list_donhang .box_list_right {
+        width: 100%;
+    }
+
+    .page_body .box_right .box_right_content .box_profile .box_list_donhang .box_list_right .list_donhang .li_donhang {
+        gap: 10px; /* Giảm khoảng cách trên mobile */
+    }
+
+    .page_body .box_right .box_right_content .box_profile .box_list_donhang .box_list_right .list_donhang .li_donhang .info_donhang {
+        width: calc(100% - 60px); /* Điều chỉnh cho mobile */
+    }
+}
+/* .page_body .box_right .box_right_content .box_profile .box_list_donhang {
     width: 100%;
     display: flex;
     justify-content: flex-start;
@@ -9857,7 +10159,7 @@ input:checked+.slider:before {
     .page_body .box_right .box_right_content .box_profile .box_time .list_time .li_time:nth-child(3) {
         width: 100%;
     }
-}
+} */
 
 .page_body .box_right .box_right_content .box_profile .box_yeucau_hotro {
     width: 100%;
