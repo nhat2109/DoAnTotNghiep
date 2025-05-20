@@ -8103,21 +8103,23 @@ $(document).ready(function () {
                 $(".load_overlay").hide();
             }, 2000);
             $("input[name=cat_thutu]").focus();
-        } else if (cat_id_socdo.length === 0) {
-            $(".load_overlay").show();
-            $(".load_process").fadeIn();
+        } 
+        // else if (cat_id_socdo.length === 0) {
+        //     $(".load_overlay").show();
+        //     $(".load_process").fadeIn();
 
-            setTimeout(function () {
-                $(".load_note").html("Vui lòng chọn danh mục sóc đỏ");
-            }, 500);
+        //     setTimeout(function () {
+        //         $(".load_note").html("Vui lòng chọn danh mục sóc đỏ");
+        //     }, 500);
 
-            setTimeout(function () {
-                $(".load_process").hide();
-                $(".load_note").html("Hệ thống đang xử lý");
-                $(".load_overlay").hide();
-            }, 2000);
-            $('input[name="category_ncc[]"]').first().focus();
-        } else {
+        //     setTimeout(function () {
+        //         $(".load_process").hide();
+        //         $(".load_note").html("Hệ thống đang xử lý");
+        //         $(".load_overlay").hide();
+        //     }, 2000);
+        //     $('input[name="category_ncc[]"]').first().focus();
+        // } 
+        else {
             $(".load_overlay").show();
             $(".load_process").fadeIn();
             var file_data = $("#minh_hoa").prop("files")[0];
@@ -8203,21 +8205,23 @@ $(document).ready(function () {
                 $(".load_overlay").hide();
             }, 2000);
             $("input[name=cat_thutu]").focus();
-        } else if (cat_id_socdo.length === 0) {
-            $(".load_overlay").show();
-            $(".load_process").fadeIn();
+        } 
+        // else if (cat_id_socdo.length === 0) {
+        //     $(".load_overlay").show();
+        //     $(".load_process").fadeIn();
 
-            setTimeout(function () {
-                $(".load_note").html("Vui lòng chọn danh mục sóc đỏ");
-            }, 500);
+        //     setTimeout(function () {
+        //         $(".load_note").html("Vui lòng chọn danh mục sóc đỏ");
+        //     }, 500);
 
-            setTimeout(function () {
-                $(".load_process").hide();
-                $(".load_note").html("Hệ thống đang xử lý");
-                $(".load_overlay").hide();
-            }, 2000);
-            $('input[name="category_ncc[]"]').first().focus();
-        } else {
+        //     setTimeout(function () {
+        //         $(".load_process").hide();
+        //         $(".load_note").html("Hệ thống đang xử lý");
+        //         $(".load_overlay").hide();
+        //     }, 2000);
+        //     $('input[name="category_ncc[]"]').first().focus();
+        // } 
+        else {
             var file_data = $("#minh_hoa").prop("files")[0];
             var form_data = new FormData();
             form_data.append("action", "add_category");

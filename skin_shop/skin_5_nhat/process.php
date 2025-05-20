@@ -220,8 +220,8 @@ if ($action == 'check_exp') {
 
 				file_put_contents('debug.log', "Sanpham: $sanpham\nTamtinh: $tamtinh\nGiam: $giam\nPhi_ship: $phi_ship\nTongtien: $tongtien\n", FILE_APPEND);
 
-
-				$ma_don = intval($shop . $check->random_number(3));
+				$dayMonth = (int)date("m", $time);
+				$ma_don = intval($shop . $check->random_number(4).$dayMonth);
 				$thongtin_tichdiem = mysqli_query($conn, "SELECT *,count(*) AS total FROM caidat_tichdiem WHERE shop='$shop'");
 				$r_td = mysqli_fetch_assoc($thongtin_tichdiem);
 				$diem = ceil(($tongtien / 100000) * $r_td['diem']);

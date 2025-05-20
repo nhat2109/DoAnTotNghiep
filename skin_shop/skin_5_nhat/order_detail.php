@@ -166,9 +166,12 @@
 	} elseif ($r_payments['payment_status'] == 'failed') {
 		$tinhtrang = 'Thanh toán thất bại';
 		$tinhtrang_class = 'status-failed';
-	} else {
+	}elseif( $r_payments['payment_status'] == '0') {
 		$tinhtrang = 'Chưa thanh toán';
 		$tinhtrang_class = 'status-pending';
+	}else {
+		$tinhtrang = 'Đang xử lý';
+		$tinhtrang_class = 'status-processing';
 	}
 	$transaction_id = $r_payments['transaction_id'];
 	$ngaythanhtoan=$r_payments['created_at'];

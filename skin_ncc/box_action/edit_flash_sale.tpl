@@ -324,7 +324,7 @@
     }
 
     .selected-product .variant-list {
-        width: 100%;
+        width: 110%;
         margin-top: 10px;
         padding-top: 10px;
         border-top: 1px solid #eee;

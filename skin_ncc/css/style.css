@@ -5043,7 +5043,17 @@ button.reg_leader i {
 
 .list_baiviet td a.del,
 .list_baiviet td a.tuchoi {
-    display: none; /* Ẩn các nút cũ nếu không sử dụng */
+        color: #fff;
+    font-size: 12px;
+    background: linear-gradient(90deg, #e93b61, #f08a8a);
+    padding: 6px 20px;
+    border-radius: 20px;
+    text-decoration: none;
+    display: inline-flex
+;
+    align-items: center;
+    gap: 5px;
+    transition: background 0.3s ease;
 }
 
 .list_baiviet td .loi_nhuan {

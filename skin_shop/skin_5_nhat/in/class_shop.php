@@ -17,7 +17,7 @@ class class_shop extends class_manage{
     function list_category($conn,$shop){
         $skin=$this->load('class_skin');
         $check=$this->load('class_check');
-        $thongtin=mysqli_query($conn,"SELECT * FROM category_sanpham_shop WHERE shop='$shop' AND cat_main='0' ORDER BY cat_thutu ASC");
+        $thongtin=mysqli_query($conn,"SELECT * FROM category_sanpham_shop WHERE shop='$shop' AND cat_index='1' AND cat_main='0' ORDER BY cat_thutu ASC");
         while($r_tt=mysqli_fetch_assoc($thongtin)){
             $thongtin_sub=mysqli_query($conn,"SELECT * FROM category_sanpham_shop WHERE cat_main='{$r_tt['cat_id']}' AND shop='$shop' ORDER BY cat_thutu ASC");
             while($r_s=mysqli_fetch_assoc($thongtin_sub)){
@@ -87,7 +87,7 @@ class class_shop extends class_manage{
         $tach_list_muakem_id = explode(',', $list_muakem_id);
         $tach_list_tang_id = explode(',', $list_tang_id);
         $tach_list_flashsale_id = explode(',', $list_flashsale_id);
-        $thongtin = mysqli_query($conn, "SELECT * FROM category_sanpham_shop WHERE shop='$shop' AND cat_index='1' ORDER BY cat_thutu ASC");
+        $thongtin = mysqli_query($conn, "SELECT * FROM category_sanpham_shop WHERE shop='$shop' AND cat_index='1' ORDER BY cat_thutu ASC LIMIT 3");
        
         $list = '';
         while ($r_tt = mysqli_fetch_assoc($thongtin)) {

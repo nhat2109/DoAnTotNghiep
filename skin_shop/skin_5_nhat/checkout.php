@@ -516,6 +516,8 @@ $replace = [
 
 if ($step == 3) {
     // Giữ nguyên logic step 3
+    // var_dump($_GET);
+    // die;
    if (isset($_GET['vnp_TxnRef']) && isset($_GET['vnp_ResponseCode'])) {
         $order_id = intval($_GET['vnp_TxnRef']);
         $payment_status = ($_GET['vnp_ResponseCode'] == '00') ? 'completed' : 'failed';
@@ -545,7 +547,13 @@ if ($step == 3) {
             // echo "Đã có bản ghi thanh toán cho đơn hàng này bằng vnpay.";
         }
     } else {
-        // echo "Thiếu tham số.";
+        // $thongtin_order = mysqli_query($conn, "SELECT * FROM donhang_shop WHERE ma_don='{$_SESSION['ma_don']}'");
+        // $r_order = mysqli_fetch_assoc($thongtin_order);
+        // $ma_don = $_SESSION['ma_don'];
+        // $thanhtoan = $r_order['thanhtoan'];
+        // $tongtien = floatval($r_order['tongtien']);
+        // mysqli_query($conn, "INSERT INTO order_payments(order_id, payment_method, amount, transaction_id, payment_status, created_at, updated_at)
+        //  VALUES ('$ma_don','$thanhtoan','$tongtien','0','0',NOW(), NOW())");
     }
     // var_dump(($_GET));
     // die;

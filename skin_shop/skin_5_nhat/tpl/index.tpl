@@ -2,6 +2,13 @@
 {header}
 <body>
 <style>
+    .category-nav h3 a {
+  display: inline-block;
+  max-width: 200px;  /* hoặc bất kỳ kích thước phù hợp nào */
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
     /* General styles for the container bannerfirst nhatthem214 */
         /* Container để giữ hiệu ứng */
         .banner-item {
@@ -159,7 +166,7 @@
     font-size: 16px;
     font-weight: normal;
 }
-
+/*/
 .container-sub #menu2017 li h3 a {
     color: #333;
     text-decoration: none;
@@ -167,6 +174,7 @@
     align-items: center;
     gap: 10px;
 }
+    */
 
 .container-sub #menu2017 li h3 a:hover {
     color: #007bff;

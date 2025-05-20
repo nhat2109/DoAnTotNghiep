@@ -39,6 +39,31 @@
                     </div>
                     <input type="file" name="minh_hoa" id="minh_hoa" style="display: none;">
                 </div>
+                
+            </div>
+            <div class="col_50">
+                <!-- <div class="form_group">
+                    <label for="">Danh mục của Sóc Đỏ <span class="color_red">*</span></label>
+                    <div style="clear: both;"></div>
+                    <div class="list_main_category">
+                        <div class="box_category scroll" id="main_category_ncc">{option_main_category_ncc}</div>
+                        <div class="box_category scroll" id="sub_category_ncc">{option_sub_category_ncc}</div>
+                        <div class="box_category scroll" id="sub_sub_category_ncc">{option_sub_sub_category_ncc}</div>
+                    </div>
+                </div> -->
+                <div class="form_group">
+                    <label for="">Title</label>
+                    <input type="text" class="form_control" name="cat_title" value="" placeholder="Nhập title...">
+                </div>
+                <div class="form_group">
+                    <label for="">Description</label>
+                    <textarea name="cat_description" class="form_control" placeholder="Nhập mô tả danh mục" style="width: 100%;height: 95px;"></textarea>
+                </div>
+                <div class="form_group">
+                    <label for="">Hiện index</label>
+                    <div style="clear: both;"></div>
+                    <input type="radio" name="cat_index" value="1"> Có <input type="radio" name="cat_index" value="0" checked=""> không
+                </div> 
                 <div class="form_group">
                     <label for="">Liên kết banner</label>
                     <input type="text" class="form_control" name="cat_link" value="" placeholder="Nhập liên kết với banner...">
@@ -55,30 +80,6 @@
                     <label for="">Icon</label>
                     <input type="text" class="form_control" name="cat_icon" value="" placeholder="Nhập biểu tưởng...">
                 </div>
-            </div>
-            <div class="col_50">
-                <div class="form_group">
-                    <label for="">Danh mục của Sóc Đỏ <span class="color_red">*</span></label>
-                    <div style="clear: both;"></div>
-                    <div class="list_main_category">
-                        <div class="box_category scroll" id="main_category_ncc">{option_main_category_ncc}</div>
-                        <div class="box_category scroll" id="sub_category_ncc">{option_sub_category_ncc}</div>
-                        <div class="box_category scroll" id="sub_sub_category_ncc">{option_sub_sub_category_ncc}</div>
-                    </div>
-                </div>
-                <div class="form_group">
-                    <label for="">Title</label>
-                    <input type="text" class="form_control" name="cat_title" value="" placeholder="Nhập title...">
-                </div>
-                <div class="form_group">
-                    <label for="">Description</label>
-                    <textarea name="cat_description" class="form_control" placeholder="Nhập mô tả danh mục" style="width: 100%;height: 95px;"></textarea>
-                </div>
-                <div class="form_group">
-                    <label for="">Hiện index</label>
-                    <div style="clear: both;"></div>
-                    <input type="radio" name="cat_index" value="1"> Có <input type="radio" name="cat_index" value="0" checked=""> không
-                </div> 
             </div>
             <div style="clear: both;"></div>
             <div class="form_group">

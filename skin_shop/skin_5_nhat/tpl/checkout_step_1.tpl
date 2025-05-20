@@ -2665,9 +2665,9 @@
     <script>
         const sender_province = '{sender_province}';
         const sender_district = '{sender_district}';
-        const weight = { weight };
-        const amount = { amount };
-        const giam = { giam };
+        const weight = {weight};
+        const amount = {amount};
+        const giam = {giam};
         $(document).ready(function () {
             var $provinceSelect = $('#customer_shipping_province[name="tinh"]');
             var $districtSelect = $('#customer_shipping_district[name="huyen"]');
@@ -2737,12 +2737,12 @@
         document.addEventListener("DOMContentLoaded", function () {
             const couponElements = document.querySelectorAll(".box_ma_giam .li_ma_giam");
 
-            if (couponElements.length === 0) return; 
+            if (couponElements.length === 0) return;
 
             let maxValue = 0;
             const valueMap = [];
 
-            
+
             couponElements.forEach(el => {
                 const valueEl = el.querySelector(".coupon_value");
                 if (valueEl) {
@@ -2755,9 +2755,9 @@
                 }
             });
 
-            
+
             valueMap.forEach(({ el, number }) => {
-                el.style.display = "flex"; 
+                el.style.display = "flex";
                 el.style.opacity = number === maxValue ? "1" : "0.5";
             });
         });
