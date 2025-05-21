@@ -206,7 +206,7 @@
 	$cancel_button_html = '';
 	if ($show_cancel_button) {
 		$cancel_button_html = '
-			<form method="POST" style="margin-top: 20px; text-align: center;">
+			<form method="POST" name="cancel_form" style="margin-top: 20px; text-align: center;">
 				<input type="hidden" name="request_cancel" value="1">
 				<button type="submit" class="btn-cancel">
 					<i class="fa fa-times-circle"></i> Yêu cầu hủy đơn hàng
@@ -217,15 +217,14 @@
 	$refund_button_html = '';
 	if ($show_refund_button) {
 		$refund_button_html = '
-			<form method="POST" style="margin-top: 20px; text-align: center;">
+			<form method="POST" name="refund_form" style="margin-top: 20px; text-align: center;">
 				<input type="hidden" name="request_refund" value="1">
-				<button type="submit" class="btn-cancel">
+				<button type="submit" class="btn-refund">
 					<i class="fa fa-undo"></i> Yêu cầu hoàn đơn hàng
 				</button>
 			</form>
 		';
 	}
-
 
 	$tach_menu=json_decode($class_index->list_menu($conn,$s,$r_shop['user_id']),true);
 	$tach_category=json_decode($class_index->list_category($conn,$r_shop['user_id']),true);

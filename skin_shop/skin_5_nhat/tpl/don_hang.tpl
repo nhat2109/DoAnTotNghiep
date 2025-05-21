@@ -101,12 +101,12 @@
                                 <h2>Đổi mật khẩu</h2>
                             </a>
                         </div>
-                        <div class="action">
+                        <!-- <div class="action">
                             <a href="/tich-diem.html">
                                 <img src="/skin/css/images/icon/tich_diem.png" alt="Tích điểm">
                                 <h2>Tích điểm</h2>
                             </a>
-                        </div>
+                        </div> -->
                         <div class="action">
                             <a href="/lien-he.html">
                                 <img src="/skin/css/images/hotro.png" alt="Liên hệ">

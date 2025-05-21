@@ -1,6 +1,6 @@
 <div class="item-popup">
     <div style="width: 55%;" class="text-left">
-        <div class="item-image"><a class="product-image" href="/product/{link}.html" title="{tieu_de}"><img alt="{tieu_de}" src="/thumbnail.php?w=320&img={minh_hoa}" width="80"></a></div>
+        <div class="item-image"><a class="product-image" href="/product/{link}.html" title="{tieu_de}"><img alt="{tieu_de}" src="{minh_hoa}" width="80"></a></div>
         <div class="item-info">
             <p class="item-name"><a href="/product/{link}.html" title="{tieu_de}">{tieu_de}</a></p>
             <p class="item-remove"><a href="javascript:;" class="remove-item-cart" title="Xóa" data-id="{id}"><i class="fa fa-close"></i> Bỏ sản phẩm</a></p>

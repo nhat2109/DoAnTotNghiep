@@ -237,7 +237,7 @@ else if ($loai == 'transport') {
         $ok = 1;
         $thongbao = 'Xóa sản phẩm thành công';
         mysqli_query($conn, "DELETE FROM sanpham_shop WHERE id='$id' AND shop='$user_id'");
-        mysqli_query($conn, "DELETE FROM sanpham WHERE id='{$r_tt['sp_id']}'");
+        // mysqli_query($conn, "DELETE FROM sanpham WHERE id='{$r_tt['sp_id']}'");
         mysqli_query($conn, "DELETE FROM phanloai_sanpham WHERE sp_id='{$r_tt['sp_id']}' AND user_id='$user_id'");
         mysqli_query($conn, "DELETE FROM phanloai_sanpham_shop WHERE sp_id='$id' AND user_id='$user_id'");
         mysqli_query($conn, "DELETE FROM seo_shop WHERE link='{$r_tt['link']}' AND loai='sanpham' AND shop='$user_id'");

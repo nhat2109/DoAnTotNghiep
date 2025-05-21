@@ -84,7 +84,7 @@ elseif ($action == 'filter_search') { // chức năng tìm kiếm nâng cao
 									<img loading="lazy" 
 										class="product-thumbnail__img product-thumbnail__img--secondary" 
 										width="480" height="480" style="--image-scale: 1; width: 100%; height: auto;" 
-										src="/thumbnail.php?w=320&img=' . htmlspecialchars($value['minh_hoa']) . '" 
+										src="' . htmlspecialchars($value['minh_hoa']) . '" 
 										alt="' . htmlspecialchars($value["title"]) . '" />
 								</a>
 							</div>

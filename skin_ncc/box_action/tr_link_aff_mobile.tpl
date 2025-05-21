@@ -1,5 +1,5 @@
 <div class="li_link_affiliate">
-	<div class="minh_hoa"><a href="/product/{link}.html" target="_blank"><img src="/thumbnail.php?w=320&img={minh_hoa}" width="200"></a></div>
+	<div class="minh_hoa"><a href="/product/{link}.html" target="_blank"><img src="{minh_hoa}" width="200"></a></div>
 	<div class="info">
 		<div class="tieu_de">
 			<a href="/product/{link}.html" target="_blank">{tieu_de}</a>

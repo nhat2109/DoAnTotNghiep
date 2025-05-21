@@ -644,7 +644,8 @@ button {
 </html>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const cancelForm = document.querySelector('form[method="POST"]');
+    // Form hủy đơn hàng
+        const cancelForm = document.querySelector('form[name="cancel_form"]');
         if (cancelForm) {
             cancelForm.addEventListener('submit', function (e) {
                 e.preventDefault();
@@ -655,30 +656,30 @@ button {
                         lydoInput.name = 'lydo';
                         lydoInput.value = lydo;
                         cancelForm.appendChild(lydoInput);
-                        cancelForm.submit(); // Submit the form normally
+                        cancelForm.submit();
                     }
                 });
             });
         }
-    });
-    document.addEventListener('DOMContentLoaded', function () {
-        const cancelForm = document.querySelector('form[method="POST"]');
-        if (cancelForm) {
-            cancelForm.addEventListener('submit', function (e) {
-                e.preventDefault();
-                showRefundOrderConfirm(function(confirmed, lydo) {
-                    if (confirmed) {
-                        const lydoInput = document.createElement('input');
-                        lydoInput.type = 'hidden';
-                        lydoInput.name = 'lydo';
-                        lydoInput.value = lydo;
-                        cancelForm.appendChild(lydoInput);
-                        cancelForm.submit(); // Submit the form normally
-                    }
+
+        // Form hoàn đơn hàng
+        const refundForm = document.querySelector('form[name="refund_form"]');
+            if (refundForm) {
+                refundForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    showRefundOrderConfirm(function(confirmed, lydo) {
+                        if (confirmed) {
+                            const lydoInput = document.createElement('input');
+                            lydoInput.type = 'hidden';
+                            lydoInput.name = 'lydo';
+                            lydoInput.value = lydo;
+                            refundForm.appendChild(lydoInput);
+                            refundForm.submit();
+                        }
+                    });
                 });
-            });
-        }
-    });
+            }
+        });
 
     function showCancelOrderConfirm(callback) {
         $("#title_confirm").html("Xác nhận hủy đơn hàng");
@@ -691,7 +692,7 @@ button {
             if (!lydo) {
                 $("#cancel_reason").focus();
                 $("#cancel_reason").css("border", "1.5px solid #dc3545");
-                return;
+                return; 
             }
             $("#cancel_reason").css("border", "1px solid #ccc");
             $("#box_pop_content").fadeOut();

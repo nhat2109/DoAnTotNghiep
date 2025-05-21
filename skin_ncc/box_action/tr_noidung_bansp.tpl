@@ -1,6 +1,6 @@
 <tr id="tr_{id}">
 	<td style="text-align: center;" class="hide_mobile">{i}</td>
-	<td style="text-align: center;" class="hide_mobile"><img src="/thumbnail.php?w=320&img={minh_hoa}" width="150" height="150"></td>
+	<td style="text-align: center;" class="hide_mobile"><img src="{minh_hoa}" width="150" height="150"></td>
 	<td style="text-align: left;">
 		<div class="noidung_ban"
 			style="max-height: 40px; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">

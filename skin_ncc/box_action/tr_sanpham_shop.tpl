@@ -5,7 +5,7 @@
     <td style="text-align: center;" class="hide_mobile">{list_ma}</td>
     <td style="text-align: center;" class="hide_mobile">
         <a href="{domain}/product/{link}.html" target="_blank">
-            <img src="/thumbnail.php?w=320&img={minh_hoa}" width="120" height="120">
+            <img src="{minh_hoa}" width="120" height="120">
         </a>
         {status_sp}
     </td>

@@ -65,6 +65,13 @@
     color: #333;
     text-decoration: none;
     transition: color 0.2s ease;
+    font-size: 13px;
+    margin: 0 0 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
 }
 
 .cart-item-title a:hover {

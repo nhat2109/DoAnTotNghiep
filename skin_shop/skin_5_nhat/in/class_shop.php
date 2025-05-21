@@ -1320,7 +1320,7 @@ class class_shop extends class_manage{
     // Xử lý sản phẩm nổi bật
     $featured_query = "SELECT * FROM sanpham_shop 
                       WHERE shop='$shop' 
-                      ORDER BY view DESC 
+                      ORDER BY view ASC 
                       LIMIT 4";
     $featured = mysqli_query($conn, $featured_query);
     

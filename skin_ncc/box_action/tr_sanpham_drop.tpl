@@ -5,7 +5,7 @@
 	<td style="text-align: center;" class="hide_mobile image-col">
 		<div class="image-container">
 			<a href="/product/{link}.html" target="_blank">
-				<img src="/thumbnail.php?w=320&img={minh_hoa}" width="100">
+				<img src="{minh_hoa}" width="100">
 			</a>
 			<div class="overlay">
 				<a href="javascript:;" class="icon-heart add_to_cart_new" sp_id="{id}" size="{size_active}"

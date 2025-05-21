@@ -742,7 +742,7 @@
 
                 var isSelected = tempSelectedProducts.some(p => p.sp_id.toString() === product.sp_id.toString());
                 html += '<div class="product-item" data-sp="' + product.sp_id + '">';
-                html += '<img src="/thumbnail.php?w=60&img=' + product.minh_hoa + '" alt="' + product.ten_sp + '">';
+                html += '<img src="' + product.minh_hoa + '" alt="' + product.ten_sp + '">';
                 html += '<div class="product-info">';
                 html += '<div class="name">' + product.ten_sp + '</div>';
                 html += '<div class="price">';

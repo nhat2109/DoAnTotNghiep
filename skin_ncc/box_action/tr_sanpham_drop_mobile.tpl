@@ -1,7 +1,7 @@
 <div class="thongbao_add_follow"></div>
 
 <div class="li_sanpham_drop" id="tr_{id}">
-	<div class="minh_hoa"><a href="/product/{link}.html" target="_blank"><img src="/thumbnail.php?w=320&img={minh_hoa}"
+	<div class="minh_hoa"><a href="/product/{link}.html" target="_blank"><img src="{minh_hoa}"
 				width="200"></a></div>
 	<div class="tieu_de"><a href="/product/{link}.html" target="_blank">{tieu_de}</a></div>
 	<div class="info_sanpham">

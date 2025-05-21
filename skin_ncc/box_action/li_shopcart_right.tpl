@@ -1,7 +1,7 @@
 <div class="li_shopcart_right">
     <div class="minh_hoa">
         <a href="/product/{link}.html">
-            <img src="/thumbnail.php?w=320&img={minh_hoa}" alt="{tieu_de}">
+            <img src="{minh_hoa}" alt="{tieu_de}">
         </a>
         <span>{quantity}</span>
     </div>
