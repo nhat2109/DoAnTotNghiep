@@ -163,7 +163,7 @@
         </div>
     </div>
     <div class="container">
-        <div class="row recent_products-row">
+        <!-- <div class="row recent_products-row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-hg-12">
                 <div class="recent_products">
                     <div class="module-header">
@@ -190,46 +190,67 @@
                     </div>
                 </div>
             </div>
+        </div> -->
+        <div class="row margin-top-20">
+            <div class="col-lg-12">
+                <div class="related-product">
+                    <div class="home-title">
+                        <h2><a href="/all">Sản phẩm đã xem</a></h2>
+                    </div>
+                    <div
+                        class="section-tour-owl owl-carousel not-dqowl products-view-grid owl-loaded owl-drag box_daxem">
+                        <div class="owl-stage-outer">
+                            <div class="owl-stage swiper-container slide_daxem">
+                                <div class="swiper-wrapper">
+                                    {list_daxem}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="owl-nav">
+                            <div class="owl-prev"><i class="fa fa-angle-left" aria-hidden="true"></i></div>
+                            <div class="owl-next"><i class="fa fa-angle-right" aria-hidden="true"></i></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     {footer}
     {script_footer}
     <script>
-    var slide_banner = new Swiper('.slide_daxem', {
-        // Optional parameters
-        direction: 'horizontal',
-        slidesPerView: 1,
-        loop: true,
-        observer: true,
-        observeParents: true,
-        // If we need pagination
-        autoplay: {
-            delay: 3000,
-          },
-        pagination: {
-            el: '.swiper-pagination',
-            clickable: true,
-        },
-        breakpoints: {
-            320: {
-              slidesPerView: 2,
-              spaceBetween: 10,
+        
+        var slide_banner = new Swiper('.slide_daxem', {
+            direction: 'horizontal',
+            slidesPerView: 1,
+            loop: true,
+            observer: true,
+            observeParents: true,
+            autoplay: {
+                delay: 3000,
             },
-            768: {
-              slidesPerView: 4,
-              spaceBetween: 10,
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
             },
-            1024: {
-              slidesPerView: 5,
-              spaceBetween: 10,
+            breakpoints: {
+                320: {
+                    slidesPerView: 2,
+                    spaceBetween: 10,
+                },
+                768: {
+                    slidesPerView: 4,
+                    spaceBetween: 10,
+                },
+                1024: {
+                    slidesPerView: 5,
+                    spaceBetween: 10,
+                },
             },
-        },
-        // Navigation arrows
-        navigation: {
-            nextEl: '.recent_products .owl-next',
-            prevEl: '.recent_products .owl-prev',
-        },
-    })
+            navigation: {
+                nextEl: '.box_daxem .owl-next',
+                prevEl: '.box_daxem .owl-prev',
+            },
+        })
     </script>
     <script type="text/javascript">
         $(document).ready(function(){

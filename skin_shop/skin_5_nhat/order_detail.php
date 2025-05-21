@@ -140,10 +140,10 @@
 	$tach_sanpham=json_decode($r_tt['sanpham'],true);
 	foreach ($tach_sanpham as $key => $value) {
 		if($value['size']!=''){
-			$value['size']=' - Size: '.strtoupper($value['size']);
+			$value['size'] = '<span class="order-size">Size: <b>' . strtoupper($value['size']) . '</b></span>';
 		}
 		if($value['color']!=''){
-			$value['color']=' - Màu: '.$value['color'];
+			$value['color'] = '<span class="order-color">Màu: <b>' . htmlspecialchars($value['color']) . '</b></span>';
 		}
 		$value['link'] = $value['link'] ?? '';
 		$value['minh_hoa'] = $value['minh_hoa'] ?? '';

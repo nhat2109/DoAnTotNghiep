@@ -1,7 +1,6 @@
 {header}
 
 <style>
-
     .overlay {
         display: none; /* Ẩn mặc định */
         position: fixed;
@@ -173,7 +172,7 @@ button {
     }
 
     [data-title="Tên"] a {
-        color: #000000;
+        color: #62aaf8;
         text-decoration: none;
         font-size: 14px;
         line-height: 1.4;
@@ -181,6 +180,7 @@ button {
 
     [data-title="Tên"] a:hover {
         text-decoration: none;
+        color: #0056b3;
     }
 
     .numeric {
@@ -234,8 +234,7 @@ button {
     }
 
     .btn-cancel {
-        padding: 8px 8px !important;
-        margin-left: 5px;
+        padding: 3px 3px !important;
     }
 
     /* Thêm vào CSS hiện có */
@@ -250,7 +249,6 @@ button {
     }
 
     .alert {
-        margin-left: 10px;
         padding: 10px;
         margin-bottom: 10px;
         border: 1px solid transparent;
@@ -474,50 +472,6 @@ button {
             float: left;
         }
     }
-    .btn-click{
-        display: flex;
-        justify-content: end;
-        align-items: center;
-    }
-    .btn-click form{
-        margin: 0px !important;
-    }
-    #order_details{
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-    #order_details .numeric{
-        text-align: center;
-    }
-    .totalorders{
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-    .order-color {
-        background: #fff3e0;
-        color: #d2691e;
-        border-radius: 4px;
-        padding: 2px 10px 2px 8px;
-        margin-right: 6px;
-        font-size: 13px;
-        display: inline-block;
-        margin-top: 4px;
-        margin-bottom: 2px;
-        box-shadow: 0 1px 2px rgba(210,105,30,0.08);
-        margin-left: 15px;
-    }
-    .order-size {
-        background: #e3f2fd;
-        color: #1976d2;
-        border-radius: 4px;
-        padding: 2px 10px 2px 8px;
-        font-size: 13px;
-        display: inline-block;
-        margin-top: 4px;
-        margin-bottom: 2px;
-        box-shadow: 0 1px 2px rgba(25,118,210,0.08);
-    }
-    .order-color b, .order-size b {
-        font-weight: 600;
-    }
 </style>
 
 <body>
@@ -603,6 +557,10 @@ button {
                         </div>
                     </div>
                 </div>
+                {cancel_message_html}
+                {refund_message_html}
+                {refund_button_html}
+                {cancel_button_html}
                 <div class="message-container">
                     <div class="message-container">
                         {success_message_html}
@@ -616,15 +574,9 @@ button {
                                 <tr>
                                     <th>Minh họa</th>
                                     <th>Sản phẩm</th>
-                                    <th style="
-                                    text-align: center;
-                                ">Giá</th>
-                                    <th style="
-                                    text-align: center;
-                                ">Số lượng</th>
-                                    <th style="
-                                    text-align: center;
-                                ">Thành tiền</th>
+                                    <th>Giá</th>
+                                    <th>Số lượng</th>
+                                    <th>Thành tiền</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -656,13 +608,9 @@ button {
                     </table>
                 </div>
                 <div class="col-md-12 col-xs-12 col-sm-12">
-                    <div class="text-center margin-bottom-20 btn-click">
-                        <a href="/don-hang.html" class="btn btn-blues" style="border-radius: 4px !important;"><i class="fa fa-reply" aria-hidden="true"></i>
-                            Quay lại</a>
-                            {cancel_message_html}
-                            {refund_message_html}
-                            {refund_button_html}
-                            {cancel_button_html}
+                    <div class="text-center margin-bottom-20">
+                        <a href="/don-hang.html" class="btn btn-blues"><i class="fa fa-reply" aria-hidden="true"></i>
+                            Danh sách đơn hàng</a>
                     </div>
                 </div>
             </div>

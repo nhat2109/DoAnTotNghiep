@@ -59,7 +59,7 @@
 				} else {
 					$ok = 1;
 					$thongbao = 'Sửa menu thành công';
-					mysqli_query($conn, "UPDATE menu_shop SET menu_tieude='$tieu_de',menu_cat='',menu_link='$link',menu_target='$target',menu_thutu='$thu_tu',menu_loai='$loai',menu_vitri='$vi_tri' WHERE menu_id='$id' AND shop='$user_id'");
+					mysqli_query($conn, "UPDATE menu_shop SET menu_tieude='$tieu_de',menu_cat='0',menu_link='$link',menu_target='$target',menu_thutu='$thu_tu',menu_loai='$loai',menu_vitri='$vi_tri' WHERE menu_id='$id' AND shop='$user_id'");
 				}
 			}
 			$info = array(
