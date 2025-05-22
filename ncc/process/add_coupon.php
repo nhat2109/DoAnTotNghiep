@@ -79,8 +79,8 @@ if (strlen($ma) !== 5) {
         $ok = 0;
         $thongbao = 'Thất bại! Mã giảm giá đã tồn tại';
     } else {
-        mysqli_query($conn, "INSERT INTO coupon(shop, ma, loai, kieu, sanpham, dieu_kien, giam, start, expired, status, img_loai, min_price, max_price, allow_combination, max_uses_per_user, max_global_uses) 
-            VALUES('$user_id', '$ma', '$loai', '$kieu', '$sanpham', 0, '$giam', '$start', '$expired', '0', '', '$min_price', '$max_price', '$allow_combination', '$max_uses_per_user', '$max_global_uses')");
+        mysqli_query($conn, "INSERT INTO coupon(shop, ma, loai, kieu, sanpham, giam, start, expired, min_price, max_price, allow_combination, max_uses_per_user, max_global_uses) 
+            VALUES('$user_id', '$ma', '$loai', '$kieu', '$sanpham', '$giam', '$start', '$expired', '$min_price', '$max_price', '$allow_combination', '$max_uses_per_user', '$max_global_uses')");
     }
 }
 

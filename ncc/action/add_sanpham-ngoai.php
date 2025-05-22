@@ -40,8 +40,5 @@ if (strlen($r_tt['thongtin']) > 2) {
 }
 $r_tt['drop_min'] = number_format($r_tt['drop_min']);
 $r_tt['drop_max'] = number_format($r_tt['drop_max']);
-$tach_main_category_ncc = json_decode($class_index->list_div_main_category_sanpham_ncc($conn, ''), true);
-$r_tt['option_main_category_ncc'] = $tach_main_category_ncc['list'];
-$r_tt['option_sub_category_ncc'] = '';
-$r_tt['option_sub_sub_category_ncc'] = '';
+
 $thaythe['box_right'] = $skin->skin_replace('skin_ncc/box_action/add_sanpham_ngoai', $r_tt);

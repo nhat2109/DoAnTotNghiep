@@ -222,9 +222,9 @@ if ($action == 'check_exp') {
 
 				$dayMonth = (int)date("m", $time);
 				$ma_don = intval($shop . $check->random_number(4).$dayMonth);
-				$thongtin_tichdiem = mysqli_query($conn, "SELECT *,count(*) AS total FROM caidat_tichdiem WHERE shop='$shop'");
-				$r_td = mysqli_fetch_assoc($thongtin_tichdiem);
-				$diem = ceil(($tongtien / 100000) * $r_td['diem']);
+				// $thongtin_tichdiem = mysqli_query($conn, "SELECT *,count(*) AS total FROM caidat_tichdiem WHERE shop='$shop'");
+				// $r_td = mysqli_fetch_assoc($thongtin_tichdiem);
+				// $diem = ceil(($tongtien / 100000) * $r_td['diem']);
 
 				$ok = 1;
 				$thongbao = 'Đang chuyển hướng...';
@@ -1355,7 +1355,8 @@ else if ($action == 'apply_coupon') {
 		'ok' => 1
 	);
 	echo json_encode($info);
-} else if ($action == 'register') {
+} 
+else if ($action == 'register') {
 	$email = addslashes(strip_tags($_REQUEST['email']));
 	$password = addslashes(strip_tags($_REQUEST['password']));
 	$re_passpord = addslashes(strip_tags($_REQUEST['re_password']));
@@ -1400,13 +1401,14 @@ else if ($action == 'apply_coupon') {
 				$ip_address = $_SERVER['REMOTE_ADDR'];
 				// mysqli_query($conn, "INSERT INTO user_info(username,shop,user_money,user_money2,email,password,name,avatar,mobile,domain,ngaysinh,gioi_tinh,cmnd,ngaycap,noicap,dia_chi,dropship,ctv,code_active,active,chinh_thuc,created,date_update,ip_address,logined,end_online,aff,about,nhom)
 				// 											      VALUES('$username','$shop','0','0','$email','$pass','$ho_ten','','$dien_thoai','','','','','','','','0','0','','1','0','$hientai','$hientai','$ip_address','','','','','')");
-				mysqli_query($conn, "INSERT INTO user_info (user_id, shop, username, password, email, name, avatar, user_money, user_money2, mobile, domain, ngaysinh, gioi_tinh, cmnd, ngaycap, noicap, tinh, huyen, xa, dia_chi, maso_thue, maso_thue_cap, maso_thue_noicap, code_active, active, nhan_vien, chinh_thuc, dropship, ctv, leader, leader_start, gia_leader, aff, doitac, about, nhom, created, date_update, ip_address, logined, end_online, status_cre)
-		VALUES (NULL, '$shop', '$username', '$pass', '$email', '$ho_ten', '', '0', '0', '$dien_thoai', '', '', '', '', '', '', '0', '0', '0', '', '', '', '', '', '1', '0', '0', '0', '0', '0', '', '1', '', '', '', '', '$hientai', '$hientai', '$ip_address', '', '', '2')");
+				mysqli_query($conn, "INSERT INTO user_info (user_id, shop, username, password, email, name, avatar, mobile, domain, ngaysinh, gioi_tinh, tinh, huyen, xa, dia_chi, active, ctv, created, date_update)
+                													VALUES (NULL, '0', '$username', '$pass', '$email', '$ho_ten', '', '$dien_thoai', '', '0', '0', '0', '0', '0', '0', '1', '0', '$hientai', '$hientai')");
 			}
 		}
 	}
 	echo json_encode(array('ok' => $ok, 'thongbao' => $thongbao));
-} else if ($action == 'change_profile') {
+} 
+else if ($action == 'change_profile') {
 	if (!isset($_COOKIE['user_id'])) {
 		echo json_encode(array('ok' => 0, 'thongbao' => 'Bạn chưa đăng nhập...'));
 		exit();

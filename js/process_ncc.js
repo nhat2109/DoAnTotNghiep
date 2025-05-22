@@ -8104,21 +8104,7 @@ $(document).ready(function () {
             }, 2000);
             $("input[name=cat_thutu]").focus();
         } 
-        // else if (cat_id_socdo.length === 0) {
-        //     $(".load_overlay").show();
-        //     $(".load_process").fadeIn();
 
-        //     setTimeout(function () {
-        //         $(".load_note").html("Vui lòng chọn danh mục sóc đỏ");
-        //     }, 500);
-
-        //     setTimeout(function () {
-        //         $(".load_process").hide();
-        //         $(".load_note").html("Hệ thống đang xử lý");
-        //         $(".load_overlay").hide();
-        //     }, 2000);
-        //     $('input[name="category_ncc[]"]').first().focus();
-        // } 
         else {
             $(".load_overlay").show();
             $(".load_process").fadeIn();
@@ -8165,105 +8151,69 @@ $(document).ready(function () {
         }
     });
     /////////////////////////////
-    $("button[name=add_category]").on("click", function () {
-        cat_tieude = $("input[name=cat_tieude]").val();
-        cat_blank = $("input[name=cat_blank]").val();
-        cat_thutu = $("input[name=cat_thutu]").val();
-        cat_title = $("input[name=cat_title]").val();
-        cat_link = $("input[name=cat_link]").val();
-        cat_description = $("textarea[name=cat_description]").val();
-        cat_noidung = $("textarea[name=cat_noidung]").val();
-        cat_main = $("select[name=cat_main]").val();
-        cat_icon = $("input[name=cat_icon]").val();
-        cat_index = $("input[name=cat_index]:checked").val();
-        let cat_id_socdo = $('input[name="category_ncc[]"]:checked')
-            .map(function () {
-                return this.value;
-            })
-            .get();
-        if (cat_tieude.length < 2) {
-            $(".load_overlay").show();
-            $(".load_process").fadeIn();
-            setTimeout(function () {
-                $(".load_note").html("Vui lòng nhập tiêu đề");
-            }, 500);
-            setTimeout(function () {
-                $(".load_process").hide();
-                $(".load_note").html("Hệ thống đang xử lý");
-                $(".load_overlay").hide();
-            }, 2000);
-            $("input[name=cat_tieude]").focus();
-        } else if (cat_thutu == "") {
-            $(".load_overlay").show();
-            $(".load_process").fadeIn();
-            setTimeout(function () {
-                $(".load_note").html("Vui lòng nhập thứ tự");
-            }, 500);
-            setTimeout(function () {
-                $(".load_process").hide();
-                $(".load_note").html("Hệ thống đang xử lý");
-                $(".load_overlay").hide();
-            }, 2000);
-            $("input[name=cat_thutu]").focus();
-        } 
-        // else if (cat_id_socdo.length === 0) {
-        //     $(".load_overlay").show();
-        //     $(".load_process").fadeIn();
+   $("button[name=add_category]").on("click", function () {
+    let cat_tieude = $("input[name=cat_tieude]").val().trim();
+    let cat_blank = $("input[name=cat_blank]").val().trim();
+    let cat_thutu = $("input[name=cat_thutu]").val().trim();
+    let cat_title = $("input[name=cat_title]").val().trim();
+    let cat_link = $("input[name=cat_link]").val().trim();
+    let cat_description = $("textarea[name=cat_description]").val().trim();
+    let cat_main = $("select[name=cat_main]").val();
+    let cat_index = $("input[name=cat_index]:checked").val();
+    let file_data = $("#minh_hoa").prop("files")[0];
 
-        //     setTimeout(function () {
-        //         $(".load_note").html("Vui lòng chọn danh mục sóc đỏ");
-        //     }, 500);
+    if (cat_tieude.length < 2) {
+        showError("Vui lòng nhập tiêu đề");
+        $("input[name=cat_tieude]").focus();
+    } else if (!cat_thutu) {
+        showError("Vui lòng nhập thứ tự");
+        $("input[name=cat_thutu]").focus();
+    } else {
+        let form_data = new FormData();
+        form_data.append("action", "add_category");
+        form_data.append("file", file_data);
+        form_data.append("cat_tieude", cat_tieude);
+        form_data.append("cat_blank", cat_blank);
+        form_data.append("cat_title", cat_title);
+        form_data.append("cat_description", cat_description);
+        form_data.append("cat_main", cat_main);
+        form_data.append("cat_index", cat_index);
+        form_data.append("cat_thutu", cat_thutu);
+        form_data.append("cat_link", cat_link);
 
-        //     setTimeout(function () {
-        //         $(".load_process").hide();
-        //         $(".load_note").html("Hệ thống đang xử lý");
-        //         $(".load_overlay").hide();
-        //     }, 2000);
-        //     $('input[name="category_ncc[]"]').first().focus();
-        // } 
-        else {
-            var file_data = $("#minh_hoa").prop("files")[0];
-            var form_data = new FormData();
-            form_data.append("action", "add_category");
-            form_data.append("file", file_data);
-            form_data.append("cat_tieude", cat_tieude);
-            form_data.append("cat_blank", cat_blank);
-            form_data.append("cat_title", cat_tieude);
-            form_data.append("cat_description", cat_description);
-            form_data.append("cat_noidung", cat_noidung);
-            form_data.append("cat_main", cat_main);
-            form_data.append("cat_icon", cat_icon);
-            form_data.append("cat_index", cat_index);
-            form_data.append("cat_thutu", cat_thutu);
-            form_data.append("cat_link", cat_link);
-            form_data.append("cat_id_socdo", cat_id_socdo); //1-4
-            $(".load_overlay").show();
-            $(".load_process").fadeIn();
-            $.ajax({
-                url: "/ncc/process.php",
-                type: "post",
-                cache: false,
-                contentType: false,
-                processData: false,
-                data: form_data,
-                success: function (kq) {
-                    var info = JSON.parse(kq);
-                    setTimeout(function () {
-                        $(".load_note").html(info.thongbao);
-                    }, 1000);
-                    setTimeout(function () {
-                        $(".load_process").hide();
-                        $(".load_note").html("Hệ thống đang xử lý");
-                        $(".load_overlay").hide();
-                        if (info.ok == 1) {
-                            window.location.reload();
-                        } else {
-                        }
-                    }, 3000);
-                },
-            });
-        }
-    });
+        $(".load_overlay").show();
+        $(".load_process").fadeIn();
+        $.ajax({
+            url: "/ncc/process.php",
+            type: "post",
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            success: function (kq) {
+                let info = JSON.parse(kq);
+                setTimeout(() => $(".load_note").html(info.thongbao), 1000);
+                setTimeout(() => {
+                    $(".load_process").hide();
+                    $(".load_note").html("Hệ thống đang xử lý");
+                    $(".load_overlay").hide();
+                    if (info.ok == 1) window.location.reload();
+                }, 3000);
+            },
+        });
+    }
+});
+
+function showError(message) {
+    $(".load_overlay").show();
+    $(".load_process").fadeIn();
+    setTimeout(() => $(".load_note").html(message), 500);
+    setTimeout(() => {
+        $(".load_process").hide();
+        $(".load_note").html("Hệ thống đang xử lý");
+        $(".load_overlay").hide();
+    }, 2000);
+}
     /////////////////////////////
     $("button[name=edit_donhang]").on("click", function () {
         id = $("input[name=id]").val();
@@ -8494,9 +8444,7 @@ $(document).ready(function () {
         cat_title = $("input[name=cat_title]").val();
         link_old = $("input[name=link_old]").val();
         cat_description = $("textarea[name=cat_description]").val();
-        cat_noidung = $("textarea[name=cat_noidung]").val();
         cat_id = $("input[name=id]").val();
-        cat_icon = $("input[name=cat_icon]").val();
         cat_main = $("select[name=cat_main]").val();
         cat_index = $("input[name=cat_index]:checked").val();
         if (cat_tieude.length < 2) {
@@ -8525,10 +8473,8 @@ $(document).ready(function () {
                     cat_blank: cat_blank,
                     cat_title: cat_title,
                     cat_description: cat_description,
-                    cat_noidung: cat_noidung,
                     cat_thutu: cat_thutu,
                     cat_main: cat_main,
-                    cat_icon: cat_icon,
                     link_old: link_old,
                     cat_index: cat_index,
                     cat_id: cat_id,
@@ -8558,9 +8504,7 @@ $(document).ready(function () {
         cat_thutu = $("input[name=cat_thutu]").val();
         cat_title = $("input[name=cat_title]").val();
         cat_description = $("textarea[name=cat_description]").val();
-        cat_noidung = $("textarea[name=cat_noidung]").val();
         cat_main = $("select[name=cat_main]").val();
-        cat_icon = $("input[name=cat_icon]").val();
         cat_index = $("input[name=cat_index]:checked").val();
         if (cat_tieude.length < 2) {
             $("input[name=cat_tieude]").focus();
@@ -8578,9 +8522,7 @@ $(document).ready(function () {
                     cat_blank: cat_blank,
                     cat_title: cat_title,
                     cat_description: cat_description,
-                    cat_noidung: cat_noidung,
                     cat_main: cat_main,
-                    cat_icon: cat_icon,
                     cat_index: cat_index,
                     cat_thutu: cat_thutu,
                 },

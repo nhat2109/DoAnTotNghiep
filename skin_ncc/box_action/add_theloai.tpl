@@ -34,11 +34,6 @@
                         value="" placeholder="Nhập link xem...">
                     <div class="check_link"></div>
                 </div>
-                <div class="form_group" style="display: none;">
-                    <label for="">Nội dung</label>
-                    <textarea name="cat_noidung" class="form_control" placeholder="Nhập nội dung danh mục"
-                        style="width: 100%;height: 95px;"></textarea>
-                </div>
                 <div class="form_group">
                     <label for="">Title</label>
                     <input type="text" class="form_control" name="cat_title" value="" placeholder="Nhập title...">
@@ -51,10 +46,6 @@
                 <div class="form_group">
                     <label for="">Thứ tự</label>
                     <input type="text" class="form_control" name="cat_thutu" value="" placeholder="Nhập thứ tự...">
-                </div>
-                <div class="form_group" style="display: none;">
-                    <label for="">Icon</label>
-                    <input type="text" class="form_control" name="cat_icon" value="" placeholder="Nhập biểu tưởng...">
                 </div>
                 <div class="form_group">
                     <label for="">Hiện index</label>

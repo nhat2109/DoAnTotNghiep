@@ -59,4 +59,5 @@ if($total_setting<1){
 }
 $s=$index_setting['skin_folder'];
 include('skin_shop/'.$s.'/index.php');
+
 ?>

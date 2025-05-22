@@ -4,13 +4,12 @@
 <style>
     .category-nav h3 a {
   display: inline-block;
-  max-width: 200px;  /* hoặc bất kỳ kích thước phù hợp nào */
+  max-width: 200px; 
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-    /* General styles for the container bannerfirst nhatthem214 */
-        /* Container để giữ hiệu ứng */
+
         .banner-item {
           position: relative;
           overflow: hidden;

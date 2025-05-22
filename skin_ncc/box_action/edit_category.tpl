@@ -42,15 +42,6 @@
                
             </div>
             <div class="col_50">
-            <!-- <div class="form_group" id="checked_cat" data-categories='{cat_id_socdo}'>
-                <label for="">Danh mục của Sóc Đỏ <span class="color_red">*</span></label>
-                <div style="clear: both;"></div>
-                <div class="list_main_category">
-                    <div class="box_category scroll" id="main_category_ncc">{option_main_category_ncc}</div>
-                    <div class="box_category scroll" id="sub_category_ncc">{option_sub_category_ncc}</div>
-                    <div class="box_category scroll" id="sub_sub_category_ncc">{option_sub_sub_category_ncc}</div>
-                </div>
-            </div> -->
             <div class="form_group">
                 <label for="">Title</label>
                 <input type="text" class="form_control" name="cat_title" value="{cat_title}" placeholder="Nhập title...">

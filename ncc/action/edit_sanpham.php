@@ -57,10 +57,10 @@
 		$list_phanloai .= $skin->skin_replace('skin_ncc/box_action/li_phanloai', $pl);
 	}
 	$r_tt['list_phanloai'] = $list_phanloai ? $list_phanloai : '<div class="li_phanloai"><p>Chưa có phân loại nào</p></div>';
-	$tach_main_category_ncc=json_decode($class_index->list_div_main_category_sanpham_ncc($conn,''),true);
-	$r_tt['option_main_category_ncc']=$tach_main_category_ncc['list'];
-	$r_tt['option_sub_category_ncc']='';
-	$r_tt['option_sub_sub_category_nc']='';
+	// $tach_main_category_ncc=json_decode($class_index->list_div_main_category_sanpham_ncc($conn,''),true);
+	// $r_tt['option_main_category_ncc']=$tach_main_category_ncc['list'];
+	// $r_tt['option_sub_category_ncc']='';
+	// $r_tt['option_sub_sub_category_nc']='';
 	$thaythe['box_right'] = $skin->skin_replace('skin_ncc/box_action/add_sanpham_ngoai', $r_tt);
 	$r_tt['list_photo'] = $list_anh;
 	$r_tt['option_category'] = $class_index->list_div_category_sanpham($conn, $user_id, $r_tt['cat']);

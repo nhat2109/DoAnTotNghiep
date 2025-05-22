@@ -1,5 +1,6 @@
 
 <?php
+
 $class_index = $tlca_do->load_skin($s, 'class_shop');
 $giaodien = json_decode($index_setting['giaodien'], true);
 $limit = 48;
@@ -102,6 +103,7 @@ foreach ($list_check_product as $product_id => $deals) {
         $list_c[$product_id] = $latest_deal;
     }
 }
+
 //  var_dump($list_c);
 //         die;
 $list_muakem_id = substr($list_muakem_id, 0, -1);

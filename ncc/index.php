@@ -89,10 +89,10 @@ $display_kh_hi = 'display:none;';
 $display_close_hi = 'display:none;';
 $display_kh_ct = 'display:block;';
 $box_taikhoan_kh = '';
-$setting = mysqli_query($conn, "SELECT * FROM index_setting ORDER BY name ASC");
-while ($r_s = mysqli_fetch_assoc($setting)) {
-	$index_setting[$r_s['name']] = $r_s['value'];
-}
+// $setting = mysqli_query($conn, "SELECT * FROM index_setting ORDER BY name ASC");
+// while ($r_s = mysqli_fetch_assoc($setting)) {
+// 	$index_setting[$r_s['name']] = $r_s['value'];
+// }
 
 
 if ($user_info['domain'] != '') {

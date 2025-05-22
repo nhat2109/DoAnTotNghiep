@@ -431,10 +431,10 @@ if (!isset($_COOKIE['user_id'])) {
 		echo json_encode($info);
 		exit();
 	} else {
-		$socdo_setting = mysqli_query($conn, "SELECT * FROM index_setting ORDER BY name ASC");
-		while ($r_sd = mysqli_fetch_assoc($socdo_setting)) {
-			$ss_setting[$r_sd['name']] = $r_sd['value'];
-		}
+		// $socdo_setting = mysqli_query($conn, "SELECT * FROM index_setting ORDER BY name ASC");
+		// while ($r_sd = mysqli_fetch_assoc($socdo_setting)) {
+		// 	$ss_setting[$r_sd['name']] = $r_sd['value'];
+		// }
 		$setting = mysqli_query($conn, "SELECT * FROM shop_setting WHERE shop='$user_id' ORDER BY name ASC");
 		while ($r_s = mysqli_fetch_assoc($setting)) {
 			$index_setting[$r_s['name']] = $r_s['value'];
