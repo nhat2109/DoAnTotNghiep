@@ -1,45 +1,6 @@
 <?php
 session_start();
-include_once '../../connect.php';
 
-// Lấy user_id từ session
-if (!isset($_SESSION['user_id'])) {
-    if (!isset($_COOKIE['user_id'])) {
-        $info = array(
-            'ok' => 0,
-            'thongbao' => 'Bạn chưa đăng nhập'
-        );
-        echo json_encode($info);
-        exit;
-    }
-
-    include_once '../includes/tlca_world.php';
-    $check = $tlca_do->load('class_check');
-    $tach_token = json_decode($check->token_login_decode($_COOKIE['user_id']), true);
-    $user_id = $tach_token['user_id'];
-
-    if (!$user_id) {
-        $info = array(
-            'ok' => 0,
-            'thongbao' => 'Không thể xác định user_id'
-        );
-        echo json_encode($info);
-        exit;
-    }
-
-    $_SESSION['user_id'] = $user_id;
-} else {
-    $user_id = $_SESSION['user_id'];
-}
-
-if (!is_numeric($user_id) || $user_id <= 0) {
-    $info = array(
-        'ok' => 0,
-        'thongbao' => 'User ID không hợp lệ'
-    );
-    echo json_encode($info);
-    exit;
-}
 
 $tieu_de = mysqli_real_escape_string($conn, strip_tags($_REQUEST['tieu_de']));
 $date_start = mysqli_real_escape_string($conn, strip_tags($_REQUEST['date_start']));

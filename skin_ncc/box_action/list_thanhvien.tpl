@@ -3,7 +3,7 @@
   	<div class="box_profile" style="width: 100%;padding: 10px;">
   		<div class="box_timkiem">
   			<input type="text" name="key" placeholder="Nhập từ khóa tìm kiếm">
-  			<button name="timkiem_sanpham" class="button_timkiem">Tìm kiếm</button>
+  			<button name="timkiem_thanhvien" class="button_timkiem">Tìm kiếm</button>
   		</div>
 		<div class="page_title">
 		    <h1 class="undefined">Danh sách thành viên</h1>

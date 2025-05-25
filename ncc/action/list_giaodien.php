@@ -11,7 +11,7 @@
 		$thaythe['title_action'] = 'Thiết lập giao diện';
 		$r_tt['domain'] = $user_info['domain'];
 		$r_tt['ip_server'] = $index_setting['ip_server'];
-		$limit = 100;
+		$limit = 10;
 		$r_tt['list_giaodien'] = $class_index->list_giaodien($conn, $page, $limit);
 		if ($r_tt['total'] == 0) {
 			$r_tt['skin'] = 'Chưa thiết lập';

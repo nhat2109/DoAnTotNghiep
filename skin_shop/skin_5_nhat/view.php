@@ -18,12 +18,11 @@ if (isset($_COOKIE['user_id'])) {
 $blank = addslashes(strip_tags($_REQUEST['blank']));
 $thongtin = mysqli_query($conn, "SELECT *, count(*) AS total FROM sanpham_shop WHERE link='$blank' AND shop='$shop'");
 $r_tt = mysqli_fetch_assoc($thongtin);
-///////////////////////////////////////////////////////
 
-// truy vấn xem sp có thuộc deal hay không
-$thongtin_deal = mysqli_query($conn, "SELECT * FROM deal WHERE FIND_IN_SET('{$r_tt['id']}', main_product) AND shop ='$shop'");
+// Truy vấn xem sản phẩm có thuộc deal hay không
+$thongtin_deal = mysqli_query($conn, "SELECT * FROM deal WHERE FIND_IN_SET('{$r_tt['id']}', main_product) AND shop='$shop'");
 $r_tt_deal = mysqli_fetch_assoc($thongtin_deal);
-$sub_product_arr = json_decode($r_tt_deal['sub_product'], true);
+$sub_product_arr = $r_tt_deal ? json_decode($r_tt_deal['sub_product'], true) : [];
 
 $stmt = $conn->prepare("SELECT * FROM phanloai_sanpham_shop WHERE sp_id=?");
 $stmt->bind_param("i", $r_tt['id']);
@@ -31,12 +30,10 @@ $stmt->execute();
 $thongtin_phanloai = $stmt->get_result();
 $max_gia_cu = 0;
 $min_gia_moi = PHP_INT_MAX;
+
 while ($r_phanloai = $thongtin_phanloai->fetch_assoc()) {
     $variant_id = $r_phanloai['id'];
     if (isset($sub_product_arr[$r_tt['id']])) {
-        $max_gia_cu = 0;
-        $min_gia_moi = PHP_INT_MAX; 
-
         foreach ($sub_product_arr[$r_tt['id']] as $variant) {
             if (isset($variant['gia_cu']) && (int) $variant['gia_cu'] > $max_gia_cu) {
                 $max_gia_cu = (int) $variant['gia_cu'];
@@ -54,7 +51,6 @@ while ($r_phanloai = $thongtin_phanloai->fetch_assoc()) {
         if ($gia_cu > $max_gia_cu) {
             $max_gia_cu = $gia_cu;
         }
-
         if ($gia_moi > 0 && $gia_moi < $min_gia_moi) {
             $min_gia_moi = $gia_moi;
         }
@@ -62,7 +58,6 @@ while ($r_phanloai = $thongtin_phanloai->fetch_assoc()) {
         $r_tt['min_gia_moi'] = $min_gia_moi;
     }
 }
-/////////////////////////////////////////////////////////////
 
 if ($r_tt['total'] == 0) {
     $thongbao = "Dữ liệu không tồn tại.";
@@ -84,62 +79,51 @@ $variants = [];
 $colors = [];
 $sizes = [];
 
+$hientai = time();
+$where_flash = "date_start<='$hientai' AND date_end>='$hientai' AND FIND_IN_SET($sp_id,main_product) AND shop='$shop' AND loai='flash_sale'";
+$thongtin_flash = mysqli_query($conn, "SELECT * FROM deal WHERE $where_flash ORDER BY id DESC LIMIT 1");
+$total_flash = mysqli_num_rows($thongtin_flash);
+$is_flash_sale = $total_flash > 0;
+
 while ($r_phanloai = mysqli_fetch_assoc($thongtin_phanloai)) {
     $variant_id = $r_phanloai['id'];
+    $kho = $r_phanloai['kho_sanpham_shop'];
+    $gia_moi = $r_phanloai['gia_moi'];
+    $gia_cu = $r_phanloai['gia_cu'];
+
     if (isset($sub_product_arr[$r_tt['id']])) {
         foreach ($sub_product_arr[$r_tt['id']] as $variant) {
             if ($variant['variant_id'] == $variant_id) {
-                $variants[] = [
-                    'variant_id' => $r_phanloai['id'],
-                    'color' => $r_phanloai['color'],
-                    'ten_color' => $r_phanloai['ten_color'],
-                    'ma_mau' => $r_phanloai['ma_mau'],
-                    'size' => $r_phanloai['size'],
-                    'ten_size' => $r_phanloai['ten_size'],
-                    'kho' => $r_phanloai['kho_sanpham_shop'],
-                    'gia_moi' => isset($variant['gia']) ? preg_replace('/[^0-9]/', '', $variant['gia']) : 0,
-                    'gia_cu' => isset($variant['gia_cu']) ? (int) $variant['gia_cu'] : 0
-                ];
-            
-                if (!isset($colors[$r_phanloai['color']])) {
-                    $colors[$r_phanloai['color']] = [
-                        'ten_color' => $r_phanloai['ten_color'],
-                        'ma_mau' => $r_phanloai['ma_mau'],
-                    ];
-                }
-            
-                if (!isset($sizes[$r_phanloai['size']])) {
-                    $sizes[$r_phanloai['size']] = [
-                        'ten_size' => $r_phanloai['ten_size'],
-                    ];
-                }
+                $kho = isset($variant['so_luong']) ? (int) $variant['so_luong'] : $r_phanloai['kho_sanpham_shop'];
+                $gia_moi = isset($variant['gia']) ? preg_replace('/[^0-9]/', '', $variant['gia']) : $r_phanloai['gia_moi'];
+                $gia_cu = isset($variant['gia_cu']) ? (int) $variant['gia_cu'] : $r_phanloai['gia_cu'];
             }
         }
-    } else {
-        $variants[] = [
-            'variant_id' => $r_phanloai['id'],
-            'color' => $r_phanloai['color'],
+    }
+
+    $variants[] = [
+        'variant_id' => $variant_id,
+        'color' => $r_phanloai['color'],
+        'ten_color' => $r_phanloai['ten_color'],
+        'ma_mau' => $r_phanloai['ma_mau'],
+        'size' => $r_phanloai['size'],
+        'ten_size' => $r_phanloai['ten_size'],
+        'kho' => $kho,
+        'gia_moi' => $gia_moi,
+        'gia_cu' => $gia_cu,
+    ];
+
+    if (!isset($colors[$r_phanloai['color']])) {
+        $colors[$r_phanloai['color']] = [
             'ten_color' => $r_phanloai['ten_color'],
             'ma_mau' => $r_phanloai['ma_mau'],
-            'size' => $r_phanloai['size'],
-            'ten_size' => $r_phanloai['ten_size'],
-            'kho' => $r_phanloai['kho_sanpham_shop'],
-            'gia_moi' => $r_phanloai['gia_moi'],
-            'gia_cu' => $r_phanloai['gia_cu'], // Thêm gia_cu
         ];
-    
-        if (!isset($colors[$r_phanloai['color']])) {
-            $colors[$r_phanloai['color']] = [
-                'ten_color' => $r_phanloai['ten_color'],
-                'ma_mau' => $r_phanloai['ma_mau'],
-            ];
-        }
-    
-        if (!isset($sizes[$r_phanloai['size']])) {
-            $sizes[$r_phanloai['size']] = [
-                'ten_size' => $r_phanloai['ten_size'],
-            ];
-        }
+    }
+
+    if (!isset($sizes[$r_phanloai['size']])) {
+        $sizes[$r_phanloai['size']] = [
+            'ten_size' => $r_phanloai['ten_size'],
+        ];
     }
 }
 
@@ -165,7 +149,7 @@ foreach ($variants as $variant) {
         $ss++;
         $checked = $ss == 1 ? 'checked' : '';
         $list_size .= '<div class="size-swatch">
-                        <input class="variant-size" id="size-' . $variant['size'] . '" type="radio" name="size" value="' . $variant['size'] . '" ' . $checked . ' data-kho="' . $variant['kho'] . '" data-gia="' . $variant['gia_moi'] . '" />
+                        <input class="variant-size" id="size-' . $variant['size'] . '" type="radio" name="size" value="' . $variant['size'] . '" ' . $checked . ' data-kho="' . $variant['kho'] . '" data-gia="' . $variant['gia_moi'] . '" data-variant-id="' . $variant['variant_id'] . '" />
                         <label for="size-' . $variant['size'] . '">' . $variant['ten_size'] . '</label>
                         <img class="crossed-out" src="/skin_shop/' . $s . '/tpl/css/images/soldout.png?v=508" alt="' . $variant['ten_size'] . '" />
                         <img class="img-check" src="/skin_shop/' . $s . '/tpl/css/images/select-pro.png?v=508" alt="' . $variant['ten_size'] . '" />
@@ -174,13 +158,33 @@ foreach ($variants as $variant) {
 }
 $option_size = !empty($sizes) ? '<div class="size-options"><label>Size:</label><div class="size-swatches">' . $list_size . '</div></div>' : '';
 
-// Xử lý các thông tin khác
-if ($r_tt['kho'] > 50) {
-    $r_tt['text_flash_sale'] = '<div class="flashsale__label">còn lại <b class="flashsale__sold-qty">' . $r_tt['kho'] . '</b> sản phẩm</div>';
-} else {
-    $r_tt['text_flash_sale'] = '<div class="flashsale__label">🔥 Sắp hết hàng</div>';
+// Xử lý flash sale và trạng thái kho
+$total_kho = 0;
+foreach ($variants as $variant) {
+    $total_kho += $variant['kho'];
 }
-$phantram = 100 - ($r_tt['kho'] / 100) * 100;
+
+if ($is_flash_sale) {
+    $r_flash = mysqli_fetch_assoc($thongtin_flash);
+    $time_conlai = $r_flash['date_end'] - time();
+    $tach_flash_sub_product = json_decode($r_flash['sub_product'], true);
+    $r_tt['gia_moi'] = preg_replace('/[^0-9]/', '', $tach_flash_sub_product[$sp_id][0]['gia']);
+    $box_flash_sale = $skin->skin_normal('skin_shop/' . $s . '/tpl/box_flash_sale');
+    $loai = 'flash_sale';
+    $r_tt['text_flash_sale'] = $total_kho > 50 ? 
+        '<div class="flashsale__label">còn lại <b class="flashsale__sold-qty">' . $total_kho . '</b> sản phẩm</div>' : 
+        '<div class="flashsale__label">🔥 Sắp hết hàng</div>';
+    $phantram = 100 - ($total_kho / 100) * 100;
+} else {
+    $box_flash_sale = '';
+    $time_conlai = 0;
+    $r_tt['text_flash_sale'] = $total_kho > 50 ? 
+        '<div class="flashsale__label">còn lại <b class="flashsale__sold-qty">' . $total_kho . '</b> sản phẩm</div>' : 
+        '<div class="flashsale__label">🔥 Sắp hết hàng</div>';
+    $phantram = 100 - ($total_kho / 100) * 100;
+}
+
+// Xử lý các thông tin khác
 $view_new = $r_tt['view'] + 1;
 mysqli_query($conn, "UPDATE sanpham_shop SET view='$view_new' WHERE id='{$r_tt['id']}' AND shop='$shop'");
 
@@ -203,7 +207,7 @@ if (!isset($_SESSION['daxem'][$sp_id])) {
 }
 $list_id = implode(",", $_SESSION['daxem']);
 
-if ($r_tt['kho'] > 0 || $r_tt['kho_hang'] > 0) {
+if ($total_kho > 0) {
     $r_tt['tinh_trang'] = 'Còn hàng';
     $disabled = '';
     $text_button = 'Mua Ngay';
@@ -213,8 +217,8 @@ if ($r_tt['kho'] > 0 || $r_tt['kho_hang'] > 0) {
     $text_button = 'Hết Hàng';
 }
 
-if ($r_tt['gia_cu'] > $r_tt['gia_moi']) {
-    $giam = ceil((($r_tt['gia_cu'] - $r_tt['gia_moi']) / $r_tt['gia_cu']) * 100);
+if ($r_tt['max_gia_cu'] > $r_tt['min_gia_moi']) {
+    $giam = ceil((($r_tt['max_gia_cu'] - $r_tt['min_gia_moi']) / $r_tt['max_gia_cu']) * 100);
     $r_tt['label_sale'] = '<div class="label_product"><div class="label_wrapper">-' . $giam . '%</div></div>';
 } else {
     $r_tt['label_sale'] = '';
@@ -238,14 +242,8 @@ if ($r_tt['thuong_hieu'] != '') {
     $thuong_hieu = '<div class="inve_brand"><span class="stock-brand-title"><strong>Thương hiệu:</strong></span><span class="a-brand" itemprop="brand" itemscope itemtype="https://schema.org/brand">' . $r_th['tieu_de'] . '</span></div>';
 }
 
-$hientai = time();
-$where_flash = "date_start<='$hientai' AND date_end>='$hientai' AND FIND_IN_SET($sp_id,main_product) AND shop='$shop' AND loai='flash_sale'";
-$thongtin_flash = mysqli_query($conn, "SELECT * FROM deal WHERE $where_flash ORDER BY id DESC LIMIT 1");
-$total_flash = mysqli_num_rows($thongtin_flash);
-
-if ($total_flash == 0) {
-    $box_flash_sale = '';
-    $time_conlai = 0;
+// Xử lý deal khác (muakem, tang)
+if (!$is_flash_sale) {
     $where_deal = "date_start<='$hientai' AND date_end>='$hientai' AND FIND_IN_SET($sp_id,main_product) AND shop='$shop' AND (loai='muakem' OR loai='tang')";
     $thongtin_deal = mysqli_query($conn, "SELECT * FROM deal WHERE $where_deal ORDER BY id DESC LIMIT 1");
     $total_deal = mysqli_num_rows($thongtin_deal);
@@ -253,7 +251,6 @@ if ($total_flash == 0) {
         $box_deal_soc = '';
         $loai = '';
     } else {
-        $box_flash_sale = '';
         $r_deal = mysqli_fetch_assoc($thongtin_deal);
         if ($r_deal['loai'] == 'muakem') {
             $loai = 'muakem';
@@ -303,81 +300,7 @@ if ($total_flash == 0) {
                     $r_sub_product['gia_cu'] = number_format($r_sub_product['gia_cu']);
                     $r_sub_product['gia_moi'] = number_format(preg_replace('/[^0-9]/', '', $tach_sub_product[$sp]['gia']));
                 } else {
-                    $gia_moi = $r_sub_product['gia_moi'] - ($r_sub_product['gia_moi'] / 100) * $tach_sub_product[$sp]['sale'];
-                    if ($r_sub_product['gia_cu'] > $gia_moi) {
-                        $giam = ceil((($r_sub_product['gia_cu'] - $gia_moi) / $r_sub_product['gia_cu']) * 100);
-                        $r_sub_product['label_sale'] = '<div class="label_product"><div class="label_wrapper">-' . $giam . '%</div></div>';
-                    } else {
-                        $r_sub_product['label_sale'] = '';
-                    }
-                    $r_sub_product['gia_cu'] = number_format($r_sub_product['gia_cu']);
-                    $r_sub_product['gia_moi'] = number_format($gia_moi);
-                }
-                $list_muakem .= $skin->skin_replace('skin_shop/' . $s . '/tpl/box_li/li_quatang', $r_sub_product);
-            }
-        }
-    }
-} else {
-    $box_flash_sale = $skin->skin_normal('skin_shop/' . $s . '/tpl/box_flash_sale');
-    $loai = 'flash_sale';
-    $r_flash = mysqli_fetch_assoc($thongtin_flash);
-    $time_conlai = $r_flash['date_end'] - time();
-    $tach_flash_sub_product = json_decode($r_flash['sub_product'], true);
-    $r_tt['gia_moi'] = preg_replace('/[^0-9]/', '', $tach_flash_sub_product[$sp_id][0]['gia']);
-    $where_deal = "date_start<='$hientai' AND date_end>='$hientai' AND FIND_IN_SET($sp_id,main_product) AND shop='$shop' AND (loai='muakem' OR loai='tang')";
-    $thongtin_deal = mysqli_query($conn, "SELECT * FROM deal WHERE $where_deal ORDER BY id DESC LIMIT 1");
-    $total_deal = mysqli_num_rows($thongtin_deal);
-    if ($total_deal == 0) {
-        $box_deal_soc = '';
-    } else {
-        $r_deal = mysqli_fetch_assoc($thongtin_deal);
-        if ($r_deal['loai'] == 'muakem') {
-            $box_deal_soc = $skin->skin_normal('skin_shop/box_deal_soc');
-            $sub_product = $r_deal['sub_id'];
-            $tach_sub_product = json_decode($r_deal['sub_product'], true);
-            $thongtin_sub_product = mysqli_query($conn, "SELECT * FROM sanpham_shop WHERE id IN ($sub_product) AND shop='$shop' ORDER BY FIELD(id,$sub_product) ASC LIMIT 2");
-            while ($r_sub_product = mysqli_fetch_assoc($thongtin_sub_product)) {
-                $sp = $r_sub_product['id'];
-                if ($tach_sub_product[$sp]['gia'] != '') {
-                    if ($r_sub_product['gia_cu'] > $tach_sub_product[$sp]['gia']) {
-                        $giam = ceil((($r_sub_product['gia_cu'] - preg_replace('/[^0-9]/', '', $tach_sub_product[$sp]['gia'])) / $r_sub_product['gia_cu']) * 100);
-                        $r_sub_product['label_sale'] = '<div class="label_product"><div class="label_wrapper">-' . $giam . '%</div></div>';
-                    } else {
-                        $r_sub_product['label_sale'] = '';
-                    }
-                    $r_sub_product['gia_cu'] = number_format($r_sub_product['gia_cu']);
-                    $r_sub_product['gia_moi'] = number_format(preg_replace('/[^0-9]/', '', $tach_sub_product[$sp]['gia']));
-                } else {
-                    $gia_moi = $r_sub_product['gia_moi'] - ($r_sub_product['gia_moi'] / 100) * $tach_sub_product[$sp]['sale'];
-                    if ($r_sub_product['gia_cu'] > $gia_moi) {
-                        $giam = ceil((($r_sub_product['gia_cu'] - $gia_moi) / $r_sub_product['gia_cu']) * 100);
-                        $r_sub_product['label_sale'] = '<div class="label_product"><div class="label_wrapper">-' . $giam . '%</div></div>';
-                    } else {
-                        $r_sub_product['label_sale'] = '';
-                    }
-                    $r_sub_product['gia_cu'] = number_format($r_sub_product['gia_cu']);
-                    $r_sub_product['gia_moi'] = number_format($gia_moi);
-                }
-                $list_muakem .= $skin->skin_replace('skin_shop/' . $s . '/tpl/box_li/li_muakem', $r_sub_product);
-            }
-        } else if ($r_deal['loai'] == 'tang') {
-            $box_deal_soc = $skin->skin_normal('skin_shop/' . $s . '/tpl/box_quatang');
-            $sub_product = $r_deal['sub_id'];
-            $tach_sub_product = json_decode($r_deal['sub_product'], true);
-            $thongtin_sub_product = mysqli_query($conn, "SELECT * FROM sanpham_shop WHERE id IN ($sub_product) ORDER BY rand() DESC LIMIT 4");
-            while ($r_sub_product = mysqli_fetch_assoc($thongtin_sub_product)) {
-                $sp = $r_sub_product['id'];
-                if ($tach_sub_product[$sp]['gia'] != '') {
-                    if ($r_sub_product['gia_cu'] > $tach_sub_product[$sp]['gia']) {
-                        $giam = ceil((($r_sub_product['gia_cu'] - preg_replace('/[^0-9]/', '', $tach_sub_product[$sp]['gia'])) / $r_sub_product['gia_cu']) * 100);
-                        $r_sub_product['label_sale'] = '<div class="label_product"><div class="label_wrapper">-' . $giam . '%</div></div>';
-                    } else {
-                        $r_sub_product['label_sale'] = '';
-                    }
-                    $r_sub_product['gia_cu'] = number_format($r_sub_product['gia_cu']);
-                    $r_sub_product['gia_moi'] = number_format(preg_replace('/[^0-9]/', '', $tach_sub_product[$sp]['gia']));
-                } else {
-                    $gia_moi = $r_sub_product['gia_moi'] - ($r_sub_product['gia_moi'] / 100) * $tach_sub_product[$sp]['sale'];
+                    $gia_moi = $r_sub_product['gia_moi'] - ($r_sub_product['gia_moi'] / 100) * preg_replace('/[^0-9]/', '', $tach_sub_product[$sp]['sale']);
                     if ($r_sub_product['gia_cu'] > $gia_moi) {
                         $giam = ceil((($r_sub_product['gia_cu'] - $gia_moi) / $r_sub_product['gia_cu']) * 100);
                         $r_sub_product['label_sale'] = '<div class="label_product"><div class="label_wrapper">-' . $giam . '%</div></div>';
@@ -397,11 +320,10 @@ $thongtin_deal = mysqli_query($conn, "SELECT * FROM deal WHERE date_start<='$hie
 $list_flashsale_id = '';
 $list_muakem_id = '';
 $list_tang_id = '';
-// nhatthem
-// sử lí sản phẩm deal liên quan đến flash sale
 $list_c = [];
 $list_check_product = [];
 $flash_sub_product = [];
+
 while ($r_d = mysqli_fetch_assoc($thongtin_deal)) {
     if ($r_d['loai'] == 'flash_sale') {
         $has_flash = 1;
@@ -409,11 +331,11 @@ while ($r_d = mysqli_fetch_assoc($thongtin_deal)) {
         $tach_m = explode(',', $r_d['main_product']);
         $tach_s = json_decode($r_d['sub_product'], true);
 
-        
         foreach ($tach_m as $key => $value) {
             $max_gia_cu = null;
             $min_gia = null;
-        
+            $total_so_luong = 0;
+
             if (isset($tach_s[$value]) && is_array($tach_s[$value])) {
                 foreach ($tach_s[$value] as $variant) {
                     if (isset($variant['gia_cu'])) {
@@ -428,6 +350,9 @@ while ($r_d = mysqli_fetch_assoc($thongtin_deal)) {
                             $min_gia = $gia;
                         }
                     }
+                    if (isset($variant['so_luong'])) {
+                        $total_so_luong += (int) $variant['so_luong'];
+                    }
                 }
             }
 
@@ -435,43 +360,34 @@ while ($r_d = mysqli_fetch_assoc($thongtin_deal)) {
                 $list_check_product[$value][] = [
                     'gia_cu_max' => $max_gia_cu,
                     'gia' => $min_gia,
-                    'expired' => $r_d['date_end'] 
+                    'so_luong' => $total_so_luong,
+                    'expired' => $r_d['date_end']
                 ];
             }
         }
-        
-        
-        
-    
+
         if (empty($event_expiry) || $r_d['date_end'] < $event_expiry) {
             $event_expiry = $r_d['date_end'];
         }
-        $f++;
-        $flash_sub_product[]=$r_d['sub_product'];
+        $flash_sub_product[] = $r_d['sub_product'];
     } else if ($r_d['loai'] == 'muakem') {
         $list_muakem_id .= $r_d['main_product'] . ',';
     } else if ($r_d['loai'] == 'tang') {
         $list_tang_id .= $r_d['main_product'] . ',';
     }
-}   
+}
 
-// // Sửa logic tạo $list_c: Chọn deal có thời gian hết hạn muộn nhất
 foreach ($list_check_product as $product_id => $deals) {
     $latest_deal = null;
-
     foreach ($deals as $deal) {
         if (
-            isset($deal['expired']) && 
-            $deal['expired'] > $hientai && 
-            (
-                is_null($latest_deal) || 
-                $deal['expired'] > $latest_deal['expired']
-            )
+            isset($deal['expired']) &&
+            $deal['expired'] > $hientai &&
+            (is_null($latest_deal) || $deal['expired'] > $latest_deal['expired'])
         ) {
             $latest_deal = $deal;
         }
     }
-
     if ($latest_deal !== null) {
         $list_c[$product_id] = $latest_deal;
     }
@@ -555,7 +471,7 @@ $script_variants = '<script>
                     // Cập nhật giá trị data-variant-id khi chọn kích thước
                     const selectedVariantId = this.getAttribute("data-variant-id");
                     $(".form-group #buy-button").attr("data-variant-id", selectedVariantId);
-                    updatePriceAndStock();  // Cập nhật giá và kho
+                    updatePriceAndStock();
                 });
             });
 
@@ -568,14 +484,9 @@ $script_variants = '<script>
     document.querySelectorAll(".variant-size").forEach(input => {
         input.addEventListener("change", updatePriceAndStock);
     });
-
-    // Khởi tạo giá và trạng thái ban đầu
-    // updatePriceAndStock();
 </script>';
 
-
-// Đặt giá cũ ban đầu dựa trên biến thể đầu tiên
-$initial_gia_cu = !empty($variants) ? $variants[0]['gia_cu'] : $r_tt['gia_cu'];
+$initial_gia_cu = !empty($variants) ? $variants[0]['gia_cu'] : $r_tt['max_gia_cu'];
 
 $replace = array(
     'header' => $skin->skin_normal('skin_shop/' . $s . '/tpl/header_view'),
@@ -597,7 +508,7 @@ $replace = array(
     'text_contact_footer' => $index_setting['text_contact_footer'],
     'text_about' => $index_setting['text_about'],
     'link_xem' => $link_xem,
-    'email' => $index_setting['email'], 
+    'email' => $index_setting['email'],
     'hotline' => $index_setting['hotline'],
     'hotline_number' => preg_replace('/[^0-9]/', '', $index_setting['hotline']),
     'text_hotline' => $index_setting['text_hotline'],
@@ -640,8 +551,8 @@ $replace = array(
     'avatar' => $user_info['avatar'] ?? '',
     'gioithieu' => $index_setting['gioithieu'],
     'tieu_de' => $r_tt['tieu_de'],
-    'gia_moi' => number_format( $r_tt['min_gia_moi']),
-    'gia_cu' => number_format($r_tt['max_gia_cu']), // Sử dụng giá cũ của biến thể đầu tiên
+    'gia_moi' => number_format($r_tt['min_gia_moi']),
+    'gia_cu' => number_format($r_tt['max_gia_cu']),
     'noi_bat' => $r_tt['noi_bat'],
     'noi_dung' => $r_tt['noi_dung'],
     'minh_hoa' => $r_tt['minh_hoa'],
@@ -657,7 +568,7 @@ $replace = array(
     'time_conlai' => $time_conlai,
     'list_muakem' => $list_muakem ?? '',
     'loai' => $loai,
-    'variant_id' => $variant_id,
+    'variant_id' => $variants[0]['variant_id'] ?? '',
     'list_lienquan' => $class_index->list_sanpham_lienquan($conn, $s, $r_shop['user_id'], $r_tt['id'], $r_tt['cat'], $list_muakem_id, $list_tang_id, $list_flashsale_id, $list_c, $limit),
     'list_daxem' => $class_index->list_sanpham_daxem($conn, $s, $r_shop['user_id'], $list_id, $r_tt['id'], $list_muakem_id, $list_tang_id, $list_flashsale_id, $list_c, $limit),
     'sp_id' => $r_tt['id'],
@@ -665,9 +576,7 @@ $replace = array(
     'text_button' => $text_button,
     'link_aff' => $r_tt['link_aff'],
     'shop' => $r_shop['user_id'],
-    // 'list_menu_header'=>$class_index->list_menu_header($conn, $s, $r_shop['user_id']),
 );
-
 
 if ($r_tt['link_aff'] != '') {
     echo $skin->skin_replace('skin_shop/' . $s . '/tpl/view_aff', $replace);

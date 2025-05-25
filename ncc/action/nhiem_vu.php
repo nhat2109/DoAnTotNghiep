@@ -1,7 +1,7 @@
 <?php
 	$thaythe['title'] = 'Lộ trình cho nhà bán mới';
 	$thaythe['title_action'] = 'Lộ trình cho nhà bán mới';
-	$limit = 100;
+	$limit = 10;
 	$bien = array(
 		'user_id' => $user_id,
 		'gioithieu_nhiemvu'=>$index_setting['gioithieu_nhiemvu'],

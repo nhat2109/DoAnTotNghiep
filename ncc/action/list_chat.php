@@ -1,7 +1,7 @@
 <?php
 	$thaythe['title'] = 'Danh sách yêu cầu hỗ trợ';
 	$thaythe['title_action'] = 'Danh sách yêu cầu hỗ trợ';
-	$limit = 100;
+	$limit = 10;
 	$thongtin=mysqli_query($conn,"SELECT chat.*,user_info.name FROM chat INNER JOIN user_info ON user_info.user_id=chat.thanh_vien WHERE chat.thanh_vien='$user_id' AND chat.noi_dung='' ORDER BY chat.id DESC LIMIT 1");
 	$total=mysqli_num_rows($thongtin);
 	if($total==0){

@@ -17,7 +17,7 @@
 					}
 				}
 			}
-			$limit = 100;
+			$limit = 10;
 			if (isset($_COOKIE['drop_kho'])) {
 				$kho = addslashes(strip_tags($_COOKIE['drop_kho']));
 			} else {

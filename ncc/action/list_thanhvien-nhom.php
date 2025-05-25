@@ -1,7 +1,7 @@
 <?php
 	$thaythe['title'] = 'Danh sách thành viên nhóm';
 	$thaythe['title_action'] = 'Danh sách thành viên nhóm';
-	$limit = 100;
+	$limit = 10;
 	$id = preg_replace('/[^0-9a-zA-Z_-]/', '', $url_query['id']);
 	if ($user_info['leader'] == 0) {
 		$thongbao = "Bạn không có quyền truy cập...";

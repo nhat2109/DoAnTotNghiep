@@ -13,7 +13,7 @@ $user_id = $tach_token['user_id'];
 
 
 // Lấy thông tin từ user_info (chỉ lấy username và user_money)
-$check_user_info = mysqli_query($conn, "SELECT username, user_money FROM user_info WHERE user_id = '$user_id'");
+$check_user_info = mysqli_query($conn, "SELECT username FROM user_info WHERE user_id = '$user_id'");
 if (!$check_user_info) {
     die('Lỗi truy vấn user_info: ' . mysqli_error($conn));
 }
@@ -29,12 +29,6 @@ if (!$check_ncc) {
 }
 $user_ncc_profile = mysqli_num_rows($check_ncc) > 0 ? mysqli_fetch_assoc($check_ncc) : [];
 
-// Nếu không tìm thấy thông tin nhà cung cấp, chuyển hướng về trang setup
-if (empty($user_ncc_profile)) {
-    error_log('Redirecting to /ncc/welcome_setup.php from profile.php');
-    header('Location: /ncc/welcome_setup.php');
-    exit;
-}
 
 // Chuẩn bị dữ liệu cho template
 $thaythe['title'] = 'Profile';

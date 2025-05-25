@@ -1,7 +1,7 @@
 <?php
 	$thaythe['title'] = 'Link tuyển dụng thành viên';
 	$thaythe['title_action'] = 'Link tuyển dụng thành viên';
-	$limit = 100;
+	$limit = 10;
 	$id = preg_replace('/[^0-9a-zA-Z_-]/', '', $url_query['id']);
 	if ($user_info['leader'] == 0) {
 		$thongbao = "Bạn không có quyền truy cập...";

@@ -10510,163 +10510,7 @@ function showError(message) {
         }
     );
 
-    /////////////////////////////end nhà cung cấp
-    // $('button[name=add_sanpham_ngoai]').on('click', function () {
-    //     tieu_de = $('input[name=tieu_de]').val();
-    //     // gia_cu = $('input[name=gia_cu]').val();
-    //     // gia_moi = $('input[name=gia_moi]').val();
-    //     kho = $('input[name=kho]').val();
-    //     var list_photo = [];
-    //     $('.list_photo img').each(function () {
-    //         list_photo.push($(this).attr('src'));
-    //     });
-    //     anh = list_photo.toString();
-    //     minh_hoa = $('#preview-minhhoa').attr('src');
-    //     title = $('input[name=title]').val();
-    //     description = $('textarea[name=description]').val();
-    //     var list_cat = [];
-    //     $('.li_input input[name^=category]:checked').each(function () {
-    //         list_cat.push($(this).val());
-    //     });
-    //     list_cat = list_cat.toString();
-    //     // cat của NCC
-    //     var list_cat_ncc = [];
-    //      $('.li_input input[name^=category_ncc]:checked').each(function() {
-    //          list_cat_ncc.push($(this).val());
-    //      });
-    //      list_cat_ncc = list_cat_ncc.toString();
-    //     var list_color = [];
-    //     $('.li_input input[name^=color]:checked').each(function () {
-    //         list_color.push($(this).val());
-    //     });
-    //     list_color = list_color.toString();
-    //     /*        var list_size = [];
-    //             $('.li_input input[name^=size]:checked').each(function() {
-    //                 list_size.push($(this).val());
-    //             });
-    //             list_size = list_size.toString();*/
-    //     size = $('select[name=size]').val();
-    //     size_2 = $('input[name=size_2]').val();
-    //     can_nang = $('input[name=can_nang]').val();
-    //     thuong_hieu = $('select[name=thuong_hieu]').val();
-    //     thuong_hieu_2 = $('input[name=thuong_hieu_2]').val();
-    //     var list_info = '';
-    //     $('.li_info').each(function () {
-    //         info_name = $(this).find('input[name^=info_name]').val();
-    //         info_value = $(this).find('input[name^=info_value]').val();
-    //         if (info_name != '') {
-    //             list_info += info_name + '&&' + info_value + '|';
-    //         }
-    //     });
-    //     noibat = tinyMCE.get('noibat').getContent();
-    //     noidung = tinyMCE.get('edit_textarea').getContent();
-    //     link = $('input[name=link]').val();
-    //     // thêm nơi bán
-    //     var list_noiban = [];
-    //      $('.li_input input[name^=noiban]:checked').each(function() {
-    //          list_noiban.push($(this).val());
-    //      });
-    //      list_noiban = list_noiban.toString();
-    //     // thêm phân loại
-    //     var list_phanloai = '';
-    //     pl=0;
-    //     $('.list_phanloai .li_phanloai').each(function() {
-    //         ma_sp = $(this).find('input[name^=ma]').val();
-    //         size = $(this).find('input[name^=size]').attr('giatri');
-    //         color = $(this).find('input[name^=color]').attr('giatri');
-    //         ma_mau = $(this).find('input[name^=color]').attr('ma_mau');
-    //         ten_size = $(this).find('input[name^=size]').val();
-    //         ten_color = $(this).find('input[name^=color]').val();
-    //         can_nang = $(this).find('input[name^=can_nang]').val();
-    //         gia_cu = $(this).find('input[name^=gia_cu]').val();
-    //         gia_moi = $(this).find('input[name^=gia_moi]').val();
-    //         gia_drop = $(this).find('input[name^=gia_drop]').val();
-    //         gia_ctv = $(this).find('input[name^=gia_ctv]').val();
-    //         drop_min = $(this).find('input[name^=drop_min]').val();
-    //         pl++;
-    //         if(pl==1){
-    //             list_phanloai+= '{"ma_sp":"'+ma_sp+'","ma_mau":"'+ma_mau+'","color":"'+color+'","size":"'+size+'","ten_color":"'+ten_color+'","ten_size":"'+ten_size+'","can_nang":"'+can_nang+'","gia_cu":"'+gia_cu+'","gia_moi":"'+gia_moi+'","gia_drop":"'+gia_drop+'","gia_ctv":"'+gia_ctv+'","drop_min":"'+drop_min+'"}';
-    //         }else{
-    //             list_phanloai+= ',{"ma_sp":"'+ma_sp+'","ma_mau":"'+ma_mau+'","color":"'+color+'","size":"'+size+'","ten_color":"'+ten_color+'","ten_size":"'+ten_size+'","can_nang":"'+can_nang+'","gia_cu":"'+gia_cu+'","gia_moi":"'+gia_moi+'","gia_drop":"'+gia_drop+'","gia_ctv":"'+gia_ctv+'","drop_min":"'+drop_min+'"}';
-    //         }
-    //     });
-
-    //     if (tieu_de.length < 4) {
-    //         $('input[name=tieu_de]').focus();
-    //     } else if (gia_cu == '') {
-    //         $('input[name=gia_cu]').focus();
-    //     } else if (gia_moi == '') {
-    //         $('input[name=gia_moi]').focus();
-    //     } else if (noibat.length < 10) {
-    //         tinymce.execCommand('mceFocus', false, 'noibat');
-    //     } else if (noidung.length < 10) {
-    //         tinymce.execCommand('mceFocus', false, 'edit_textarea');
-    //     } else if (title == '') {
-    //         $('input[name=title]').focus();
-    //     } else if (description == '') {
-    //         $('textarea[name=description]').focus();
-    //     } else {
-    //         var file_data = $('#minh_hoa').prop('files')[0];
-    //         var form_data = new FormData();
-    //         form_data.append('action', 'add_sanpham_ngoai');
-    //         form_data.append('tieu_de', tieu_de);
-    //         // form_data.append('gia_cu', gia_cu);
-    //         // form_data.append('gia_moi', gia_moi);
-    //         form_data.append('kho', kho);
-    //         form_data.append('anh', anh);
-    //         form_data.append('minh_hoa', minh_hoa);
-    //         form_data.append('file', file_data);
-    //         form_data.append('link', link);
-    //         form_data.append('category', list_cat);
-    //         //form_data.append('color', list_color);
-    //         //form_data.append('size', size);
-    //         //form_data.append('size_2', size_2);
-    //         //form_data.append('can_nang', can_nang);
-    //         // Thêm phân loại, nơi bán, danh mục của nhà cung cấp
-    //         form_data.append('category_ncc', list_cat_ncc);
-    //         form_data.append('phan_loai', list_phanloai);
-    //         form_data.append('noiban', list_noiban);
-
-    //         form_data.append('thuong_hieu', thuong_hieu);
-    //         form_data.append('thuong_hieu_2', thuong_hieu_2);
-    //         form_data.append('info', list_info);
-    //         form_data.append('noibat', noibat);
-    //         form_data.append('noidung', noidung);
-    //         form_data.append('title', title);
-    //         form_data.append('description', description);
-    //         $('.load_overlay').show();
-    //         $('.load_process').fadeIn();
-    //         console.log('Data being sent:');
-    //         for (var pair of form_data.entries()) {
-    //             console.log(pair[0] + ':', pair[1]);
-    //         }
-    //         // $.ajax({
-    //         //     url: '/ncc/process.php',
-    //         //     type: 'post',
-    //         //     cache: false,
-    //         //     contentType: false,
-    //         //     processData: false,
-    //         //     data: form_data,
-
-    //         //     success: function (kq) {
-    //         //         var info = JSON.parse(kq);
-    //         //         setTimeout(function () {
-    //         //             $('.load_note').html(info.thongbao);
-    //         //         }, 1000);
-    //         //         setTimeout(function () {
-    //         //             $('.load_process').hide();
-    //         //             $('.load_note').html('Hệ thống đang xử lý');
-    //         //             $('.load_overlay').hide();
-    //         //             if (info.ok == 1) {
-    //         //                 window.location.reload();
-    //         //             }
-    //         //         }, 3000);
-    //         //     }
-
-    //         // });
-
-    //     }
-    // });
+   
     // test
     // Phân loại sản phẩm ngoài nhà cung cấp
     // Phân loại sản phẩm ngoài nhà cung cấp
@@ -11131,268 +10975,475 @@ function showError(message) {
 
     //Gửi dữ liệu khi nhấn nút "Hoàn thành"
     // huyphuc12/05/2025
-    $("button[name=add_sanpham_ngoai]").on("click", function () {
-        tieu_de = $("input[name=tieu_de]").val();
-        //kho = $('input[name=kho]').val();
-        var list_photo = [];
-        $(".list_photo img").each(function () {
-            list_photo.push($(this).attr("src"));
-        });
-        anh = list_photo.toString();
-        minh_hoa = $("#preview-minhhoa").attr("src");
-        title = $("input[name=title]").val();
-        description = $("textarea[name=description]").val();
-        // Danh mục website shop
-        var list_cat = [];
-        $(".li_input input[name^=category]:checked").each(function () {
-            list_cat.push($(this).val());
-        });
-        list_cat = list_cat.toString();
-        // Nơi bán
-        var list_noiban = [];
-        $(".li_input input[name^=noiban]:checked").each(function () {
-            list_noiban.push($(this).val());
-        });
-        list_noiban = list_noiban.toString();
+    // $("button[name=add_sanpham_ngoai]").on("click", function () {
+    //     tieu_de = $("input[name=tieu_de]").val();
+    //     //kho = $('input[name=kho]').val();
+    //     var list_photo = [];
+    //     $(".list_photo img").each(function () {
+    //         list_photo.push($(this).attr("src"));
+    //     });
+    //     anh = list_photo.toString();
+    //     minh_hoa = $("#preview-minhhoa").attr("src");
+    //     title = $("input[name=title]").val();
+    //     description = $("textarea[name=description]").val();
+    //     // Danh mục website shop
+    //     var list_cat = [];
+    //     $(".li_input input[name^=category]:checked").each(function () {
+    //         list_cat.push($(this).val());
+    //     });
+    //     list_cat = list_cat.toString();
+    //     // Nơi bán
+    //     var list_noiban = [];
+    //     $(".li_input input[name^=noiban]:checked").each(function () {
+    //         list_noiban.push($(this).val());
+    //     });
+    //     list_noiban = list_noiban.toString();
 
-        // Thông số sản phẩm
-        var list_info = "";
-        $(".li_info").each(function () {
-            info_name = $(this).find("input[name^=info_name]").val();
-            info_value = $(this).find("input[name^=info_value]").val();
-            if (info_name != "") {
-                list_info += info_name + "&&" + info_value + "|";
-            }
-        });
-        // Đặc điểm nổi bật và nội dung chi tiết
-        noibat = tinyMCE.get("noibat").getContent();
-        noibat2 = stripHtml(noibat);
-        noidung = tinyMCE.get("edit_textarea").getContent();
-        noidung2 = stripHtml(noidung);
-        link = $("input[name=link]").val();
-        thuong_hieu = $("select[name=thuong_hieu]").val();
-        thuong_hieu_2 = $("input[name=thuong_hieu_2]").val();
-        thongtin = $("input[name=thongtin]").val();
-        chieudai_shop = $("input[name=chieudai_shop]").val();
-        chieurong_shop = $("input[name=chieurong_shop]").val();
-        chieucao_shop = $("input[name=chieucao_shop]").val();
-        // console.log(noidung);
-        // Phân loại sản phẩm
-        var list_phanloai = [];
-        $(".list_phanloai .li_phanloai").each(function () {
-            var phanloai = {
-                ma_sp: $(this).find("input[name^=ma]").val() || "",
-                size_shop: $(this).find("input[name^=size_shop]").attr("giatri") || "0",
-                color_shop:
-                    $(this).find("input[name^=color_shop]").attr("giatri") || "0",
-                ten_size_shop: $(this).find("input[name^=ten_size_shop]").val() || "",
-                ten_color_shop: $(this).find("input[name^=ten_color_shop]").val() || "",
-                ma_mau_shop: $(this).find("input[name^=ma_mau_shop]").val() || "",
-                size: $(this).find("input[name^=size]").attr("giatri") || "0", // số size
-                color: $(this).find("input[name^=color]").attr("giatri") || "0", // số color
-                ten_size: $(this).find("input[name^=ten_size]").val() || "", // tên size
-                ten_color: $(this).find("input[name^=ten_color]").val() || "", //tên color
-                ma_mau: $(this).find("input[name^=ma_mau]").attr("ma_mau") || "", // mã màu  // cần sữa
-                can_nang: $(this).find("input[name^=can_nang]").val() || "0",
-                gia_cu: $(this).find("input[name^=gia_cu]").val() || "0",
-                gia_moi: $(this).find("input[name^=gia_moi]").val() || "0",
-                gia_drop: $(this).find("input[name^=gia_drop]").val() || "0",
-                gia_ctv: $(this).find("input[name^=gia_ctv]").val() || "0",
-                gia_socdo: $(this).find("input[name^=gia_socdo]").val() || "0",
-                drop_min: $(this).find("input[name^=drop_min]").val() || "0",
-                kho_sanpham_shop:
-                    $(this).find("input[name^=kho_sanpham_shop]").val() || "0",
-                trongluongtinhship:
-                    $(this).find("input[name^=trongluongtinhship]").val() || "0",
-            };
-            list_phanloai.push(phanloai);
-        });
-        var tong_kho_sanpham = $(".list_phanloai .li_phanloai")
-            .toArray()
-            .reduce((sum, el) => {
-                return (
-                    sum +
-                    (parseInt($(el).find("input[name^=kho_sanpham_shop]").val()) || 0)
-                );
-            }, 0);
-        // Kiểm tra dữ liệu
-        if (tieu_de.length < 4) {
-            $("input[name=tieu_de]").focus();
-        }
-        // huyphuc08/05/225
-        else if (list_photo.length > 8) {
-            setTimeout(function () {
-                $(".load_overlay").show();
-                $(".load_process").fadeIn();
-                $(".load_note").html("Tối đa 8 ảnh đa chiều sản phẩm");
-            }, 1000);
-            setTimeout(function () {
-                $(".load_process").hide();
-                $(".load_overlay").hide();
-                $(".load_note").html("");
-            }, 3000);
-        } else if (!list_photo.length) {
-            setTimeout(function () {
-                $(".load_overlay").show();
-                $(".load_process").fadeIn();
-                $(".load_note").html("Vui lòng chọn ít nhất một ảnh đa chiều sản phẩm");
-            }, 1000);
-            setTimeout(function () {
-                $(".load_process").hide();
-                $(".load_overlay").hide();
-                $(".load_note").html("");
-            }, 3000);
-        } else if (noibat2.length < 10) {
-            setTimeout(function () {
-                $(".load_overlay").show();
-                $(".load_process").fadeIn();
-                $(".load_note").html(
-                    "Vui lòng nhập ít nhất 10 ký tự cho đặc điểm nổi bật!"
-                );
-            }, 1000);
-            setTimeout(function () {
-                $(".load_process").hide();
-                $(".load_overlay").hide();
-                $(".load_note").html("");
-            }, 3000);
-            tinymce.execCommand("mceFocus", false, "noibat");
-        } else if (noibat2.length > 600) {
-            setTimeout(function () {
-                $(".load_overlay").show();
-                $(".load_process").fadeIn();
-                $(".load_note").html("Đặc điểm nổi bật không được quá 600 ký tự!");
-            }, 1000);
-            setTimeout(function () {
-                $(".load_process").hide();
-                $(".load_overlay").hide();
-                $(".load_note").html("");
-            }, 3000);
-            tinymce.execCommand("mceFocus", false, "noibat");
-        } else if (noidung2.length < 10) {
-            setTimeout(function () {
-                $(".load_overlay").show();
-                $(".load_process").fadeIn();
-                $(".load_note").html(
-                    "Vui lòng nhập ít nhất 10 ký tự cho mô tả chi tiết!"
-                );
-            }, 1000);
-            setTimeout(function () {
-                $(".load_process").hide();
-                $(".load_overlay").hide();
-                $(".load_note").html("");
-            }, 3000);
-            tinymce.execCommand("mceFocus", false, "edit_textarea");
-        } else if (noidung2.length > 5000) {
-            setTimeout(function () {
-                $(".load_overlay").show();
-                $(".load_process").fadeIn();
-                $(".load_note").html(
-                    "Nội dung chi tiết không được vượt quá 5000 ký tự!"
-                );
-            }, 1000);
-            setTimeout(function () {
-                $(".load_process").hide();
-                $(".load_overlay").hide();
-                $(".load_note").html("");
-            }, 3000);
-            tinymce.execCommand("mceFocus", false, "edit_textarea");
-        }
-        //
-        else if (title.length > 150) {
-            setTimeout(function () {
-                $(".load_overlay").show();
-                $(".load_process").fadeIn();
-                $(".load_note").html("Title không được vượt quá 150 ký tự!");
-            }, 1000);
-            setTimeout(function () {
-                $(".load_process").hide();
-                $(".load_overlay").hide();
-                $(".load_note").html("");
-            }, 3000);
-            $("input[name=title]").focus();
-        } else if (description.length > 150) {
-            setTimeout(function () {
-                $(".load_overlay").show();
-                $(".load_process").fadeIn();
-                $(".load_note").html("description không được vượt quá 150 ký tự!");
-            }, 1000);
-            setTimeout(function () {
-                $(".load_process").hide();
-                $(".load_overlay").hide();
-                $(".load_note").html("");
-            }, 3000);
-            $("textarea[name=description]").focus();
-        } else if (title == "") {
-            $("input[name=title]").focus();
-        } else if (description == "") {
-            $("textarea[name=description]").focus();
-        } else if (list_phanloai.length === 0) {
-            alert("Vui lòng thêm ít nhất một phân loại sản phẩm!");
-        } else if (list_noiban.length === 0) {
-            alert("Vui lòng chọn nơi bán!");
-        } else {
-            // Gửi dữ liệu qua AJAX
-            var file_data = $("#minh_hoa").prop("files")[0];
-            var form_data = new FormData();
-            form_data.append("action", "add_sanpham_ngoai");
-            form_data.append("tieu_de", tieu_de);
-            form_data.append("kho", tong_kho_sanpham); // = số sản phẩm phân loại
-            form_data.append("anh", anh);
-            form_data.append("minh_hoa", minh_hoa);
-            form_data.append("file", file_data);
-            form_data.append("link", link);
-            form_data.append("category", list_cat);
-            form_data.append("phan_loai", JSON.stringify(list_phanloai));
-            form_data.append("noiban", list_noiban);
-            form_data.append("thuong_hieu", thuong_hieu);
-            form_data.append("thuong_hieu_2", thuong_hieu_2);
-            form_data.append("info", list_info);
-            form_data.append("noibat", noibat);
-            form_data.append("noidung", noidung);
-            form_data.append("title", title);
-            form_data.append("description", description);
-            form_data.append("chieudai_shop", chieudai_shop);
-            form_data.append("chieurong_shop", chieurong_shop);
-            form_data.append("chieucao_shop", chieucao_shop);
-            form_data.append("thongtin", thongtin); // thông tin (thông số) 3-4
-            $(".load_overlay").show();
-            $(".load_process").fadeIn();
-            console.log("Data being sent:");
-            for (var pair of form_data.entries()) {
-                console.log(pair[0] + ":", pair[1]);
-            }
-            $.ajax({
-                url: "/ncc/process.php",
-                type: "post",
-                cache: false,
-                contentType: false,
-                processData: false,
-                data: form_data,
-                success: function (kq) {
-                    var info = JSON.parse(kq);
-                    setTimeout(function () {
-                        $(".load_note").html(info.thongbao);
-                    }, 1000);
-                    setTimeout(function () {
-                        $(".load_process").hide();
-                        $(".load_note").html("Hệ thống đang xử lý");
-                        $(".load_overlay").hide();
-                        if (info.ok == 1) {
-                            window.location.reload();
-                        }
-                    }, 3000);
-                },
-            });
+    //     // Thông số sản phẩm
+    //     var list_info = "";
+    //     $(".li_info").each(function () {
+    //         info_name = $(this).find("input[name^=info_name]").val();
+    //         info_value = $(this).find("input[name^=info_value]").val();
+    //         if (info_name != "") {
+    //             list_info += info_name + "&&" + info_value + "|";
+    //         }
+    //     });
+    //     // Đặc điểm nổi bật và nội dung chi tiết
+    //     noibat = tinyMCE.get("noibat").getContent();
+    //     noibat2 = stripHtml(noibat);
+    //     noidung = tinyMCE.get("edit_textarea").getContent();
+    //     noidung2 = stripHtml(noidung);
+    //     link = $("input[name=link]").val();
+    //     thuong_hieu = $("select[name=thuong_hieu]").val();
+    //     thuong_hieu_2 = $("input[name=thuong_hieu_2]").val();
+    //     thongtin = $("input[name=thongtin]").val();
+    //     chieudai_shop = $("input[name=chieudai_shop]").val();
+    //     chieurong_shop = $("input[name=chieurong_shop]").val();
+    //     chieucao_shop = $("input[name=chieucao_shop]").val();
+    //     // console.log(noidung);
+    //     // Phân loại sản phẩm
+    //     var list_phanloai = [];
+    //     $(".list_phanloai .li_phanloai").each(function () {
+    //         var phanloai = {
+    //             ma_sp: $(this).find("input[name^=ma]").val() || "",
+    //             size_shop: $(this).find("input[name^=size_shop]").attr("giatri") || "0",
+    //             color_shop:
+    //                 $(this).find("input[name^=color_shop]").attr("giatri") || "0",
+    //             ten_size_shop: $(this).find("input[name^=ten_size_shop]").val() || "",
+    //             ten_color_shop: $(this).find("input[name^=ten_color_shop]").val() || "",
+    //             ma_mau_shop: $(this).find("input[name^=ma_mau_shop]").val() || "",
+    //             size: $(this).find("input[name^=size]").attr("giatri") || "0", // số size
+    //             color: $(this).find("input[name^=color]").attr("giatri") || "0", // số color
+    //             ten_size: $(this).find("input[name^=ten_size]").val() || "", // tên size
+    //             ten_color: $(this).find("input[name^=ten_color]").val() || "", //tên color
+    //             ma_mau: $(this).find("input[name^=ma_mau]").attr("ma_mau") || "", // mã màu  // cần sữa
+    //             can_nang: $(this).find("input[name^=can_nang]").val() || "0",
+    //             gia_cu: $(this).find("input[name^=gia_cu]").val() || "0",
+    //             gia_moi: $(this).find("input[name^=gia_moi]").val() || "0",
+    //             gia_drop: $(this).find("input[name^=gia_drop]").val() || "0",
+    //             gia_ctv: $(this).find("input[name^=gia_ctv]").val() || "0",
+    //             gia_socdo: $(this).find("input[name^=gia_socdo]").val() || "0",
+    //             drop_min: $(this).find("input[name^=drop_min]").val() || "0",
+    //             kho_sanpham_shop:
+    //                 $(this).find("input[name^=kho_sanpham_shop]").val() || "0",
+    //             trongluongtinhship:
+    //                 $(this).find("input[name^=trongluongtinhship]").val() || "0",
+    //         };
+    //         list_phanloai.push(phanloai);
+    //     });
+    //     var tong_kho_sanpham = $(".list_phanloai .li_phanloai")
+    //         .toArray()
+    //         .reduce((sum, el) => {
+    //             return (
+    //                 sum +
+    //                 (parseInt($(el).find("input[name^=kho_sanpham_shop]").val()) || 0)
+    //             );
+    //         }, 0);
+    //     // Kiểm tra dữ liệu
+    //     if (tieu_de.length < 4) {
+    //         $("input[name=tieu_de]").focus();
+    //     }
+    //     // huyphuc08/05/225
+    //     else if (list_photo.length > 8) {
+    //         setTimeout(function () {
+    //             $(".load_overlay").show();
+    //             $(".load_process").fadeIn();
+    //             $(".load_note").html("Tối đa 8 ảnh đa chiều sản phẩm");
+    //         }, 1000);
+    //         setTimeout(function () {
+    //             $(".load_process").hide();
+    //             $(".load_overlay").hide();
+    //             $(".load_note").html("");
+    //         }, 3000);
+    //     } else if (!list_photo.length) {
+    //         setTimeout(function () {
+    //             $(".load_overlay").show();
+    //             $(".load_process").fadeIn();
+    //             $(".load_note").html("Vui lòng chọn ít nhất một ảnh đa chiều sản phẩm");
+    //         }, 1000);
+    //         setTimeout(function () {
+    //             $(".load_process").hide();
+    //             $(".load_overlay").hide();
+    //             $(".load_note").html("");
+    //         }, 3000);
+    //     } else if (noibat2.length < 10) {
+    //         setTimeout(function () {
+    //             $(".load_overlay").show();
+    //             $(".load_process").fadeIn();
+    //             $(".load_note").html(
+    //                 "Vui lòng nhập ít nhất 10 ký tự cho đặc điểm nổi bật!"
+    //             );
+    //         }, 1000);
+    //         setTimeout(function () {
+    //             $(".load_process").hide();
+    //             $(".load_overlay").hide();
+    //             $(".load_note").html("");
+    //         }, 3000);
+    //         tinymce.execCommand("mceFocus", false, "noibat");
+    //     } else if (noibat2.length > 600) {
+    //         setTimeout(function () {
+    //             $(".load_overlay").show();
+    //             $(".load_process").fadeIn();
+    //             $(".load_note").html("Đặc điểm nổi bật không được quá 600 ký tự!");
+    //         }, 1000);
+    //         setTimeout(function () {
+    //             $(".load_process").hide();
+    //             $(".load_overlay").hide();
+    //             $(".load_note").html("");
+    //         }, 3000);
+    //         tinymce.execCommand("mceFocus", false, "noibat");
+    //     } else if (noidung2.length < 10) {
+    //         setTimeout(function () {
+    //             $(".load_overlay").show();
+    //             $(".load_process").fadeIn();
+    //             $(".load_note").html(
+    //                 "Vui lòng nhập ít nhất 10 ký tự cho mô tả chi tiết!"
+    //             );
+    //         }, 1000);
+    //         setTimeout(function () {
+    //             $(".load_process").hide();
+    //             $(".load_overlay").hide();
+    //             $(".load_note").html("");
+    //         }, 3000);
+    //         tinymce.execCommand("mceFocus", false, "edit_textarea");
+    //     } else if (noidung2.length > 5000) {
+    //         setTimeout(function () {
+    //             $(".load_overlay").show();
+    //             $(".load_process").fadeIn();
+    //             $(".load_note").html(
+    //                 "Nội dung chi tiết không được vượt quá 5000 ký tự!"
+    //             );
+    //         }, 1000);
+    //         setTimeout(function () {
+    //             $(".load_process").hide();
+    //             $(".load_overlay").hide();
+    //             $(".load_note").html("");
+    //         }, 3000);
+    //         tinymce.execCommand("mceFocus", false, "edit_textarea");
+    //     }
+    //     //
+    //     else if (title.length > 150) {
+    //         setTimeout(function () {
+    //             $(".load_overlay").show();
+    //             $(".load_process").fadeIn();
+    //             $(".load_note").html("Title không được vượt quá 150 ký tự!");
+    //         }, 1000);
+    //         setTimeout(function () {
+    //             $(".load_process").hide();
+    //             $(".load_overlay").hide();
+    //             $(".load_note").html("");
+    //         }, 3000);
+    //         $("input[name=title]").focus();
+    //     } else if (description.length > 150) {
+    //         setTimeout(function () {
+    //             $(".load_overlay").show();
+    //             $(".load_process").fadeIn();
+    //             $(".load_note").html("description không được vượt quá 150 ký tự!");
+    //         }, 1000);
+    //         setTimeout(function () {
+    //             $(".load_process").hide();
+    //             $(".load_overlay").hide();
+    //             $(".load_note").html("");
+    //         }, 3000);
+    //         $("textarea[name=description]").focus();
+    //     } else if (title == "") {
+    //         $("input[name=title]").focus();
+    //     } else if (description == "") {
+    //         $("textarea[name=description]").focus();
+    //     } else if (list_phanloai.length === 0) {
+    //         alert("Vui lòng thêm ít nhất một phân loại sản phẩm!");
+    //     } else if (list_noiban.length === 0) {
+    //         alert("Vui lòng chọn nơi bán!");
+    //     } else {
+    //         // Gửi dữ liệu qua AJAX
+    //         var file_data = $("#minh_hoa").prop("files")[0];
+    //         var form_data = new FormData();
+    //         form_data.append("action", "add_sanpham_ngoai");
+    //         form_data.append("tieu_de", tieu_de);
+    //         form_data.append("kho", tong_kho_sanpham); // = số sản phẩm phân loại
+    //         form_data.append("anh", anh);
+    //         form_data.append("minh_hoa", minh_hoa);
+    //         form_data.append("file", file_data);
+    //         form_data.append("link", link);
+    //         form_data.append("category", list_cat);
+    //         form_data.append("phan_loai", JSON.stringify(list_phanloai));
+    //         form_data.append("noiban", list_noiban);
+    //         form_data.append("thuong_hieu", thuong_hieu);
+    //         form_data.append("thuong_hieu_2", thuong_hieu_2);
+    //         form_data.append("info", list_info);
+    //         form_data.append("noibat", noibat);
+    //         form_data.append("noidung", noidung);
+    //         form_data.append("title", title);
+    //         form_data.append("description", description);
+    //         form_data.append("chieudai_shop", chieudai_shop);
+    //         form_data.append("chieurong_shop", chieurong_shop);
+    //         form_data.append("chieucao_shop", chieucao_shop);
+    //         form_data.append("thongtin", thongtin); // thông tin (thông số) 3-4
+    //         $(".load_overlay").show();
+    //         $(".load_process").fadeIn();
+    //         console.log("Data being sent:");
+    //         for (var pair of form_data.entries()) {
+    //             console.log(pair[0] + ":", pair[1]);
+    //         }
+    //         $.ajax({
+    //             url: "/ncc/process.php",
+    //             type: "post",
+    //             cache: false,
+    //             contentType: false,
+    //             processData: false,
+    //             data: form_data,
+    //             success: function (kq) {
+    //                 var info = JSON.parse(kq);
+    //                 setTimeout(function () {
+    //                     $(".load_note").html(info.thongbao);
+    //                 }, 1000);
+    //                 setTimeout(function () {
+    //                     $(".load_process").hide();
+    //                     $(".load_note").html("Hệ thống đang xử lý");
+    //                     $(".load_overlay").hide();
+    //                     if (info.ok == 1) {
+    //                         window.location.reload();
+    //                     }
+    //                 }, 3000);
+    //             },
+    //         });
+    //     }
+    // });
+    $("button[name=add_sanpham_ngoai]").on("click", function () {
+    var tieu_de = $("input[name=tieu_de]").val();
+    var list_photo = [];
+    $(".list_photo img").each(function () {
+        list_photo.push($(this).attr("src"));
+    });
+    var anh = list_photo.toString();
+    var minh_hoa = $("#preview-minhhoa").attr("src");
+    var title = $("input[name=title]").val();
+    var description = $("textarea[name=description]").val();
+    var list_cat = [];
+    $(".li_input input[name^=category]:checked").each(function () {
+        list_cat.push($(this).val());
+    });
+    list_cat = list_cat.toString();
+    var list_info = "";
+    $(".li_info").each(function () {
+        var info_name = $(this).find("input[name^=info_name]").val();
+        var info_value = $(this).find("input[name^=info_value]").val();
+        if (info_name != "") {
+            list_info += info_name + "&&" + info_value + "|";
         }
     });
+    var noibat = tinyMCE.get("noibat").getContent();
+    var noibat2 = stripHtml(noibat);
+    var noidung = tinyMCE.get("edit_textarea").getContent();
+    var noidung2 = stripHtml(noidung);
+    var link = $("input[name=link]").val();
+    var thuong_hieu = $("select[name=thuong_hieu]").val();
+    var thuong_hieu_2 = $("input[name=thuong_hieu_2]").val();
+    var chieudai_shop = $("input[name=chieudai_shop]").val();
+    var chieurong_shop = $("input[name=chieurong_shop]").val();
+    var chieucao_shop = $("input[name=chieucao_shop]").val();
+    var list_phanloai = [];
+    $(".list_phanloai .li_phanloai").each(function () {
+        var phanloai = {
+            ma_sp: $(this).find("input[name^=ma]").val() || "",
+            size: $(this).find("input[name^=size]").attr("giatri") || "",
+            color: $(this).find("input[name^=color]").attr("giatri") || "",
+            ten_size: $(this).find("input[name^=ten_size]").val() || "",
+            ten_color: $(this).find("input[name^=ten_color]").val() || "",
+            ma_mau: $(this).find("input[name^=ma_mau]").val() || "",
+            can_nang: $(this).find("input[name^=can_nang]").val() || "0",
+            gia_cu: $(this).find("input[name^=gia_cu]").val() || "0",
+            gia_moi: $(this).find("input[name^=gia_moi]").val() || "0",
+            kho_sanpham_shop: $(this).find("input[name^=kho_sanpham_shop]").val() || "0",
+            trongluongtinhship: $(this).find("input[name^=trongluongtinhship]").val() || "0",
+        };
+        list_phanloai.push(phanloai);
+    });
+    var tong_kho_sanpham = $(".list_phanloai .li_phanloai")
+        .toArray()
+        .reduce((sum, el) => {
+            return sum + (parseInt($(el).find("input[name^=kho_sanpham_shop]").val()) || 0);
+        }, 0);
 
-    // Hàm định dạng giá
+    // Kiểm tra dữ liệu
+    if (tieu_de.length < 4) {
+        $("input[name=tieu_de]").focus();
+        alert("Vui lòng nhập tiêu đề ít nhất 4 ký tự!");
+        return;
+    }
+    if (tieu_de.length > 120) {
+        $("input[name=tieu_de]").focus();
+        alert("Tiêu đề không được vượt quá 120 ký tự!");
+        return;
+    }
+    if (list_photo.length > 8) {
+        $(".load_overlay").show();
+        $(".load_process").fadeIn();
+        $(".load_note").html("Tối đa 8 ảnh đa chiều sản phẩm");
+        setTimeout(function () {
+            $(".load_process").hide();
+            $(".load_overlay").hide();
+            $(".load_note").html("");
+        }, 3000);
+        return;
+    }
+    if (!list_photo.length) {
+        $(".load_overlay").show();
+        $(".load_process").fadeIn();
+        $(".load_note").html("Vui lòng chọn ít nhất một ảnh đa chiều sản phẩm");
+        setTimeout(function () {
+            $(".load_process").hide();
+            $(".load_overlay").hide();
+            $(".load_note").html("");
+        }, 3000);
+        return;
+    }
+    if (noibat2.length < 10) {
+        $(".load_overlay").show();
+        $(".load_process").fadeIn();
+        $(".load_note").html("Vui lòng nhập ít nhất 10 ký tự cho đặc điểm nổi bật!");
+        setTimeout(function () {
+            $(".load_process").hide();
+            $(".load_overlay").hide();
+            $(".load_note").html("");
+        }, 3000);
+        tinymce.execCommand("mceFocus", false, "noibat");
+        return;
+    }
+    if (noibat2.length > 600) {
+        $(".load_overlay").show();
+        $(".load_process").fadeIn();
+        $(".load_note").html("Đặc điểm nổi bật không được quá 600 ký tự!");
+        setTimeout(function () {
+            $(".load_process").hide();
+            $(".load_overlay").hide();
+            $(".load_note").html("");
+        }, 3000);
+        tinymce.execCommand("mceFocus", false, "noibat");
+        return;
+    }
+    if (noidung2.length < 10) {
+        $(".load_overlay").show();
+        $(".load_process").fadeIn();
+        $(".load_note").html("Vui lòng nhập ít nhất 10 ký tự cho mô tả chi tiết!");
+        setTimeout(function () {
+            $(".load_process").hide();
+            $(".load_overlay").hide();
+            $(".load_note").html("");
+        }, 3000);
+        tinymce.execCommand("mceFocus", false, "edit_textarea");
+        return;
+    }
+    if (noidung2.length > 5000) {
+        $(".load_overlay").show();
+        $(".load_process").fadeIn();
+        $(".load_note").html("Nội dung chi tiết không được vượt quá 5000 ký tự!");
+        setTimeout(function () {
+            $(".load_process").hide();
+            $(".load_overlay").hide();
+            $(".load_note").html("");
+        }, 3000);
+        tinymce.execCommand("mceFocus", false, "edit_textarea");
+        return;
+    }
+    if (title.length > 150) {
+        $("input[name=title]").focus();
+        alert("Title không được vượt quá 150 ký tự!");
+        return;
+    }
+    if (description.length > 150) {
+        $("textarea[name=description]").focus();
+        alert("Description không được vượt quá 150 ký tự!");
+        return;
+    }
+    if (title == "") {
+        $("input[name=title]").focus();
+        alert("Vui lòng nhập title!");
+        return;
+    }
+    if (description == "") {
+        $("textarea[name=description]").focus();
+        alert("Vui lòng nhập description!");
+        return;
+    }
+    if (list_phanloai.length === 0) {
+        alert("Vui lòng thêm ít nhất một phân loại sản phẩm!");
+        return;
+    }
+
+    // Gửi dữ liệu qua AJAX
+    var file_data = $("#minh_hoa").prop("files")[0];
+    var form_data = new FormData();
+    form_data.append("action", "add_sanpham_ngoai");
+    form_data.append("tieu_de", tieu_de);
+    form_data.append("kho", tong_kho_sanpham);
+    form_data.append("anh", anh);
+    form_data.append("minh_hoa", minh_hoa);
+    form_data.append("file", file_data);
+    form_data.append("link", link);
+    form_data.append("category", list_cat);
+    form_data.append("phan_loai", JSON.stringify(list_phanloai));
+    form_data.append("thuong_hieu", thuong_hieu);
+    form_data.append("thuong_hieu_2", thuong_hieu_2);
+    form_data.append("info", list_info);
+    form_data.append("noibat", noibat);
+    form_data.append("noidung", noidung);
+    form_data.append("title", title);
+    form_data.append("description", description);
+    form_data.append("chieudai_shop", chieudai_shop);
+    form_data.append("chieurong_shop", chieurong_shop);
+    form_data.append("chieucao_shop", chieucao_shop);
+
+    $(".load_overlay").show();
+    $(".load_process").fadeIn();
+    $.ajax({
+        url: "/ncc/process.php",
+        type: "post",
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        success: function (kq) {
+            var info = JSON.parse(kq);
+            setTimeout(function () {
+                $(".load_note").html(info.thongbao);
+            }, 1000);
+            setTimeout(function () {
+                $(".load_process").hide();
+                $(".load_note").html("Hệ thống đang xử lý");
+                $(".load_overlay").hide();
+                if (info.ok == 1) {
+                    window.location.reload();
+                }
+            }, 3000);
+        },
+    });
+});
+
     function format_price(number) {
         return Number(number).toLocaleString("en-US", { minimumFractionDigits: 0 });
     }
 
-    // Tự động tạo mã cho hàng phân loại đầu tiên khi trang được tải
-    //3-4
     $(document).ready(function () {
         const randomCode = generateRandomCode();
         $(".list_phanloai .li_phanloai input[name^=ma]").each(function () {

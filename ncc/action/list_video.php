@@ -1,7 +1,7 @@
 <?php
 	$thaythe['title'] = 'Học viện socdo.vn';
 	$thaythe['title_action'] = 'Danh sách video hướng dẫn';
-	$limit = 100;
+	$limit = 10;
 	$thongke = mysqli_query($conn, "SELECT count(*) AS total FROM video WHERE loai LIKE '%all%' OR loai LIKE '%drop%'");
 	$r_tk = mysqli_fetch_assoc($thongke);
 	$total_page = ceil($r_tk['total'] / $limit);

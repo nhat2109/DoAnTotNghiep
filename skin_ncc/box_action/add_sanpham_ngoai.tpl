@@ -408,11 +408,16 @@ tinymce.init({
     <div class="box_right_content">
         <div class="box_profile">
             <div class="page_title">
-                <h1 class="undefined">Đăng sản phẩm mới</h1>
+                <h1>Đăng sản phẩm mới</h1>
                 <div class="line"></div>
                 <hr>
             </div>
             <div class="col_50">
+                <!-- <div class="form_group">
+                    <label for="">Tiêu đề (tối đa 120 ký tự)</label>
+                    <input type="text" class="form_control tieude_seo" name="tieu_de" onkeyup="check_blank('sanpham');" value="" placeholder="Nhập tiêu đề...">
+                    <div class="check_link"></div>
+                </div> -->
                 <div class="form_group">
                     <label for="">Tiêu đề (tối đa 120 ký tự)</label>
                     <input type="text" class="form_control tieude_seo" name="tieu_de" onkeyup="check_blank('sanpham');" value="" placeholder="Nhập tiêu đề...">
@@ -421,7 +426,6 @@ tinymce.init({
                 <div class="form_group" style="display: none;">
                     <label for="">Link xem</label>
                     <input type="text" class="form_control link_seo" name="link" onkeyup="check_link('sanpham');" value="" placeholder="Nhập link xem...">
-                    
                 </div>
                 <div class="form_group">
                     <label for="">Minh họa (Bấm vào ảnh để chọn ảnh mới 600 x 600 px)</label>
@@ -437,25 +441,21 @@ tinymce.init({
                     </div>
                     <input type="file" name="minh_hoa" id="minh_hoa" style="display: none;">
                 </div>
-                <div class="form_group" style="display: none;">
-                    <label for="">Kho hàng</label>
-                    <input type="text" class="form_control price_format" name="kho" value="0" placeholder="Nhập số hàng trong kho...">
-                </div>
                 <div class="form_group">
                     <h3 for="">Kích thước đóng hộp</h3>
-                    <div style=" display: flex;">
+                    <div style="display: flex;">
                         <div style="margin-right:10px;">
                             <label for="">Chiều dài (cm)</label>
-                        <input type="text" class="form_control price_format" name="chieudai_shop" value="0" placeholder="Nhập chiều dài (cm)...">
+                            <input type="text" class="form_control price_format" name="chieudai_shop" value="0" placeholder="Nhập chiều dài (cm)...">
                         </div>
                         <div style="margin-right:10px;">
                             <label for="">Chiều rộng (cm)</label>
                             <input type="text" class="form_control price_format" name="chieurong_shop" value="0" placeholder="Nhập chiều rộng (cm)...">
                         </div>
-                      <div style="margin-right:10px;">
-                        <label for="">Chiều cao (cm)</label>
-                        <input type="text" class="form_control price_format" name="chieucao_shop" value="0" placeholder="Nhập chiều cao (cm)...">
-                      </div>
+                        <div style="margin-right:10px;">
+                            <label for="">Chiều cao (cm)</label>
+                            <input type="text" class="form_control price_format" name="chieucao_shop" value="0" placeholder="Nhập chiều cao (cm)...">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -480,9 +480,6 @@ tinymce.init({
                         <div class="info_can_nang">Trọng lượng (kg)</div>
                         <div class="info_gia">Giá niêm yết</div>
                         <div class="info_gia">Giá bán</div>
-                        <div class="info_gia" style="display: none;">Giá drop</div>
-                        <div class="info_gia" style="display: none;">Giá CTV</div>
-                        <div class="info_gia" style="display: none;">Giá trên Sóc đỏ</div>
                         <div class="info_kho_sanpham_shop">Kho</div>
                         <div class="info_trongluongtinhship">Trọng lượng tính ship</div>
                         <div class="info_action"></div>
@@ -512,23 +509,14 @@ tinymce.init({
                         <div class="info_gia">
                             <input type="text" name="gia_moi[]" class="price_format" value="0" placeholder="Giá bán">
                         </div>
-                        <div class="info_gia" style="display: none;">
-                            <input type="text" name="gia_drop[]" class="price_format" value="0" placeholder="Giá Nhà Bán Chuyên Nghiệp">
-                        </div>
-                        <div class="info_gia" style="display: none;">
-                            <input type="text" name="gia_ctv[]" class="price_format" value="0" placeholder="Giá Hội Viên">
-                        </div>
-                        <div class="info_gia" style="display: none;">
-                            <input type="text" name="gia_socdo[]" class="price_format" value="0" placeholder="Giá trên Sóc Đỏ">
-                        </div>
                         <div class="info_kho_sanpham_shop">
                             <input type="text" name="kho_sanpham_shop[]" class="price_format" value="0" placeholder="Số hàng trong kho">
                         </div>
                         <div class="info_trongluongtinhship">
                             <input type="text" name="trongluongtinhship[]" class="price_format" value="0" readonly>
                         </div>
-                        <div class="info_action"><i class="fa fa-trash-o"></i> </div>
-                        <div class="info_action_copy"><i class="fa fa-files-o"></i> </div>
+                        <div class="info_action"><i class="fa fa-trash-o"></i></div>
+                        <div class="info_action_copy"><i class="fa fa-files-o"></i></div>
                     </div>
                 </div>
             </div>
@@ -545,10 +533,10 @@ tinymce.init({
             <div style="clear: both;"></div>
             <div class="col_50">
                 <div class="form_group">
-                    <label for="">Thương hiệu </label>
-                    <select class="form_control" name="thuong_hieu"  style="margin-top: 5px;">
+                    <label for="">Thương hiệu</label>
+                    <select class="form_control" name="thuong_hieu" style="margin-top: 5px;">
                         <option value="">Thương hiệu của bạn</option>
-                            {option_brand}
+                        {option_brand}
                     </select>
                     <input style="margin-top: 5px;" type="text" class="form_control" name="thuong_hieu_2" value="" placeholder="Hoặc thêm mới...">
                 </div>
@@ -568,16 +556,13 @@ tinymce.init({
                 <div style="clear: both;"></div>
                 <div class="form_group">
                     <label for="">Đặc điểm nổi bật</label>
-                    <textarea name="noibat" class="form_control" id="noibat"
-                        placeholder="Nhập đặc điểm nổi bật của sản phẩm"
-                        style="width: 100%;height: 150px;"></textarea>
+                    <textarea name="noibat" class="form_control" id="noibat" placeholder="Nhập đặc điểm nổi bật của sản phẩm" style="width: 100%;height: 150px;"></textarea>
                     <div id="noibat-counter">Ký tự: 0/600</div>
                 </div>
                 <div style="clear: both;"></div>
                 <div class="form_group">
                     <label for="">Mô tả chi tiết</label>
-                    <textarea name="content" class="form_control" id="edit_textarea"
-                        placeholder="Nhập nội dung chi tiết sản phẩm" style="width: 100%;height: 250px;"></textarea>
+                    <textarea name="content" class="form_control" id="edit_textarea" placeholder="Nhập nội dung chi tiết sản phẩm" style="width: 100%;height: 250px;"></textarea>
                     <div id="noidung-counter">Ký tự: 0/5000</div>
                     <input type='file' name='fileupload' id='fileupload' style='display: none;'>
                 </div>
@@ -588,16 +573,8 @@ tinymce.init({
                 </div>
                 <div class="form_group">
                     <label for="">Description</label>
-                    <textarea name="description" class="form_control" placeholder="Nhập mô tả bài viết"
-                        style="width: 100%;height: 95px;"></textarea>
+                    <textarea name="description" class="form_control" placeholder="Nhập mô tả bài viết" style="width: 100%;height: 95px;"></textarea>
                     <div id="description-counter">Ký tự: 0/150</div>
-                </div>
-                <div class="form_group">
-                    <label for="" style="display: none;">Nơi bán</label>
-                    <div style="clear: both;"></div>
-                    <!-- <div class="li_input" id="noiban_all"><input type="radio" name="noiban[]" value="all"> Tất cả ( Sàn TMĐT & Website & CTV )</div> -->
-                    <div  class="li_input" style="display: none;" id="noiban_drop"><input type="radio" name="noiban[]" value="shop_ncc" checked> Website của bạn</div>
-                    <!-- <div class="li_input" id="noiban_socdo"><input type="radio" name="noiban[]" value="socdo_ctv"> Cộng đồng nhà bán hàng ( CTV )</div> -->
                 </div>
             </div>
             <div style="clear: both;"></div>

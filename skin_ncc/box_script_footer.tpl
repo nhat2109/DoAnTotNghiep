@@ -180,7 +180,7 @@
 </div>
 <div class="box_pop_add"></div>
 
-<div style="display: none;">{box_taikhoan_kh}</div>
+<!-- <div style="display: none;">{box_taikhoan_kh}</div>
 <div class="box_sms_bottom">
     <div class="box_sms_bottom_content"><a href="/ncc/list-chat"><img src="/images/icon-nu.png"><span
                 class="total_chat">0</span></a></div>
@@ -189,7 +189,7 @@
         <div class="noidung_huongdan">Chat với bộ phận hỗ trợ</div>
         <div class="button_next"><button step="box_hotro">Tiếp theo</button></div>
     </div>
-</div>
+</div> -->
 
 
 

@@ -1,7 +1,7 @@
 <?php
 	$thaythe['title'] = 'Sản phẩm hết hàng cắt mã';
 	$thaythe['title_action'] = 'Sản phẩm hết hàng cắt mã';
-	$limit = 100;
+	$limit = 10;
 	if (isset($_COOKIE['drop_kho'])) {
 		$kho = addslashes(strip_tags($_COOKIE['drop_kho']));
 	} else {

@@ -16,7 +16,8 @@ if(isset($_COOKIE['user_id'])){
     $username=addslashes(strip_tags($_REQUEST['username']));
     $password=addslashes(strip_tags($_REQUEST['password']));
     $remember=addslashes($_REQUEST['remember']);
-    $thongtin=mysqli_query($conn,"SELECT *,count(*) AS total FROM user_info WHERE (email='$username' OR username='$username') AND shop='0' ORDER BY user_id LIMIT 1");
+    $thongtin=mysqli_query($conn,"SELECT *,count(*) AS total FROM user_info WHERE (email='$username' OR username='$username')  ORDER BY user_id LIMIT 1");
+    // AND shop='0'
     $r_tt=mysqli_fetch_assoc($thongtin);
     if($r_tt['total']>0){
         $pass=md5($password);

@@ -97,25 +97,25 @@ if ($step == 1 || !$step) {
         }
     }
 
-    if (isset($_SESSION['muakem'])) {
-        $list_main_id = '';
-        foreach ($_SESSION['main_product'] as $value) {
-            if (is_numeric($value)) {
-                $list_main_id .= $value . ',';
-                $thongtin_muakem = mysqli_query($conn, "SELECT * FROM deal WHERE FIND_IN_SET($value,main_product)>0 AND date_start<='$hientai' AND date_end>='$hientai' AND loai='muakem' AND shop='$shop' ORDER BY id DESC LIMIT 1");
-                $r_mk = mysqli_fetch_assoc($thongtin_muakem);
-                $list_sub_product[] = json_decode($r_mk['sub_product'], true);
-            }
-        }
-        foreach ($list_sub_product as $value) {
-            foreach ($value as $k => $v) {
-                $list_s[$k] = $v;
-            }
-        }
-        $list_main_id = rtrim($list_main_id, ',');
-        $tach_list_main_id = explode(',', $list_main_id);
-        $tach_list_id_mk = explode(',', rtrim($r_mk['sub_id'] ?? '', ','));
-    }
+        // if (isset($_SESSION['muakem'])) {
+        //     $list_main_id = '';
+        //     foreach ($_SESSION['main_product'] as $value) {
+        //         if (is_numeric($value)) {
+        //             $list_main_id .= $value . ',';
+        //             $thongtin_muakem = mysqli_query($conn, "SELECT * FROM deal WHERE FIND_IN_SET($value,main_product)>0 AND date_start<='$hientai' AND date_end>='$hientai' AND loai='muakem' AND shop='$shop' ORDER BY id DESC LIMIT 1");
+        //             $r_mk = mysqli_fetch_assoc($thongtin_muakem);
+        //             $list_sub_product[] = json_decode($r_mk['sub_product'], true);
+        //         }
+        //     }
+        //     foreach ($list_sub_product as $value) {
+        //         foreach ($value as $k => $v) {
+        //             $list_s[$k] = $v;
+        //         }
+        //     }
+        //     $list_main_id = rtrim($list_main_id, ',');
+        //     $tach_list_main_id = explode(',', $list_main_id);
+        //     $tach_list_id_mk = explode(',', rtrim($r_mk['sub_id'] ?? '', ','));
+        // }
 
     foreach ($list_check_product as $value) {
         foreach ($value as $k => $v) {
@@ -177,23 +177,23 @@ if ($step == 1 || !$step) {
     }
     function checkRole($conn, $user_id)
     {
-        $stmt = mysqli_prepare($conn, "SELECT dropship, ctv FROM user_info WHERE user_id = ?");
+        $stmt = mysqli_prepare($conn, "SELECT ctv FROM user_info WHERE user_id = ?");
         mysqli_stmt_bind_param($stmt, "i", $user_id);
         mysqli_stmt_execute($stmt);
         $result = mysqli_stmt_get_result($stmt);
 
         if ($row = mysqli_fetch_assoc($result)) {
-            $dropship = $row['dropship'];
+            // $dropship = $row['dropship'];
             $ctv = $row['ctv'];
 
-            if ($dropship == 1) {
-                mysqli_stmt_close($stmt);
-                $data = [
-                    'tinh' => 'Thành phố Hà Nội',
-                    'huyen' => 'Nam Từ Liêm'
-                ];
-                return $data;
-            }
+            // if ($dropship == 1) {
+            //     mysqli_stmt_close($stmt);
+            //     $data = [
+            //         'tinh' => 'Thành phố Hà Nội',
+            //         'huyen' => 'Nam Từ Liêm'
+            //     ];
+            //     return $data;
+            // }
 
             if ($ctv == 1) {
                 $data = getCtvProvinceDistrict($conn, $user_id);

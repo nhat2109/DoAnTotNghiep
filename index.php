@@ -39,7 +39,7 @@ if ($user_info['ctv'] == 1) {
 		'title' => 'Tài khoản của bạn không có quyền truy cập vào trang này...',
 		'description' => $index_setting['description'],
 		'thongbao' => $thongbao,
-		'link_chuyen' => '/ncc',
+		'link_chuyen' => '/ncc/login',
 	);
 	echo $skin->skin_replace('skin_ncc/chuyenhuong', $replace);
 	exit();

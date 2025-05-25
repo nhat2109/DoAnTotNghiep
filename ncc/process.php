@@ -29,15 +29,14 @@ if (!isset($_COOKIE['user_id'])) {
 		);
 		echo json_encode($info);
 	}
-	// Lưu danh sách sản phẩm đã chọn vào session cho add_flash_sale (giữ lại nếu vẫn cần cho add_flash_sale)
-	if ($action == 'save_selected_products') {
+	else if ($action == 'save_selected_products') {
 		$products = $_REQUEST['products'];
 		$_SESSION['selected_products'] = $products;
 		echo json_encode(['status' => 'success', 'message' => 'Đã lưu danh sách sản phẩm vào session']);
 		exit;
 	}
 	// Lấy danh sách sản phẩm đã chọn từ session cho add_flash_sale (giữ lại nếu vẫn cần cho add_flash_sale)
-	if ($action == 'get_selected_products') {
+	else if ($action == 'get_selected_products') {
 		if (isset($_SESSION['selected_products'])) {
 			echo json_encode(['status' => 'success', 'products' => $_SESSION['selected_products']]);
 		} else {
@@ -45,35 +44,91 @@ if (!isset($_COOKIE['user_id'])) {
 		}
 		exit;
 	}
-	if ($action == 'get_product_variants') {
+	// else if ($action == 'get_product_variants') {
+	// 	$search = isset($_REQUEST['search']) ? mysqli_real_escape_string($conn, $_REQUEST['search']) : '';
+	// 	$where = "shop='$user_id'";
+	// 	if ($search) {
+	// 		$where .= " AND tieu_de LIKE '%$search%'";
+	// 	}
+	// 	$current_time = time();
+	// 	$deal_query = "SELECT main_product FROM deal WHERE date_end > '$current_time' AND loai = 'flash_sale'";
+    // 	$deal_result = mysqli_query($conn, $deal_query);
+	// 	$result = mysqli_query($conn, "SELECT id, tieu_de, gia_cu, gia_moi, minh_hoa FROM sanpham_shop WHERE $where");
+
+	// 	if (!$result) {
+	// 		die('Query Error: ' . mysqli_error($conn));
+	// 	}
+
+	// 	$products = [];
+
+	// 	while ($row = mysqli_fetch_assoc($result)) {
+	// 		$products[] = [
+	// 			'sp_id' => $row['id'],
+	// 			'ten_sp' => $row['tieu_de'],
+	// 			'gia_cu' => number_format($row['gia_cu']) . 'đ',
+	// 			'gia_moi' => number_format($row['gia_moi']) . 'đ',
+	// 			'minh_hoa' => $row['minh_hoa']
+	// 		];
+	// 	}
+
+	// 	echo json_encode($products);
+	// 	exit;
+	// }
+
+	else if ($action == 'get_product_variants') {
 		$search = isset($_REQUEST['search']) ? mysqli_real_escape_string($conn, $_REQUEST['search']) : '';
 		$where = "shop='$user_id'";
 		if ($search) {
 			$where .= " AND tieu_de LIKE '%$search%'";
 		}
+	
+		$current_time = time();
 
-		$result = mysqli_query($conn, "SELECT id,sp_id, tieu_de, gia_cu, gia_moi, minh_hoa FROM sanpham_shop WHERE $where");
+// Truy vấn bảng deal để lấy danh sách main_product còn hiệu lực
+$deal_query = "SELECT main_product FROM deal WHERE date_end > '$current_time' AND loai = 'flash_sale'";
+$deal_result = mysqli_query($conn, $deal_query);
 
-		if (!$result) {
-			die('Query Error: ' . mysqli_error($conn));
-		}
+if (!$deal_result) {
+    die('Deal Query Error: ' . mysqli_error($conn));
+}
 
-		$products = [];
+// Mảng lưu tất cả các ID sản phẩm đang có trong deal
+$deal_product_ids = [];
 
-		while ($row = mysqli_fetch_assoc($result)) {
-			$products[] = [
-				'sp_id' => $row['id'],
-				'ten_sp' => $row['tieu_de'],
-				'gia_cu' => number_format($row['gia_cu']) . 'đ',
-				'gia_moi' => number_format($row['gia_moi']) . 'đ',
-				'minh_hoa' => $row['minh_hoa']
-			];
-		}
+while ($deal_row = mysqli_fetch_assoc($deal_result)) {
+    // Tách chuỗi main_product thành mảng các ID
+    $ids = explode(',', $deal_row['main_product']);
+    foreach ($ids as $id) {
+        $deal_product_ids[] = trim($id);
+    }
+}
 
-		echo json_encode($products);
-		exit;
+// Truy vấn sản phẩm từ sanpham_shop, loại bỏ sản phẩm còn trong deal
+$result = mysqli_query($conn, "SELECT id, tieu_de, gia_cu, gia_moi, minh_hoa FROM sanpham_shop WHERE $where");
+
+if (!$result) {
+    die('Query Error: ' . mysqli_error($conn));
+}
+
+$products = [];
+
+while ($row = mysqli_fetch_assoc($result)) {
+    // Nếu sản phẩm không nằm trong danh sách deal thì mới thêm vào
+    if (!in_array($row['id'], $deal_product_ids)) {
+        $products[] = [
+            'sp_id' => $row['id'],
+            'ten_sp' => $row['tieu_de'],
+            'gia_cu' => number_format($row['gia_cu']) . 'đ',
+            'gia_moi' => number_format($row['gia_moi']) . 'đ',
+            'minh_hoa' => $row['minh_hoa']
+        ];
+    }
+}
+
+echo json_encode($products);
+exit;
 	}
-	if ($action == 'get_variants_by_product') {
+	else if ($action == 'get_variants_by_product') {
 		$sp_id = mysqli_real_escape_string($conn, $_REQUEST['sp_id']);
 		$variant_result = mysqli_query($conn, "SELECT id, ten_color, ten_size, gia_moi, gia_cu, kho_sanpham_shop FROM phanloai_sanpham_shop WHERE sp_id='$sp_id' AND user_id='$user_id'");
 
@@ -96,7 +151,7 @@ if (!isset($_COOKIE['user_id'])) {
 		echo json_encode($variants);
 		exit;
 	}
-	if ($_POST['action'] == 'filter_date') {
+	else if ($_POST['action'] == 'filter_date') {
 		$from_date = isset($_POST['from_date']) ? mysqli_real_escape_string($conn, $_POST['from_date']) : '';
 		$to_date = isset($_POST['to_date']) ? mysqli_real_escape_string($conn, $_POST['to_date']) : '';
 
@@ -431,17 +486,11 @@ if (!isset($_COOKIE['user_id'])) {
 		echo json_encode($info);
 		exit();
 	} else {
-		// $socdo_setting = mysqli_query($conn, "SELECT * FROM index_setting ORDER BY name ASC");
-		// while ($r_sd = mysqli_fetch_assoc($socdo_setting)) {
-		// 	$ss_setting[$r_sd['name']] = $r_sd['value'];
-		// }
 		$setting = mysqli_query($conn, "SELECT * FROM shop_setting WHERE shop='$user_id' ORDER BY name ASC");
 		while ($r_s = mysqli_fetch_assoc($setting)) {
 			$index_setting[$r_s['name']] = $r_s['value'];
 		}
 		$file_action = 'process/' . $action . '.php';
-		// var_dump($file_action);
-		// die();
 		if (file_exists($file_action)) {
 			include($file_action);
 		} else {

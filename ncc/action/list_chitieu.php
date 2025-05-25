@@ -1,7 +1,7 @@
 <?php
 	$thaythe['title'] = 'Lịch sử chi tiêu';
 	$thaythe['title_action'] = 'Lịch sử chi tiêu';
-	$limit = 100;
+	$limit = 10;
 	$thongke = mysqli_query($conn, "SELECT count(*) AS total FROM lichsu_chitieu WHERE user_id='$user_id'");
 	$r_tk = mysqli_fetch_assoc($thongke);
 	$total_page = ceil($r_tk['total'] / $limit);

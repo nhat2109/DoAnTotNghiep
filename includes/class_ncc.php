@@ -859,6 +859,25 @@
 			);
 			return json_encode($info);
 		}
+		function thongke_doanhthu_hieu_suat($conn, $list_id, $dau, $cuoi)
+		{
+			$skin = $this->load('class_skin_cpanel');
+			$check = $this->load('class_check');
+			$start = $page * $limit - $limit;
+			$thongtin = mysqli_query($conn, "SELECT * FROM sanpham_shop WHERE shop IN ($list_id) AND date_post>='$dau' AND date_post<='$cuoi'");
+			while ($r_tt = mysqli_fetch_assoc($thongtin)) {
+				$ngay = date('d', $r_tt['date_post']);
+				$ngay = intval($ngay);
+				$r_tt['ban'] = number_format($r_tt['ban']);
+			}
+			$info = array(
+				'sanpham' => $r_tt['sanpham'],
+				'ban' => $r_tt['ban'],
+				'tongtien' => number_format($r_tt['tongtien']),
+				'date_post' => date('d/m/Y', $r_tt['date_post']),
+			);
+			return json_encode($info);
+		}
 		///////////////////
 		function thongke_hoahong($conn, $list_leader, $list_id, $list_all, $dau, $cuoi)
 		{
@@ -3653,7 +3672,7 @@
 			$skin = $this->load('class_skin_cpanel');
 			$check = $this->load('class_check');
 			$start = $page * $limit - $limit;
-			$thongtin = mysqli_query($conn, "SELECT sanpham_shop.*, ps.gia_ctv, ps.gia_socdo
+			$thongtin = mysqli_query($conn, "SELECT sanpham_shop.*
 											FROM sanpham_shop 
 											
 											LEFT JOIN (SELECT * FROM phanloai_sanpham_shop GROUP BY sp_id) AS ps ON sanpham_shop.id = ps.sp_id
@@ -3669,9 +3688,6 @@
 				$r_tt['date_post'] = date('d/m/Y', $r_tt['date_post']);
 				$r_tt['gia_cu'] = number_format($r_tt['gia_cu']);
 				$r_tt['gia_moi'] = number_format($r_tt['gia_moi']);
-				$r_tt['gia_drop'] = number_format($r_tt['phanloai_gia_drop']);
-				$r_tt['gia_ctv'] = number_format($r_tt['gia_ctv']);
-				$r_tt['gia_socdo'] = number_format($r_tt['gia_socdo']);
 				if ($leader == 1 || $gia_leader == 1) {
 					$r_tt['gia_nhap'] = number_format($r_tt['phanloai_gia_drop']);
 				} else {
@@ -3692,13 +3708,8 @@
 				$r_tt['list_ma'] = $list_ma;
 				unset($list_ma);
 
-				// huyphuc24/04/2025
-				if ($r_tt['status'] == 0) {
-					$r_tt['status_sp'] = '<span class="status">Đang chờ duyệt</span>';
-				} else {
-					$r_tt['status_sp'] = '';
-				}
-				// 
+				
+			
 
 				$list .= $skin->skin_replace('skin_ncc/box_action/tr_sanpham_shop', $r_tt);
 			}
@@ -4525,10 +4536,9 @@
 					}
 				}
 			}
-			// huyphuc29/04/2025
-			$thongtin = mysqli_query($conn, "SELECT sanpham_shop.*, sanpham.gia_drop AS sanpham_gia_drop, sanpham.kho, ps.gia_drop AS phanloai_gia_drop, ps.gia_ctv, ps.gia_socdo
+			
+			$thongtin = mysqli_query($conn, "SELECT sanpham_shop.*
 											FROM sanpham_shop 
-											LEFT JOIN sanpham ON sanpham_shop.sp_id = sanpham.id 
 											LEFT JOIN (SELECT * FROM phanloai_sanpham_shop GROUP BY sp_id) AS ps
 											ON sanpham_shop.id = ps.sp_id WHERE $where AND sanpham_shop.shop='$shop' ORDER BY sanpham_shop.tieu_de ASC");
 			// 
@@ -4539,9 +4549,7 @@
 				$r_tt['date_post'] = date('d/m/Y', $r_tt['date_post']);
 				$r_tt['gia_cu'] = number_format($r_tt['gia_cu']);
 				$r_tt['gia_moi'] = number_format($r_tt['gia_moi']);
-				$r_tt['gia_drop'] = number_format($r_tt['phanloai_gia_drop']);
-				$r_tt['gia_ctv'] = number_format($r_tt['gia_ctv']);
-				$r_tt['gia_socdo'] = number_format($r_tt['gia_socdo']);
+
 				if ($leader == 1 or $gia_leader == 1) {
 					$r_tt['gia_nhap'] = number_format($r_tt['gia_drop']);
 				} else {
@@ -4553,7 +4561,7 @@
 					$r_tt['drop_min'] = number_format($r_tt['drop_min']);
 				}
 				$r_tt['drop_max'] = number_format($r_tt['drop_max']);
-				// huyphuc29/04/2025
+				
 				$thongtin_phanloai = mysqli_query($conn, "SELECT * FROM phanloai_sanpham_shop WHERE sp_id='{$r_tt['id']}'");
 				$total_phanloai = mysqli_num_rows($thongtin_phanloai);
 				if ($total_phanloai == 0) {
@@ -4567,17 +4575,12 @@
 				$r_tt['list_ma'] = $list_ma;
 				unset($list_ma);
 				// 
-				// huyphuc26/04/2025
-				if ($r_tt['status'] == 0) {
-					$r_tt['status_sp'] = '<span class="status">Đang chờ duyệt</span>';
-				} else {
-					$r_tt['status_sp'] = '';
-				}
-				// 
+				
+			
 				$list .= $skin->skin_replace('skin_ncc/box_action/tr_sanpham_shop', $r_tt);
 			}
 			
-			$list .= $skin->skin_replace('skin_ncc/box_action/timkiem_sanpham_shop', 0); // huyphuc26/04/2025
+			$list .= $skin->skin_replace('skin_ncc/box_action/timkiem_sanpham_shop', 0); 
 			mysqli_free_result($thongtin);
 			if ($i == 0) {
 				$list = '<center>Không có kết quả</center>';
@@ -5193,137 +5196,192 @@
 			return $list;
 		}
 		///////////////////////
-		function phantrang($page, $total, $link)
-		{
-			if ($total <= 1) {
-				return '';
-			} else {
-				if ($total == 2) {
-					if ($page < $total) {
-						return '<div class=pagination><div class="pagination-custom"><span>1</span><a href="' . $link . '?page=2">2</a><a href="' . $link . '?page=2">Next</a></div></div>';
-					} else if ($page == $total) {
-						return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '?page=1">Prev</a><a href="' . $link . '?page=1">1</a><span>2</span></div></div>';
-					} else {
-						return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '?page=1">1</a><a href="' . $link . '?page=2">2</a></div></div>';
-					}
-				} else if ($total == 3) {
-					if ($page == 1) {
-						return '<div class=pagination><div class="pagination-custom"><span>1</span><a href="' . $link . '?page=2">2</a><a href="' . $link . '?page=3">3</a><a href="' . $link . '?page=2">Next</a></div></div>';
-					} else if ($page == 2) {
-						return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '?page=1">Prev</a><a href="' . $link . '?page=1">1</a><span>2</span><a href="' . $link . '?page=3">3</a><a href="' . $link . '?page=3">Next</a></div></div>';
-					} else if ($page == 3) {
-						return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '?page=2">Prev</a><a href="' . $link . '?page=1">1</a><a href="' . $link . '?page=2">2</a><span>3</span></div></div>';
-					} else {
-						return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '?page=1">1</a><a href="' . $link . '?page=2">2</a><a href="' . $link . '?page=3">3</a></div></div>';
-					}
-				} else if ($total == 4) {
-					if ($page == 1) {
-						return '<div class=pagination><div class="pagination-custom"><span>1</span> . . . <a href="' . $link . '?page=4">4</a><a href="' . $link . '?page=2">Next</a></div></div>';
-					} else if ($page == 2) {
-						return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '?page=1">Prev</a><a href="' . $link . '?page=1">1</a><span>2</span> . . . <a href="' . $link . '?page=4">4</a><a href="' . $link . '?page=3">Next</a></div></div>';
-					} else if ($page == 3) {
-						return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '?page=2">Prev</a><a href="' . $link . '?page=1">1</a> . . . <span>3</span><a href="' . $link . '?page=4">4</a><a href="' . $link . '?page=4">Next</a></div></div>';
-					} else if ($page == 4) {
-						return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '?page=3">Prev</a><a href="' . $link . '?page=1">1</a> . . . <span>4</span></div></div>';
-					} else {
-						return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '?page=1">1</a><a href="' . $link . '?page=2">2</a><a href="' . $link . '?page=3">3</a><a href="' . $link . '?page=4">4</a></div></div>';
-					}
-				} else {
-					if ($page == 1) {
-						return '<div class=pagination><div class="pagination-custom"><span>1</span> . . . <a href="' . $link . '?page=' . $total . '">' . $total . '</a><a href="' . $link . '?page=2">Next</a></div></div>';
-					} else if ($page == 2) {
-						return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '?page=1">Prev</a><a href="' . $link . '?page=1">1</a><span>2</span> . . . <a href="' . $link . '?page=' . $total . '">' . $total . '</a><a href="' . $link . '?page=3">Next</a></div></div>';
-					} else if ($page == 3) {
-						return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '?page=2">Prev</a><a href="' . $link . '?page=1">1</a> . . . <span>3</span><a href="' . $link . '?page=' . $total . '">' . $total . '</a><a href="' . $link . '?page=4">Next</a></div></div>';
-					} else if ($page <= $total - 2) {
-						$back = $page - 1;
-						$next = $page + 1;
-						return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '?page=' . $back . '">Prev</a><a href="' . $link . '?page=1">1</a> . . . <span>' . $page . '</span> . . . <a href="' . $link . '?page=' . $total . '">' . $total . '</a><a href="' . $link . '?page=' . $next . '">Next</a></div></div>';
-					} else if ($page < $total - 1) {
-						$back = $page - 1;
-						$next = $page + 1;
-						return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '?page=' . $back . '">Prev</a><a href="' . $link . '?page=1">1</a> . . . <span>' . $page . '</span><a href="' . $link . '?page=' . $total . '">' . $total . '</a><a href="' . $link . '?page=' . $next . '">Next</a></div></div>';
-					} else if ($page == $total - 1) {
-						$back = $page - 1;
-						$next = $page + 1;
-						return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '?page=' . $back . '">Prev</a><a href="' . $link . '?page=1">1</a> . . . <span>' . $page . '</span><a href="' . $link . '?page=' . $total . '">' . $total . '</a><a href="' . $link . '?page=' . $next . '">Next</a></div></div>';
-					} else if ($page == $total) {
-						$back = $page - 1;
-						$next = $page + 1;
-						return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '?page=' . $back . '">Prev</a><a href="' . $link . '?page=1">1</a> . . . <a href="' . $link . '?page=' . $back . '">' . $back . '</a><span>' . $page . '</span></div></div>';
-					} else {
-						$k = $total - 1;
-						return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '?page=1">1</a><a href="' . $link . '?page=2">2</a> . . . <a href="' . $link . '?page=' . $k . '">' . $k . '</a><a href="' . $link . '?page=' . $total . '">' . $total . '</a></div></div>';
-					}
-				}
-			}
-		}
+		function phantrang($page, $total, $link) {
+    if ($total <= 1) {
+        return '';
+    } else {
+        if ($total == 2) {
+            if ($page < $total) {
+                return '<div class="pagination"><div class="pagination-custom"><span>1</span><a href="' . $link . '?page=2">2</a><a href="' . $link . '?page=2" class="next">Next</a></div></div>';
+            } else if ($page == $total) {
+                return '<div class="pagination"><div class="pagination-custom"><a href="' . $link . '?page=1" class="prev">Prev</a><a href="' . $link . '?page=1">1</a><span>2</span></div></div>';
+            } else {
+                return '<div class="pagination"><div class="pagination-custom"><a href="' . $link . '?page=1">1</a><a href="' . $link . '?page=2">2</a></div></div>';
+            }
+        } else if ($total == 3) {
+            if ($page == 1) {
+                return '<div class="pagination"><div class="pagination-custom"><span>1</span><a href="' . $link . '?page=2">2</a><a href="' . $link . '?page=3">3</a><a href="' . $link . '?page=2" class="next">Next</a></div></div>';
+            } else if ($page == 2) {
+                return '<div class="pagination"><div class="pagination-custom"><a href="' . $link . '?page=1" class="prev">Prev</a><a href="' . $link . '?page=1">1</a><span>2</span><a href="' . $link . '?page=3">3</a><a href="' . $link . '?page=3" class="next">Next</a></div></div>';
+            } else if ($page == 3) {
+                return '<div class="pagination"><div class="pagination-custom"><a href="' . $link . '?page=2" class="prev">Prev</a><a href="' . $link . '?page=1">1</a><a href="' . $link . '?page=2">2</a><span>3</span></div></div>';
+            } else {
+                return '<div class="pagination"><div class="pagination-custom"><a href="' . $link . '?page=1">1</a><a href="' . $link . '?page=2">2</a><a href="' . $link . '?page=3">3</a></div></div>';
+            }
+        } else if ($total == 4) {
+            if ($page == 1) {
+                return '<div class="pagination"><div class="pagination-custom"><span>1</span> . . . <a href="' . $link . '?page=4">4</a><a href="' . $link . '?page=2" class="next">Next</a></div></div>';
+            } else if ($page == 2) {
+                return '<div class="pagination"><div class="pagination-custom"><a href="' . $link . '?page=1" class="prev">Prev</a><a href="' . $link . '?page=1">1</a><span>2</span> . . . <a href="' . $link . '?page=4">4</a><a href="' . $link . '?page=3" class="next">Next</a></div></div>';
+            } else if ($page == 3) {
+                return '<div class="pagination"><div class="pagination-custom"><a href="' . $link . '?page=2" class="prev">Prev</a><a href="' . $link . '?page=1">1</a> . . . <span>3</span><a href="' . $link . '?page=4">4</a><a href="' . $link . '?page=4" class="next">Next</a></div></div>';
+            } else if ($page == 4) {
+                return '<div class="pagination"><div class="pagination-custom"><a href="' . $link . '?page=3" class="prev">Prev</a><a href="' . $link . '?page=1">1</a> . . . <span>4</span></div></div>';
+            } else {
+                return '<div class="pagination"><div class="pagination-custom"><a href="' . $link . '?page=1">1</a><a href="' . $link . '?page=2">2</a><a href="' . $link . '?page=3">3</a><a href="' . $link . '?page=4">4</a></div></div>';
+            }
+        } else {
+            if ($page == 1) {
+                return '<div class="pagination"><div class="pagination-custom"><span>1</span> . . . <a href="' . $link . '?page=' . $total . '">' . $total . '</a><a href="' . $link . '?page=2" class="next">Next</a></div></div>';
+            } else if ($page == 2) {
+                return '<div class="pagination"><div class="pagination-custom"><a href="' . $link . '?page=1" class="prev">Prev</a><a href="' . $link . '?page=1">1</a><span>2</span> . . . <a href="' . $link . '?page=' . $total . '">' . $total . '</a><a href="' . $link . '?page=3" class="next">Next</a></div></div>';
+            } else if ($page == 3) {
+                return '<div class="pagination"><div class="pagination-custom"><a href="' . $link . '?page=2" class="prev">Prev</a><a href="' . $link . '?page=1">1</a> . . . <span>3</span><a href="' . $link . '?page=' . $total . '">' . $total . '</a><a href="' . $link . '?page=4" class="next">Next</a></div></div>';
+            } else if ($page <= $total - 2) {
+                $back = $page - 1;
+                $next = $page + 1;
+                return '<div class="pagination"><div class="pagination-custom"><a href="' . $link . '?page=' . $back . '" class="prev">Prev</a><a href="' . $link . '?page=1">1</a> . . . <span>' . $page . '</span> . . . <a href="' . $link . '?page=' . $total . '">' . $total . '</a><a href="' . $link . '?page=' . $next . '" class="next">Next</a></div></div>';
+            } else if ($page < $total - 1) {
+                $back = $page - 1;
+                $next = $page + 1;
+                return '<div class="pagination"><div class="pagination-custom"><a href="' . $link . '?page=' . $back . '" class="prev">Prev</a><a href="' . $link . '?page=1">1</a> . . . <span>' . $page . '</span><a href="' . $link . '?page=' . $total . '">' . $total . '</a><a href="' . $link . '?page=' . $next . '" class="next">Next</a></div></div>';
+            } else if ($page == $total - 1) {
+                $back = $page - 1;
+                $next = $page + 1;
+                return '<div class="pagination"><div class="pagination-custom"><a href="' . $link . '?page=' . $back . '" class="prev">Prev</a><a href="' . $link . '?page=1">1</a> . . . <span>' . $page . '</span><a href="' . $link . '?page=' . $total . '">' . $total . '</a><a href="' . $link . '?page=' . $next . '" class="next">Next</a></div></div>';
+            } else if ($page == $total) {
+                $back = $page - 1;
+                $next = $page + 1;
+                return '<div class="pagination"><div class="pagination-custom"><a href="' . $link . '?page=' . $back . '" class="prev">Prev</a><a href="' . $link . '?page=1">1</a> . . . <a href="' . $link . '?page=' . $back . '">' . $back . '</a><span>' . $page . '</span></div></div>';
+            } else {
+                $k = $total - 1;
+                return '<div class="pagination"><div class="pagination-custom"><a href="' . $link . '?page=1">1</a><a href="' . $link . '?page=2">2</a> . . . <a href="' . $link . '?page=' . $k . '">' . $k . '</a><a href="' . $link . '?page=' . $total . '">' . $total . '</a></div></div>';
+            }
+        }
+    }
+}
 		///////////////////////
-		function phantrang_timkiem($page, $total, $link)
-		{
-			if ($total <= 1) {
-				return '';
-			} else {
-				if ($total == 2) {
-					if ($page < $total) {
-						return '<div class=pagination><div class="pagination-custom"><span>1</span><a href="' . $link . '&page=2">2</a><a href="' . $link . '&page=2">Next</a></div></div>';
-					} else if ($page == $total) {
-						return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '&page=1">Prev</a><a href="' . $link . '&page=1">1</a><span>2</span></div></div>';
-					} else {
-						return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '&page=1">1</a><a href="' . $link . '&page=2">2</a></div></div>';
-					}
-				} else if ($total == 3) {
-					if ($page == 1) {
-						return '<div class=pagination><div class="pagination-custom"><span>1</span><a href="' . $link . '&page=2">2</a><a href="' . $link . '&page=3">3</a><a href="' . $link . '&page=2">Next</a></div></div>';
-					} else if ($page == 2) {
-						return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '&page=1">Prev</a><a href="' . $link . '&page=1">1</a><span>2</span><a href="' . $link . '&page=3">3</a><a href="' . $link . '&page=3">Next</a></div></div>';
-					} else if ($page == 3) {
-						return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '&page=2">Prev</a><a href="' . $link . '&page=1">1</a><a href="' . $link . '&page=2">2</a><span>3</span></div></div>';
-					} else {
-						return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '&page=1">1</a><a href="' . $link . '&page=2">2</a><a href="' . $link . '&page=3">3</a></div></div>';
-					}
-				} else if ($total == 4) {
-					if ($page == 1) {
-						return '<div class=pagination><div class="pagination-custom"><span>1</span> . . . <a href="' . $link . '&page=4">4</a><a href="' . $link . '&page=2">Next</a></div></div>';
-					} else if ($page == 2) {
-						return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '&page=1">Prev</a><a href="' . $link . '&page=1">1</a><span>2</span> . . . <a href="' . $link . '&page=4">4</a><a href="' . $link . '&page=3">Next</a></div></div>';
-					} else if ($page == 3) {
-						return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '&page=2">Prev</a><a href="' . $link . '&page=1">1</a> . . . <span>3</span><a href="' . $link . '&page=4">4</a><a href="' . $link . '&page=4">Next</a></div></div>';
-					} else if ($page == 4) {
-						return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '&page=3">Prev</a><a href="' . $link . '&page=1">1</a> . . . <span>4</span></div></div>';
-					} else {
-						return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '&page=1">1</a><a href="' . $link . '&page=2">2</a><a href="' . $link . '&page=3">3</a><a href="' . $link . '&page=4">4</a></div></div>';
-					}
-				} else {
-					if ($page == 1) {
-						return '<div class=pagination><div class="pagination-custom"><span>1</span> . . . <a href="' . $link . '&page=' . $total . '">' . $total . '</a><a href="' . $link . '&page=2">Next</a></div></div>';
-					} else if ($page == 2) {
-						return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '&page=1">Prev</a><a href="' . $link . '&page=1">1</a><span>2</span> . . . <a href="' . $link . '&page=' . $total . '">' . $total . '</a><a href="' . $link . '&page=3">Next</a></div></div>';
-					} else if ($page == 3) {
-						return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '&page=2">Prev</a><a href="' . $link . '&page=1">1</a> . . . <span>3</span><a href="' . $link . '&page=' . $total . '">' . $total . '</a><a href="' . $link . '&page=4">Next</a></div></div>';
-					} else if ($page <= $total - 2) {
-						$back = $page - 1;
-						$next = $page + 1;
-						return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '&page=' . $back . '">Prev</a><a href="' . $link . '&page=1">1</a> . . . <span>' . $page . '</span> . . . <a href="' . $link . '&page=' . $total . '">' . $total . '</a><a href="' . $link . '&page=' . $next . '">Next</a></div></div>';
-					} else if ($page < $total - 1) {
-						$back = $page - 1;
-						$next = $page + 1;
-						return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '&page=' . $back . '">Prev</a><a href="' . $link . '&page=1">1</a> . . . <span>' . $page . '</span><a href="' . $link . '&page=' . $total . '">' . $total . '</a><a href="' . $link . '&page=' . $next . '">Next</a></div></div>';
-					} else if ($page == $total - 1) {
-						$back = $page - 1;
-						$next = $page + 1;
-						return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '&page=' . $back . '">Prev</a><a href="' . $link . '&page=1">1</a> . . . <span>' . $page . '</span><a href="' . $link . '&page=' . $total . '">' . $total . '</a><a href="' . $link . '&page=' . $next . '">Next</a></div></div>';
-					} else if ($page == $total) {
-						$back = $page - 1;
-						$next = $page + 1;
-						return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '&page=' . $back . '">Prev</a><a href="' . $link . '&page=1">1</a> . . . <a href="' . $link . '&page=' . $back . '">' . $back . '</a><span>' . $page . '</span></div></div>';
-					} else {
-						$k = $total - 1;
-						return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '&page=1">1</a><a href="' . $link . '&page=2">2</a> . . . <a href="' . $link . '&page=' . $k . '">' . $k . '</a><a href="' . $link . '&page=' . $total . '">' . $total . '</a></div></div>';
-					}
-				}
-			}
-		}
+		// function phantrang_timkiem($page, $total, $link)
+		// {
+		// 	if ($total <= 1) {
+		// 		return '';
+		// 	} else {
+		// 		if ($total == 2) {
+		// 			if ($page < $total) {
+		// 				return '<div class=pagination><div class="pagination-custom"><span>1</span><a href="' . $link . '&page=2">2</a><a href="' . $link . '&page=2">Next</a></div></div>';
+		// 			} else if ($page == $total) {
+		// 				return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '&page=1">Prev</a><a href="' . $link . '&page=1">1</a><span>2</span></div></div>';
+		// 			} else {
+		// 				return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '&page=1">1</a><a href="' . $link . '&page=2">2</a></div></div>';
+		// 			}
+		// 		} else if ($total == 3) {
+		// 			if ($page == 1) {
+		// 				return '<div class=pagination><div class="pagination-custom"><span>1</span><a href="' . $link . '&page=2">2</a><a href="' . $link . '&page=3">3</a><a href="' . $link . '&page=2">Next</a></div></div>';
+		// 			} else if ($page == 2) {
+		// 				return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '&page=1">Prev</a><a href="' . $link . '&page=1">1</a><span>2</span><a href="' . $link . '&page=3">3</a><a href="' . $link . '&page=3">Next</a></div></div>';
+		// 			} else if ($page == 3) {
+		// 				return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '&page=2">Prev</a><a href="' . $link . '&page=1">1</a><a href="' . $link . '&page=2">2</a><span>3</span></div></div>';
+		// 			} else {
+		// 				return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '&page=1">1</a><a href="' . $link . '&page=2">2</a><a href="' . $link . '&page=3">3</a></div></div>';
+		// 			}
+		// 		} else if ($total == 4) {
+		// 			if ($page == 1) {
+		// 				return '<div class=pagination><div class="pagination-custom"><span>1</span> . . . <a href="' . $link . '&page=4">4</a><a href="' . $link . '&page=2">Next</a></div></div>';
+		// 			} else if ($page == 2) {
+		// 				return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '&page=1">Prev</a><a href="' . $link . '&page=1">1</a><span>2</span> . . . <a href="' . $link . '&page=4">4</a><a href="' . $link . '&page=3">Next</a></div></div>';
+		// 			} else if ($page == 3) {
+		// 				return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '&page=2">Prev</a><a href="' . $link . '&page=1">1</a> . . . <span>3</span><a href="' . $link . '&page=4">4</a><a href="' . $link . '&page=4">Next</a></div></div>';
+		// 			} else if ($page == 4) {
+		// 				return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '&page=3">Prev</a><a href="' . $link . '&page=1">1</a> . . . <span>4</span></div></div>';
+		// 			} else {
+		// 				return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '&page=1">1</a><a href="' . $link . '&page=2">2</a><a href="' . $link . '&page=3">3</a><a href="' . $link . '&page=4">4</a></div></div>';
+		// 			}
+		// 		} else {
+		// 			if ($page == 1) {
+		// 				return '<div class=pagination><div class="pagination-custom"><span>1</span> . . . <a href="' . $link . '&page=' . $total . '">' . $total . '</a><a href="' . $link . '&page=2">Next</a></div></div>';
+		// 			} else if ($page == 2) {
+		// 				return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '&page=1">Prev</a><a href="' . $link . '&page=1">1</a><span>2</span> . . . <a href="' . $link . '&page=' . $total . '">' . $total . '</a><a href="' . $link . '&page=3">Next</a></div></div>';
+		// 			} else if ($page == 3) {
+		// 				return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '&page=2">Prev</a><a href="' . $link . '&page=1">1</a> . . . <span>3</span><a href="' . $link . '&page=' . $total . '">' . $total . '</a><a href="' . $link . '&page=4">Next</a></div></div>';
+		// 			} else if ($page <= $total - 2) {
+		// 				$back = $page - 1;
+		// 				$next = $page + 1;
+		// 				return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '&page=' . $back . '">Prev</a><a href="' . $link . '&page=1">1</a> . . . <span>' . $page . '</span> . . . <a href="' . $link . '&page=' . $total . '">' . $total . '</a><a href="' . $link . '&page=' . $next . '">Next</a></div></div>';
+		// 			} else if ($page < $total - 1) {
+		// 				$back = $page - 1;
+		// 				$next = $page + 1;
+		// 				return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '&page=' . $back . '">Prev</a><a href="' . $link . '&page=1">1</a> . . . <span>' . $page . '</span><a href="' . $link . '&page=' . $total . '">' . $total . '</a><a href="' . $link . '&page=' . $next . '">Next</a></div></div>';
+		// 			} else if ($page == $total - 1) {
+		// 				$back = $page - 1;
+		// 				$next = $page + 1;
+		// 				return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '&page=' . $back . '">Prev</a><a href="' . $link . '&page=1">1</a> . . . <span>' . $page . '</span><a href="' . $link . '&page=' . $total . '">' . $total . '</a><a href="' . $link . '&page=' . $next . '">Next</a></div></div>';
+		// 			} else if ($page == $total) {
+		// 				$back = $page - 1;
+		// 				$next = $page + 1;
+		// 				return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '&page=' . $back . '">Prev</a><a href="' . $link . '&page=1">1</a> . . . <a href="' . $link . '&page=' . $back . '">' . $back . '</a><span>' . $page . '</span></div></div>';
+		// 			} else {
+		// 				$k = $total - 1;
+		// 				return '<div class=pagination><div class="pagination-custom"><a href="' . $link . '&page=1">1</a><a href="' . $link . '&page=2">2</a> . . . <a href="' . $link . '&page=' . $k . '">' . $k . '</a><a href="' . $link . '&page=' . $total . '">' . $total . '</a></div></div>';
+		// 			}
+		// 		}
+		// 	}
+		// }
+		function phantrang_timkiem($page, $total, $link, $param_name = 'page') {
+    if ($total <= 1) {
+        return '';
+    }
+    $param = $param_name;
+    $html = '<div class="pagination"><div class="pagination-custom">';
+    
+    if ($total <= 4) {
+        // Hiển thị tất cả các trang nếu tổng số trang <= 4
+        if ($page > 1) {
+            $prev = $page - 1;
+            $html .= "<a href=\"$link&$param=$prev\" class=\"prev\">Prev</a>";
+        }
+        for ($i = 1; $i <= $total; $i++) {
+            if ($i == $page) {
+                $html .= "<span>$i</span>";
+            } else {
+                $html .= "<a href=\"$link&$param=$i\">$i</a>";
+            }
+        }
+        if ($page < $total) {
+            $next = $page + 1;
+            $html .= "<a href=\"$link&$param=$next\" class=\"next\">Next</a>";
+        }
+    } else {
+        // Hiển thị trang đầu, trang cuối, và các trang lân cận
+        if ($page > 1) {
+            $prev = $page - 1;
+            $html .= "<a href=\"$link&$param=$prev\" class=\"prev\">Prev</a>";
+        }
+        $html .= "<a href=\"$link&$param=1\">1</a>";
+        if ($page > 3) {
+            $html .= "<span class=\"ellipsis\">...</span>";
+        }
+        $start = max(2, $page - 1);
+        $end = min($total - 1, $page + 1);
+        for ($i = $start; $i <= $end; $i++) {
+            if ($i == $page) {
+                $html .= "<span>$i</span>";
+            } else {
+                $html .= "<a href=\"$link&$param=$i\">$i</a>";
+            }
+        }
+        if ($page < $total - 2) {
+            $html .= "<span class=\"ellipsis\">...</span>";
+        }
+        $html .= "<a href=\"$link&$param=$total\">$total</a>";
+        if ($page < $total) {
+            $next = $page + 1;
+            $html .= "<a href=\"$link&$param=$next\" class=\"next\">Next</a>";
+        }
+    }
+    
+    $html .= '</div></div>';
+    return $html;
+}
 		//////////////////////////////////////////////////////////////////
 		function thanhvien_info($conn, $id)
 		{
@@ -5360,6 +5418,6 @@
 			return $list;
 		}
 
-		// huyphuc15/04/2025
+		
 	}
 	?>

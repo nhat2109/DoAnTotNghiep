@@ -5,13 +5,14 @@
     <div class="content_loadpage">
       <div class="logox">
         <!-- <a href="/ncc/dashboard"><img src="/skin_ncc/css/images/logo.png" alt="logo"></a> -->
+          <a href="/ncc/dashboard"><img src="/skin_ncc/css/images/logo_admin.jpg" alt="logo"></a>
       </div>
       <div class="loadx"></div>
     </div>
   </div>
   <div class="page_body">
     <div class="logo_mobile">
-      <!-- <a href="/ncc/dashboard"><img src="/skin_ncc/css/images/logo.png" alt="logo"></a> -->
+      <!-- <a href="/ncc/dashboard"><img src="/skin_ncc/css/images/logo_admin.jpg" alt="logo"></a> -->
       <div class="slogan"><a href="/">Đơn vị tiên phong về TMĐT hàng hóa chính hãng</a></div>
     </div>
 
@@ -24,7 +25,7 @@
             {box_menu}
           </div>
         </div>
-        <div class="title_action"><i class="fa fa-th"></i> {title_action} title</div>
+        <div class="title_action"><i class="fa fa-th"></i> {title_action}</div>
       </div>
 
 
@@ -143,7 +144,7 @@
     <div class="box_left">
       <div class="box_menu_left scroll">
         <div class="logo">
-          <a href="/ncc/dashboard"><img src="/skin_ncc/css/images/logo_white.png" alt="logo"></a>
+          <a href="/ncc/dashboard"><img src="/skin_ncc/css/images/admin_image_1.png" alt="logo"></a>
         </div>
         <div class="box_left_content">
           <!-- đây là menu trái  -->

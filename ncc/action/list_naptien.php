@@ -1,7 +1,7 @@
 <?php
 $thaythe['title'] = 'Lịch sử nạp tiền';
 $thaythe['title_action'] = 'Lịch sử nạp tiền';
-$limit = 100;
+$limit = 10;
 $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
 $start = ($page - 1) * $limit;
 

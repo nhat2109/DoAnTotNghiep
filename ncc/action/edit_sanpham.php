@@ -47,24 +47,15 @@
 	while ($pl = mysqli_fetch_assoc($thongtin_phanloai)) {
 		$pl['gia_cu'] = number_format($pl['gia_cu']);
 		$pl['gia_moi'] = number_format($pl['gia_moi']);
-		$pl['gia_drop'] = number_format($pl['gia_drop']);
-		$pl['gia_ctv'] = number_format($pl['gia_ctv']);
-		$pl['gia_socdo'] = number_format($pl['gia_socdo']);
-		$pl['drop_min'] = number_format($pl['drop_min']);
 		$pl['can_nang'] = number_format($pl['can_nang'], 2);
 		$pl['kho_sanpham_shop'] = number_format($pl['kho_sanpham_shop']);
 		$pl['can_nang_tinhship'] = number_format($pl['can_nang_tinhship'], 2);
 		$list_phanloai .= $skin->skin_replace('skin_ncc/box_action/li_phanloai', $pl);
 	}
 	$r_tt['list_phanloai'] = $list_phanloai ? $list_phanloai : '<div class="li_phanloai"><p>Chưa có phân loại nào</p></div>';
-	// $tach_main_category_ncc=json_decode($class_index->list_div_main_category_sanpham_ncc($conn,''),true);
-	// $r_tt['option_main_category_ncc']=$tach_main_category_ncc['list'];
-	// $r_tt['option_sub_category_ncc']='';
-	// $r_tt['option_sub_sub_category_nc']='';
 	$thaythe['box_right'] = $skin->skin_replace('skin_ncc/box_action/add_sanpham_ngoai', $r_tt);
 	$r_tt['list_photo'] = $list_anh;
 	$r_tt['option_category'] = $class_index->list_div_category_sanpham($conn, $user_id, $r_tt['cat']);
-	// huyphuc24/04/2025
 	$tach_main_category = json_decode($class_index->list_div_main_category_sanpham($conn, $user_id, $r_tt['cat']), true);
 	if($tach_main_category['list_id']){
 		$tach_sub_category = json_decode($class_index->list_div_sub_category_sanpham($conn, $user_id, $tach_main_category['list_id'], $r_tt['cat']), true);
@@ -92,6 +83,4 @@
 		$r_tt['option_size'] = $class_index->list_option_size($conn, $user_id, $r_tt['size']);
 		$thaythe['box_right'] = $skin->skin_replace('skin_ncc/box_action/edit_sanpham_ngoai', $r_tt);
 	}
-
-
 ?>

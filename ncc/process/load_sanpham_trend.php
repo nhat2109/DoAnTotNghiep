@@ -7,7 +7,7 @@
 			$kieu=addslashes($_REQUEST['kieu']);
 			$page = intval($_REQUEST['page']);
 			$page++;
-			$limit = 100;
+			$limit = 10;
 			if($kieu=='mobile'){
 				$list = $class_index->list_sanpham_trend($conn,$user_info['leader'],$user_info['gia_leader'],'mobile', $kho, $user_id, $page, $limit);
 			}else{

@@ -57,8 +57,12 @@
 
                     <div class="clearfix margin-bottom-20"></div>
                     <div class="action-buttons">
-                        <button type="submit" class="btn btn-cart btn_buy {disabled}" id="buy-button"
+                        <!-- <button type="submit" class="btn btn-cart btn_buy {disabled}" id="buy-button"
                             sp_id="{id}" loai="{loai}" data-color="{color}" data-size="{size}">
+                            <span class="txt-main">{text_button}</span>
+                        </button> -->
+                        <button type="submit" class="btn btn-cart btn_buy {disabled}" id="buy-button"
+                            sp_id="{id}" loai="{loai}" data-variant-id="{variants[0].variant_id}">
                             <span class="txt-main">{text_button}</span>
                         </button>
 

@@ -16,18 +16,15 @@
 				<span id="selected-count">Đã chọn: 0</span>
 			</div>
 			<table class="list_baiviet">
-				<thead style="z-index: 999;">
+				<thead style="z-index: 1;">
 					<th style="text-align: center;"><input type="checkbox" id="select-all"></th>
 					<th style="text-align: center;width: 50px;" class="hide_mobile">STT</th>
 					<th style="text-align: center;width: 120px;" class="hide_mobile">Mã</th>
 					<th style="text-align: center;width: 120px;" class="hide_mobile">Minh họa</th>
 					<th style="text-align: left;">Tên sản phẩm</th>
-					<!-- <th style="text-align: center;width: 100px;" class="hide_mobile">Giá Nhập</th> -->
 					<th style="text-align: center;width: 100px;" class="hide_mobile">Giá niêm yết</th>
 					<th style="text-align: center;width: 100px;" class="hide_mobile">Giá bán lẻ</th>
-					<!-- <th style="text-align: center;width: 100px;" class="hide_mobile">Giá Drop</th>
-					<th style="text-align: center;width: 100px;" class="hide_mobile">Giá CTV</th>
-					<th style="text-align: center;width: 110px;" class="hide_mobile">Giá Sóc Đỏ</th> -->
+					<th style="text-align: center;width: 100px;" class="hide_mobile">Đã bán</th>
 					<th style="text-align: center;width: 100px;" class="hide_mobile">Kho</th>
 					<th style="text-align: center;width: 100px;" class="hide_mobile">View</th>
 					<th style="text-align: center;width: 160px;">Hành động</th>

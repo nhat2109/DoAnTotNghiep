@@ -32,10 +32,10 @@ if (isset($_COOKIE['user_id'])) {
     }
 }
 
-$setting = mysqli_query($conn, "SELECT * FROM index_setting ORDER BY name ASC");
-while ($r_s = mysqli_fetch_assoc($setting)) {
-    $index_setting[$r_s['name']] = $r_s['value'];
-}
+// $setting = mysqli_query($conn, "SELECT * FROM index_setting ORDER BY name ASC");
+// while ($r_s = mysqli_fetch_assoc($setting)) {
+//     $index_setting[$r_s['name']] = $r_s['value'];
+// }
 $limit = 30;
 $replace = array(
     'header' => $skin->skin_normal('skin_ncc/header'),
@@ -43,9 +43,9 @@ $replace = array(
     'footer' => $skin->skin_normal('skin_ncc/footer'),
     'box_script_footer' => $skin->skin_normal('skin_ncc/box_script_footer'),
     'title' => 'Đăng nhập tài khoản',
-    'description' => $index_setting['description'],
-    'site_name' => $index_setting['site_name'],
-    'h1' => $index_setting['h1']
+    // 'description' => $index_setting['description'],
+    // 'site_name' => $index_setting['site_name'],
+    // 'h1' => $index_setting['h1']
 );
 echo $skin->skin_replace('skin_ncc/login', $replace);
 ?>

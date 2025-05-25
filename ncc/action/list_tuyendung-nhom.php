@@ -2,7 +2,7 @@
 
 $thaythe['title'] = 'Link tuyển dụng thành viên';
 $thaythe['title_action'] = 'Link tuyển dụng thành viên';
-$limit = 100;
+$limit = 10;
 $id = preg_replace('/[^0-9a-zA-Z_-]/', '', $url_query['id']);
 
 $tien_kh = 200000; // Số tiền nhận được khi tuyển dụng thành viên
