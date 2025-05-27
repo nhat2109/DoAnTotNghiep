@@ -135,6 +135,26 @@
 			</div>
 		</div>
 		<div class="li_menu">
+			<a href="javascript:;" class="a_main"><span class="left"><i class="icofont-resize"></i>Kích cỡ sản
+					phẩm</span><span class="right"><i class="fa fa-plus-square-o"></i></span></a>
+			<div class="list_menu_sub">
+				<div class="li_menu_sub"><a href="/ncc/add-size"><i class="fa fa-plus-circle"></i>Thêm kích cỡ
+						mới</a></div>
+				<div class="li_menu_sub"><a href="/ncc/list-size"><i class="icofont-ui-file"></i>Danh sách kích
+						cỡ</a></div>
+			</div>
+		</div>
+		<div class="li_menu">
+			<a href="javascript:;" class="a_main"><span class="left"><i class="fa fa-paint-brush"></i>Màu sắc sản
+					phẩm</span><span class="right"><i class="fa fa-plus-square-o"></i></span></a>
+			<div class="list_menu_sub">
+				<div class="li_menu_sub"><a href="/ncc/add-color"><i class="fa fa-plus-circle"></i>Thêm màu sắc
+						mới</a></div>
+				<div class="li_menu_sub"><a href="/ncc/list-color"><i class="icofont-ui-file"></i>Danh sách màu
+						sắc</a></div>
+			</div>
+		</div>
+		<div class="li_menu">
 			<a href="javascript:;" class="a_main"><span class="left"><i class="icofont-papers"></i>Danh mục bài
 					viết</span><span class="right"><i class="fa fa-plus-square-o"></i></span></a>
 			<div class="list_menu_sub">
@@ -359,7 +379,7 @@
 	}
 
 	.page_body .box_left .box_menu_left .box_left_content .main_menu .title {
-		border-radius: 45px;
+		border-radius: 8px;
 	}
 
 	.main_menu_box {

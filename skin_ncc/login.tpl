@@ -3,7 +3,7 @@
   <div class="loadpage">
     <div class="content_loadpage">
       <div class="logox">
-        <img src="/skin_ncc/css/images/logo.png" alt="">
+        <img src="/skin_ncc/css/images/logo_admin.jpg" alt="">
       </div>
       <div class="loadx"></div>
     </div>
@@ -11,7 +11,7 @@
   <div class="page_body">
     <div class="content_login" style="height: 280px;">
       <div class="logox">
-        <img src="/skin_ncc/css/images/logo.png" alt="">
+        <img src="/skin_ncc/css/images/logo_admin.jpg" alt="">
       </div>
       <div class="form_group">
         <input type="text" class="form_control" name="username" placeholder="Nhập tài khoản hoặc Email...">

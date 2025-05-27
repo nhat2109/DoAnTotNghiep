@@ -17,8 +17,13 @@
                 </div>
             </div>
             <div style="clear: both;"></div>
+
+
             <div class="form_group">
-                <button name="add_size" class="button_all"> Thêm </button>
+                <a href="/ncc/list-size" class="btn-secondary-back">
+                    <i class="fa fa-arrow-left"></i> Quay lại
+                </a>
+                <button name="add_size" class="button_all"> Thêm <i class="fa fa-check"></i> </button>
             </div>
         </div>
     </div>

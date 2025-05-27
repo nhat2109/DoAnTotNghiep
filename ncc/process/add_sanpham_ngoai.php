@@ -53,9 +53,11 @@ if (empty($list_phanloai) || !is_array($tach_phanloai) || empty($tach_phanloai))
 if (!empty($thuong_hieu_2)) {
     $check_query = "SELECT id FROM thuong_hieu WHERE shop = '$user_id' AND tieu_de = '$thuong_hieu_2'";
     $result = mysqli_query($conn, $check_query);
-    
+    $thu_tu_query = mysqli_query($conn, "SELECT MAX(thu_tu) AS max_thu_tu FROM thuong_hieu WHERE shop = '$user_id'");
+    $row = mysqli_fetch_assoc($thu_tu_query);
+    $thu_tu = ($row['max_thu_tu'] ?? 0) + 1;
     if (mysqli_num_rows($result) == 0) {
-        $query = "INSERT INTO thuong_hieu (shop, tieu_de) VALUES ('$user_id', '$thuong_hieu_2')";
+        $query = "INSERT INTO thuong_hieu (shop, tieu_de, thu_tu) VALUES ('$user_id', '$thuong_hieu_2', '$thu_tu')";
         if (!mysqli_query($conn, $query)) {
             echo json_encode(['ok' => 0, 'thongbao' => 'Lỗi khi thêm thương hiệu: ' . mysqli_error($conn)]);
             exit();

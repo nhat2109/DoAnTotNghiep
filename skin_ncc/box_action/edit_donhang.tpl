@@ -159,7 +159,7 @@
     }
     
     .thead-default {
-        background: linear-gradient(to right, #dc3545, #ff6f61);
+        background: linear-gradient(to right, #00c4b4, #00c4b4);
         color: #fff;
         text-transform: uppercase;
     }
@@ -221,7 +221,7 @@
     
     /* Nút hành động */
     .button_all {
-        background: linear-gradient(to right, #dc3545, #ff6f61);
+        background: linear-gradient(to right, #00c4b4, #00c4b4);
         color: #fff;
         padding: 10px 20px;
         border: none;
@@ -237,7 +237,7 @@
     }
     
     .button_all:hover {
-        background: linear-gradient(to right, #c82333, #e65c00);
+        background: linear-gradient(to right, #00c4b4, #00c4b4);
         transform: translateY(-2px);
     }
     

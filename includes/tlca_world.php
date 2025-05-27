@@ -28,11 +28,11 @@ if($total_visit==0){
 	$r_visit=mysqli_fetch_assoc($thongtin_visit);
 	$gioi_han=time() - $r_visit['date_post'];
 	if($gioi_han>24*3600){
-		mysqli_query($conn,"INSERT INTO visit(ip_address,date_post)VALUES('$ip_address','$hientai')");
-		$thongtin_isetting=mysqli_query($conn,"SELECT * FROM index_setting WHERE name='total_visit'");
-		$r_st=mysqli_fetch_assoc($thongtin_isetting);
-		$visit_moi=intval($r_st['value']) + 1;
-		mysqli_query($conn,"UPDATE index_setting SET value='$visit_moi' WHERE name='total_visit'");
+		// mysqli_query	($conn,"INSERT INTO visit(ip_address,date_post)VALUES('$ip_address','$hientai')");
+		// $thongtin_isetting=mysqli_query($conn,"SELECT * FROM index_setting WHERE name='total_visit'");
+		// $r_st=mysqli_fetch_assoc($thongtin_isetting);
+		// $visit_moi=intval($r_st['value']) + 1;
+		// mysqli_query($conn,"UPDATE index_setting SET value='$visit_moi' WHERE name='total_visit'");
 	}
 }
 ?>

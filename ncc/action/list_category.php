@@ -1,7 +1,7 @@
 <?php
 	$thaythe['title'] = 'Danh mục sản phẩm';
 	$thaythe['title_action'] = 'Danh mục sản phẩm';
-	$limit = 50;
+	$limit = 10;
 	$thongke = mysqli_query($conn, "SELECT count(*) AS total FROM category_sanpham_shop WHERE shop='$user_id'");
 	$r_tk = mysqli_fetch_assoc($thongke);
 	$total_page = ceil($r_tk['total'] / $limit);

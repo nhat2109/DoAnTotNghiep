@@ -19,7 +19,10 @@
             <div style="clear: both;"></div>
             <div class="form_group">
                 <input type="hidden" name="id" value="{id}">
-                <button name="edit_size" class="button_all"> Lưu thay đổi </button>
+                 <a href="/ncc/list-size" class="btn-secondary-back">
+                        <i class="fa fa-arrow-left"></i> Quay lại
+                    </a>
+                <button name="edit_size" class="button_all"> Lưu thay đổi   <i class="fa fa-check"></i></button>
             </div>
         </div>
     </div>

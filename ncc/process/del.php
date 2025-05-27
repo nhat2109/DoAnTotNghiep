@@ -1,12 +1,72 @@
 <?php
-ini_set('display_errors', 1); // Bật debug trên server
+ini_set('display_errors', 1);
 error_reporting(E_ALL);
-$user_id = $tach_token['user_id']; // Giả định từ token
+
+$user_id = $tach_token['user_id']; // Lấy user từ token
 $loai = addslashes($_REQUEST['loai']);
-$id = preg_replace('/[^0-9a-z]/', '', $_REQUEST['id']);
-$reload = null;
+//$id = preg_replace('/[^0-9a-z]/', '', $_REQUEST['id']);
+$id = null;
+if (isset($_REQUEST['id']) && is_scalar($_REQUEST['id'])) {
+    $id = preg_replace('/[^0-9a-z]/', '', $_REQUEST['id']);
+}
+$reload = 0;
+$ok = 0;
+$thongbao = '';
+
+// Chuẩn hóa danh sách ID
 if (isset($_POST['selectedIds'])) {
-	$ids = array_map('intval', $_POST['selectedIds']);
+    if (is_array($_POST['selectedIds'])) {
+        $ids = $_POST['selectedIds'];
+    } else {
+        $ids = explode(',', $_POST['selectedIds']);
+    }
+} elseif (isset($_POST['id'])) {
+    $ids = is_array($_POST['id']) ? $_POST['id'] : [$_POST['id']];
+}
+$ids = array_map('intval', $ids);
+
+function processMultipleDelete($conn, $user_id, $ids, $table, $loai) {
+    $ok = 0;
+    $thongbao = '';
+    $deleted_count = 0;
+    $all_ids = [];
+    
+    foreach ($ids as $id) {
+        $id_array = is_string($id) ? explode(',', $id) : [$id];
+        $id_array = array_map('intval', $id_array);
+        $all_ids = array_merge($all_ids, $id_array);
+    }
+    error_log("All IDs for $table: " . print_r($all_ids, true));
+
+    foreach ($all_ids as $single_id) {
+        if (!is_numeric($single_id) || $single_id <= 0) {
+            $thongbao .= "ID $single_id không hợp lệ. ";
+            continue;
+        }
+        
+        $single_id = mysqli_real_escape_string($conn, $single_id);
+        $thongtin = mysqli_query($conn, "SELECT id, count(*) AS total FROM $table WHERE id='$single_id' AND shop='$user_id'");
+        $r_tt = mysqli_fetch_assoc($thongtin);
+        
+        if ($r_tt['total'] == 0) {
+            $thongbao .= "ID $single_id không tồn tại. ";
+        } else {
+            mysqli_query($conn, "DELETE FROM $table WHERE id='$single_id' AND shop='$user_id'");
+            $deleted_count++;
+            error_log("Deleted ID $single_id from $table");
+        }
+    }
+
+    if ($deleted_count > 0) {
+        $ok = 1;
+        $thongbao = "Đã xóa thành công $deleted_count mục. " . $thongbao;
+        $reload = 1;
+    } else {
+        $ok = 0;
+        $thongbao = $thongbao ?: "Không có mục nào được xóa.";
+    }
+    
+    return array('ok' => $ok, 'thongbao' => $thongbao, 'reload' => 1);
 }
 if ($loai == 'category') {
 	$thongtin = mysqli_query($conn, "SELECT *,count(*) AS total FROM category_shop WHERE cat_id='$id' AND shop='$user_id'");
@@ -20,7 +80,17 @@ if ($loai == 'category') {
 		mysqli_query($conn, "DELETE FROM category_shop WHERE cat_id='$id' AND shop='$user_id'");
 		mysqli_query($conn, "DELETE FROM seo_shop WHERE link='{$r_tt['cat_blank']}' AND loai='theloai' AND shop='$user_id'");
 	}
-} else if ($loai == 'category_sanpham') {
+} 
+else if ($loai == 'size') {
+    $result = processMultipleDelete($conn, $user_id, $ids, 'kich_co', 'size');
+    extract($result);
+}
+else if ($loai == 'color') {
+    $result = processMultipleDelete($conn, $user_id, $ids, 'mau_sanpham', 'color');
+    extract($result);
+}
+
+else if ($loai == 'category_sanpham') {
 	$thongtin = mysqli_query($conn, "SELECT *,count(*) AS total FROM category_sanpham_shop WHERE cat_id='$id' AND shop='$user_id'");
 	$r_tt = mysqli_fetch_assoc($thongtin);
 	if ($r_tt['total'] == 0) {
@@ -114,16 +184,6 @@ if ($loai == 'category') {
 }
 // nhatthem114
 else if ($loai == 'transport') {
-	// $thongtin = mysqli_query($conn, "SELECT *,count(*) AS total FROM transport WHERE user_id = '$user_id' AND id='$id'");
-	// $r_tt = mysqli_fetch_assoc($thongtin);
-	// if ($r_tt['total'] == 0) {
-	// 	$ok = 0;
-	// 	$thongbao = 'Dữ liệu không tồn tại';
-	// } else {
-	// 	$ok = 1;
-	// 	$thongbao = 'Xóa địa chỉ giao nhận thành công';
-	// 	mysqli_query($conn, "DELETE FROM transport WHERE id = '$id' AND user_id = '$user_id' AND is_default = 0");
-	// }
 	$sql = "SELECT COUNT(*) AS total, is_default FROM transport WHERE user_id = ? AND id = ?";
 	$stmt = mysqli_prepare($conn, $sql);
 	mysqli_stmt_bind_param($stmt, "ii", $user_id, $id);
@@ -162,30 +222,8 @@ else if ($loai == 'transport') {
 		$thongbao = 'Xóa tài khoản ngân hàng thành công';
 		mysqli_query($conn, "DELETE FROM bank_accounts WHERE id = '$id' AND user_id = '$user_id' AND is_default = 0");
 	}
-} else if ($loai == 'size') {
-	$thongtin = mysqli_query($conn, "SELECT *,count(*) AS total FROM kich_co WHERE shop='$user_id' AND id='$id'");
-	$r_tt = mysqli_fetch_assoc($thongtin);
-	if ($r_tt['total'] == 0) {
-		$ok = 0;
-		$thongbao = 'Dữ liệu không tồn tại';
-	} else {
-		$ok = 1;
-		$thongbao = 'Xóa kích cỡ thành công';
-		mysqli_query($conn, "DELETE FROM kich_co WHERE id='$id' AND shop='$user_id'");
-	}
-} else if ($loai == 'color') {
-
-	$thongtin = mysqli_query($conn, "SELECT *,count(*) AS total FROM mau_sanpham WHERE shop='$user_id' AND id='$id'");
-	$r_tt = mysqli_fetch_assoc($thongtin);
-	if ($r_tt['total'] == 0) {
-		$ok = 0;
-		$thongbao = 'Màu sản phẩm không tồn tại';
-	} else {
-		$ok = 1;
-		$thongbao = 'Xóa màu sản phẩm thành công';
-		mysqli_query($conn, "DELETE FROM mau_sanpham WHERE shop='$user_id' AND id='$id'");
-	}
-} else if ($loai == 'remarketing') {
+}
+else if ($loai == 'remarketing') {
 	$thongtin = mysqli_query($conn, "SELECT *,count(*) AS total FROM thongbao_shop WHERE id='$id' AND shop='$user_id'");
 	$r_tt = mysqli_fetch_assoc($thongtin);
 	if ($r_tt['total'] == 0) {
@@ -237,13 +275,10 @@ else if ($loai == 'transport') {
         $ok = 1;
         $thongbao = 'Xóa sản phẩm thành công';
         mysqli_query($conn, "DELETE FROM sanpham_shop WHERE id='$id' AND shop='$user_id'");
-        // mysqli_query($conn, "DELETE FROM sanpham WHERE id='{$r_tt['sp_id']}'");
-        mysqli_query($conn, "DELETE FROM phanloai_sanpham WHERE sp_id='{$r_tt['sp_id']}' AND user_id='$user_id'");
         mysqli_query($conn, "DELETE FROM phanloai_sanpham_shop WHERE sp_id='$id' AND user_id='$user_id'");
         mysqli_query($conn, "DELETE FROM seo_shop WHERE link='{$r_tt['link']}' AND loai='sanpham' AND shop='$user_id'");
     }
 }
-// huyphuc24/04/2025
 else if ($loai == 'xoanhieu_sanpham') {
 	$success_count = 0;
 	$total_count = count($ids);
@@ -252,13 +287,8 @@ else if ($loai == 'xoanhieu_sanpham') {
 		// Lấy thông tin sản phẩm
 		$thongtin = mysqli_query($conn, "SELECT *,count(*) AS total FROM sanpham_shop WHERE id='$id' AND shop='$user_id'");
 		$r_tt = mysqli_fetch_assoc($thongtin);
-		$tach_anh = explode(',', $r_tt['anh']);
-		// foreach ($tach_anh as $key => $value) {
-		// 	$tach_value = explode('/uploads/', $value);
-		// 	@unlink('../uploads/' . $tach_value[1]);
-		// }
-		// @unlink('..' . $r_tt['minh_hoa']);
-		// // Thực hiện xóa sản phẩm
+		//$tach_anh = explode(',', $r_tt['anh']);
+		$tach_anh = explode(',', $r_tt['anh'] ?? '');
 		$query = "DELETE FROM sanpham_shop WHERE id='$id' AND shop='$user_id'";
 		if (mysqli_query($conn, $query)) {
 			// Xóa phân loại sản phẩm
@@ -272,8 +302,6 @@ else if ($loai == 'xoanhieu_sanpham') {
 			}
 		}
 	}
-
-	// Trả về kết quả
 	if ($success_count == $total_count) {
 		$ok = 1;
 		$thongbao = 'Đã xóa thành công sản phẩm';
@@ -282,7 +310,9 @@ else if ($loai == 'xoanhieu_sanpham') {
 		$ok = 0;
 		$thongbao = 'xóa sản phẩm thất bại';
 	}
-} else if ($loai == 'donhang_drop') {
+}
+
+ else if ($loai == 'donhang_drop') {
 	$thongtin = mysqli_query($conn, "SELECT *,count(*) AS total FROM donhang WHERE id='$id' AND user_id='$user_id'");
 	$r_tt = mysqli_fetch_assoc($thongtin);
 	if ($r_tt['total'] == 0) {
@@ -342,6 +372,6 @@ else if ($loai == 'xoanhieu_sanpham') {
 $info = array(
 	'ok' => $ok,
 	'thongbao' => $thongbao,
-	'reload' => $reload, //huyphuc25/04/2025
+	'reload' => $reload, 
 );
 echo json_encode($info);

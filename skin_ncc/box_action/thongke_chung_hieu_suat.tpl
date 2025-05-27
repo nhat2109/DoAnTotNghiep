@@ -64,16 +64,17 @@
                     </div>
                 </div>
             </div>
-            <!-- Biểu đồ sản phẩm bán chạy -->
-            <div class="chart-container">
-                <h3>Sản phẩm bán chạy</h3>
-                <canvas id="chartBanChay"></canvas>
-            </div>
             <!-- Biểu đồ tổng quan lượt mua -->
             <div class="chart-container">
                 <h3>Tổng quan lượt mua</h3>
                 <canvas id="chartSummary"></canvas>
             </div>
+            <!-- Biểu đồ sản phẩm bán chạy -->
+            <div class="chart-container">
+                <h3>Sản phẩm bán chạy</h3>
+                <canvas id="chartBanChay"></canvas>
+            </div>
+            
             <!-- Danh sách sản phẩm bán chạy -->
             <div class="product-list">
                 <h3>Danh sách sản phẩm bán chạy</h3>

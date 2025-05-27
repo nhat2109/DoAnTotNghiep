@@ -2,7 +2,7 @@
 	$thaythe['title'] = 'Danh sách kích cỡ';
 	$thaythe['title_action'] = 'Danh sách kích cỡ';
 	$limit = 10;
-	$thongke = mysqli_query($conn, "SELECT count(*) AS total FROM user_info WHERE shop='$user_id'");
+	$thongke = mysqli_query($conn, "SELECT count(*) AS total FROM kich_co WHERE shop='$user_id'");
 	$r_tk = mysqli_fetch_assoc($thongke);
 	$total_page = ceil($r_tk['total'] / $limit);
 	$bien = array(

@@ -228,179 +228,261 @@ tinymce.init({
         
     }
 });
+
 </script>
+
 <style>
+/* Main container styles */
+.box_right {
+    background: #fff; 
+    border-radius: 8px ;
+    /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+    padding: 20px;
+    margin: 20px;
+    height: 100%;
+}
+
+.box_right_content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Header styles */
+.page_title {
+    margin-bottom: 30px;
+}
+
+.page_title h1 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.page_title .line {
+    height: 2px;
+    background: #e0e0e0;
+    margin: 10px 0;
+}
+
+/* Form group styles */
+.form_group {
+    margin-bottom: 25px;
+}
+
+.form_group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+    font-weight: 500;
+}
+
+.form_control {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+.form_control:focus {
+    border-color: #4a90e2;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(74,144,226,0.2);
+}
+
+/* Preview wrapper styles */
 .preview-wrapper {
     display: flex;
     align-items: flex-start;
-    gap: 20px; /* Khoảng cách giữa ảnh và text */
-    padding: 0px 2px;
+    gap: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 6px;
+}
+
+.preview-wrapper img {
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.preview-wrapper img:hover {
+    transform: scale(1.02);
 }
 
 .preview-text {
-    color: #999;
-    font-size: 14px;
-    margin-top: 0; /* Loại bỏ margin nếu cần */
-    padding-left: 0;
-    list-style: disc;
-    cursor: default;
-}
-.preview-text li {
-    font-size: 11px;
+    color: #666;
+    font-size: 13px;
+    line-height: 1.5;
 }
 
-/* Mobile specific styles */
+.preview-text li {
+    margin-bottom: 8px;
+    font-size: 12px;
+}
+
+/* Button styles */
+.button_all, .button_select_photo, .button_add_phanloai, .button_add_info {
+    background: #4a90e2;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.3s;
+}
+
+.button_all:hover, .button_select_photo:hover, .button_add_phanloai:hover, .button_add_info:hover {
+    background: #357abd;
+}
+
+/* Product classification table styles */
+.th_phanloai, .li_phanloai {
+    display: grid;
+    grid-template-columns: 1.2fr 1.2fr 1.2fr 1fr 1.2fr 1.2fr 1fr 1.2fr 0.5fr 0.5fr;
+    gap: 10px;
+    align-items: center;
+}
+.th_phanloai > div, .li_phanloai > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 0;
+}
+.li_phanloai input {
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.info_ma, .info_name, .info_mau, .info_can_nang, .info_gia,
+.info_kho_sanpham_shop, .info_trongluongtinhship {
+    padding: 5px;
+    width: 120px !important; 
+}
+
+.info_action i, .info_action_copy i {
+    cursor: pointer;
+    color: #666;
+    transition: color 0.2s;
+}
+
+.info_action i:hover {
+    color: #dc3545;
+}
+
+.info_action_copy i:hover {
+    color: #28a745;
+}
+
+/* Category selection styles */
+.list_main_category {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+}
+.box_category {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+    min-width: 180px;
+    min-height: 40px;
+    max-height: 300px;
+    background: #fff;
+    flex: 1 1 0;
+    overflow-y: auto;
+    display: none; /* Ẩn mặc định */
+}
+.box_category.scroll:empty {
+    display: none !important; /* Ẩn nếu không có nội dung */
+}
+.box_category.scroll:not(:empty) {
+    display: block !important; /* Hiện khi có nội dung */
+}
+/* Character counter styles */
+#title-counter, #description-counter, #noidung-counter, #noibat-counter {
+    margin-top: 5px;
+    font-size: 12px;
+    color: #666;
+}
+
+/* Responsive styles */
 @media (max-width: 768px) {
     .box_right {
-        width: 100%;
-        max-width: 100%;
-        overflow-x: hidden;
+        margin: 10px;
         padding: 15px;
-        box-sizing: border-box;
     }
 
-    .box_right_content {
-        width: 100%;
-        max-width: 100%;
-        padding: 0;
-    }
-
-    .box_profile {
-        width: 100%;
-    }
-
-    .page_title h1 {
-        font-size: 22px;
-        margin-bottom: 15px;
-    }
-
-    .col_50, .col_100 {
-        width: 100%;
-        max-width: 100%;
-        padding: 0;
-        margin-bottom: 20px;
-    }
-
-    .form_group {
-        margin-bottom: 20px;
-        width: 100%;
-    }
-
-    .form_control {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        margin-bottom: 10px;
-    }
-
-    /* Kích thước hộp */
-    .form_group h3 {
-        margin-bottom: 10px;
-        font-size: 16px;
-    }
-
-    .form_group > div {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-    }
-
-    .form_group > div > div {
-        flex: 1 1 100%;
-        margin-right: 0;
-        margin-bottom: 10px;
-    }
-
-    /* Phân loại sản phẩm */
-    .list_phanloai {
-        width: 100%;
-        overflow-x: auto;
-        margin-top: 15px;
-    }
-
-    .th_phanloai, .li_phanloai {
-        display: flex;
-        flex-wrap: nowrap;
-        min-width: 1200px;
-    }
-
-    .info_ma, .info_name, .info_mau, .info_can_nang, .info_gia, 
-    .info_kho_sanpham_shop, .info_trongluongtinhship, .info_action, .info_action_copy {
-        padding: 5px;
-        min-width: 100px;
-    }
-
-    .info_action, .info_action_copy {
-        min-width: 80px;
-        text-align: center;
-    }
-
-    /* Nơi bán */
-    .li_input {
-        margin-bottom: 10px;
-    }
-    
-    .box_right {
-        padding: 10px;
-    }
-    
     .page_title h1 {
         font-size: 20px;
     }
-    
-    .form_group > div {
-        flex-direction: column;
-    }
-    
-    .form_group > div > div {
-        width: 100%;
-    }
-    
+
     .preview-wrapper {
         flex-direction: column;
         align-items: center;
     }
-    
-    .preview-text {
-        margin-top: 10px;
-        text-align: center;
+
+    .th_phanloai, .li_phanloai {
+        grid-template-columns: repeat(5, 1fr);
+        overflow-x: auto;
     }
-    
-    .list_photo {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
+
+    .list_main_category {
+        grid-template-columns: 1fr;
     }
-    
-    .list_photo img {
-        width: calc(50% - 5px);
-        height: auto;
+
+    .form_group > div {
+        flex-direction: column;
+    }
+
+    .form_group > div > div {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 10px;
     }
 }
 
-/* Small mobile devices */
 @media (max-width: 480px) {
-
     .box_right {
-        padding: 5px;
+        margin: 5px;
+        padding: 10px;
     }
-    
+
     .page_title h1 {
         font-size: 18px;
     }
-    
+
     .form_control {
         padding: 8px;
-        font-size: 14px;
+        font-size: 13px;
     }
-    
-    .list_photo img {
+
+    .button_all, .button_select_photo, .button_add_phanloai, .button_add_info {
         width: 100%;
+        margin-bottom: 10px;
     }
-    
-    .button_all {
-        padding: 10px;
+    .button_add_info {
+        margin-bottom: 10px;
+    }
+    .list_info {
+        display: flex;
+        gap: 15px;
+        margin-top: 10px;
+    }
+    .list_info input {
+        min-width: 180px;
+        padding: 8px 10px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+        background: #fafbfc;
+    }
+    .form_control.disabled, .form_control:disabled {
+        background: #f5f5f5 !important;
+        color: #bbb !important;
+        cursor: not-allowed;
     }
 }
 </style>
@@ -482,8 +564,10 @@ tinymce.init({
                         <div class="info_gia">Giá bán</div>
                         <div class="info_kho_sanpham_shop">Kho</div>
                         <div class="info_trongluongtinhship">Trọng lượng tính ship</div>
-                        <div class="info_action"></div>
-                        <div class="info_action_copy"></div>
+                        <span> Hành động
+                            <div class="info_action"></div>
+                            <div class="info_action_copy"></div>
+                        </span>
                     </div>
                     <div class="li_phanloai">
                         <div class="info_ma">
@@ -550,7 +634,6 @@ tinymce.init({
                     <div class="list_main_category">
                         <div class="box_category scroll" id="main_category">{option_main_category}</div>
                         <div class="box_category scroll" id="sub_category"></div>
-                        <div class="box_category scroll" id="sub_sub_category"></div>
                     </div>
                 </div>
                 <div style="clear: both;"></div>
@@ -589,4 +672,36 @@ tinymce.init({
 <script type="text/javascript" src="/js/jquery.priceformat.min.js"></script>
 <script type="text/javascript" src="/js/demo_price.js"></script>
 <script type="text/javascript">
+    $(document).ready(function() {
+        // Khi chọn select
+        $("select[name='thuong_hieu']").on("change", function() {
+            if ($(this).val() !== "") {
+                $("input[name='thuong_hieu_2']").val("").prop("disabled", true).addClass("disabled");
+            } else {
+                $("input[name='thuong_hieu_2']").prop("disabled", false).removeClass("disabled");
+            }
+        });
+    
+        // Khi nhập input
+        $("input[name='thuong_hieu_2']").on("input", function() {
+            if ($(this).val().trim() !== "") {
+                $("select[name='thuong_hieu']").val("").prop("disabled", true).addClass("disabled");
+            } else {
+                $("select[name='thuong_hieu']").prop("disabled", false).removeClass("disabled");
+            }
+        });
+        // CSS for error highlighting
+        $('head').append(`
+        <style>
+            input.error {
+                border: 1px solid red !important;
+            }
+            .error-message {
+                font-size: 12px;
+                margin-top: 2px;
+                display: block;
+            }
+        </style>
+        `);
+    });
 </script>
