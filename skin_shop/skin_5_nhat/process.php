@@ -15,252 +15,7 @@ if ($action == 'check_exp') {
 	// }
 	// echo json_encode(array('ok' => $ok, 'thongbao' => $thongbao));
 } 
-// else if ($action == 'checkout_complete') {
-// 	$ho_ten = addslashes(strip_tags($_REQUEST['ho_ten'] ?? ''));
-// 	$email = addslashes(strip_tags($_REQUEST['email'] ?? ''));
-// 	$dien_thoai = addslashes(strip_tags($_REQUEST['dien_thoai'] ?? ''));
-// 	$dia_chi = addslashes(strip_tags($_REQUEST['dia_chi'] ?? ''));
-// 	$tinh = intval($_REQUEST['tinh'] ?? 0);
-// 	$huyen = intval($_REQUEST['huyen'] ?? 0);
-// 	$thanhtoan = addslashes(strip_tags($_REQUEST['thanhtoan'] ?? 'cod'));
-// 	$ghi_chu = addslashes(strip_tags($_REQUEST['ghi_chu'] ?? ''));
-// 	$coupon = $_SESSION['coupon'] ?? '';
-// 	$phi_ship = intval($_REQUEST['phi_ship'] ?? 28000);
-// 	$tamtinh = intval($_REQUEST['tamtinh'] ?? 0);
-// 	$giam = intval($_REQUEST['giam'] ?? 0);
-// 	$tongtien = intval($_REQUEST['tongtien'] ?? 0);
-// 	$shop = addslashes(strip_tags($_REQUEST['shop'] ?? ''));
-// 	if (isset($_COOKIE['user_id'])) {
-// 		$tach_token = json_decode($check->token_login_decode($_COOKIE['user_id']), true);
-// 		$user_id = $tach_token['user_id'];
-// 	} else {
-// 		$user_id = 0;
-// 	}
-// 	function updateVoucherUsage($voucher_code, $user_id)
-// 	{
-// 		global $conn;
-// 		$user_id = ($user_id === null || $user_id === '') ? 0 : intval($user_id);
-// 		$voucher_code = mysqli_real_escape_string($conn, $voucher_code);
 
-// 		mysqli_query($conn, "START TRANSACTION");
-// 		$max_attempts = 3; // Số lần thử tối đa để tránh deadlock
-// 		$attempt = 0;
-
-// 		while ($attempt < $max_attempts) {
-// 			$query = "SELECT id, current_uses, max_global_uses, max_uses_per_user FROM coupon WHERE ma = '$voucher_code' FOR UPDATE";
-// 			$result = mysqli_query($conn, $query);
-// 			$voucher = mysqli_fetch_assoc($result);
-
-// 			if ($voucher && $voucher['current_uses'] < $voucher['max_global_uses']) {
-// 				$new_uses = $voucher['current_uses'] + 1;
-// 				$update_query = "UPDATE coupon SET current_uses = '$new_uses' WHERE id = '{$voucher['id']}' AND current_uses = '{$voucher['current_uses']}'";
-// 				if (mysqli_query($conn, $update_query)) {
-// 					if ($user_id > 0) {
-// 						$voucher_id = mysqli_real_escape_string($conn, $voucher['id']);
-// 						mysqli_query($conn, "INSERT INTO voucher_usage (voucher_id, user_id, use_date) VALUES ('$voucher_id', '$user_id', UNIX_TIMESTAMP())");
-// 					}
-// 					mysqli_query($conn, "COMMIT");
-// 					return true;
-// 				}
-// 			} else {
-// 				mysqli_query($conn, "ROLLBACK");
-// 				return false;
-// 			}
-// 			function getUserVoucherUses($user_id, $voucher_code)
-// 			{
-// 				global $conn;
-// 				$user_id = intval($user_id);
-// 				$voucher_code = mysqli_real_escape_string($conn, $voucher_code);
-
-// 				$query = "SELECT COUNT(*) AS uses FROM voucher_usage vu 
-// 						JOIN coupon c ON vu.voucher_id = c.id 
-// 						WHERE vu.user_id = $user_id AND c.ma = '$voucher_code'";
-// 				$result = mysqli_query($conn, $query);
-// 				if ($result && mysqli_num_rows($result) > 0) {
-// 					$row = mysqli_fetch_assoc($result);
-// 					return (int) ($row['uses'] ?? 0);
-// 				}
-// 				return 0;
-// 			}
-// 			$uses_by_user = ($user_id > 0) ? getUserVoucherUses($user_id, $voucher_code) : 0;
-// 			if ($voucher['current_uses'] >= $voucher['max_global_uses'] && $voucher['max_global_uses'] > 0) {
-// 				mysqli_query($conn, "ROLLBACK");
-// 				return false;
-// 			}
-// 			if ($user_id > 0 && $uses_by_user >= $voucher['max_uses_per_user'] && $voucher['max_uses_per_user'] > 0) {
-// 				mysqli_query($conn, "ROLLBACK");
-// 				return false;
-// 			}
-// 			$attempt++;
-// 			if ($attempt < $max_attempts) {
-// 				usleep(100000); // Chờ 100ms trước khi thử lại
-// 			}
-// 		}
-
-// 		mysqli_query($conn, "ROLLBACK");
-// 		return false;
-// 	}
-// 	if (strlen($ho_ten) < 4) {
-// 		$ok = 0;
-// 		$thongbao = 'Vui lòng nhập họ và tên';
-// 	} elseif (strlen($dien_thoai) < 8) {
-// 		$ok = 0;
-// 		$thongbao = 'Vui lòng nhập số điện thoại';
-// 	} elseif (strlen($dia_chi) < 10) {
-// 		$ok = 0;
-// 		$thongbao = 'Vui lòng nhập địa chỉ';
-// 	} elseif ($tinh == 0) {
-// 		$ok = 0;
-// 		$thongbao = 'Vui lòng chọn Tỉnh/Thành phố';
-// 	} elseif ($huyen == 0) {
-// 		$ok = 0;
-// 		$thongbao = 'Vui lòng chọn Quận/Huyện';
-// 	} else if (!in_array($thanhtoan, ['cod', 'bank', 'vnpay'])) {
-// 		echo json_encode(['ok' => 0, 'thongbao' => 'Phương thức thanh toán không hợp lệ']);
-// 		exit();
-// 	} else if ($phi_ship < 0) {
-// 		echo json_encode(['ok' => 0, 'thongbao' => 'Phí vận chuyển không hợp lệ']);
-// 		exit();
-// 	} else {
-// 		if (count($_SESSION['cart']) == 0) {
-// 			$ok = 0;
-// 			$thongbao = 'Thất bại! Giỏ hàng trống';
-// 		} else {
-// 			$list_id = '';
-// 			foreach ($_SESSION['cart'] as $key => $value) {
-// 				if (isset($value['sp_id']) && !empty($value['sp_id']) && is_numeric($value['sp_id'])) {
-// 					$list_id .= $value['sp_id'] . ',';
-// 				}
-// 			}
-// 			$list_id = rtrim($list_id, ',');
-
-// 			if (empty($list_id)) {
-// 				$ok = 0;
-// 				$thongbao = 'Thất bại! Không có sản phẩm hợp lệ trong giỏ hàng';
-// 			} else {
-// 				// Tính toán giỏ hàng
-// 				$hientai = time();
-// 				$tamtinh_server = 0;
-// 				$giam_server = 0;
-// 				$can_nang = 0;
-// 				$list = '';
-// 				$k = 0;
-
-// 				// Debug: Ghi log $_SESSION['cart']
-// 				file_put_contents('debug.log', "SESSION CART Process: " . print_r($_SESSION['cart'], true) . "\n", FILE_APPEND);
-
-// 				// Tạo danh sách sản phẩm và tính toán
-// 				$k = 0;
-// 				foreach ($_SESSION['cart'] as $cart_item) {
-// 					$k++;
-// 					$id_sp = $cart_item['sp_id'];
-// 					$r_cart = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM sanpham_shop WHERE id='$id_sp' AND shop='$shop'"));
-// 					if (!$r_cart)
-// 						continue;
-// 					if (isset($r_cart['so_luong']) && $r_cart['so_luong'] < $cart_item['quantity']) {
-// 						echo json_encode(['ok' => 0, 'thongbao' => "Sản phẩm {$r_cart['tieu_de']} không đủ số lượng trong kho"]);
-// 						exit();
-// 					}
-// 					// Tính tổng cân nặng
-// 					$can_nang += floatval(str_replace(',', '.', $r_cart['can_nang'])) * $cart_item['quantity'];
-
-// 					$item = [
-// 						'tieu_de' => $r_cart['tieu_de'],
-// 						'ma_sanpham' => $r_cart['ma_sanpham'] ?? '',
-// 						'soluong' => $cart_item['quantity'],
-// 						'color' => $cart_item['ten_color'] ?? '',
-// 						'size' => $cart_item['ten_size'] ?? '',
-// 						'gia_moi' => number_format(floatval($cart_item['gia_moi'])),
-// 						'minh_hoa' => $r_cart['minh_hoa'],
-// 						'link' => $r_cart['link'],
-// 						'thanhtien' => number_format(floatval($cart_item['gia_moi']) * $cart_item['quantity'])
-// 					];
-
-// 					$tamtinh_server += floatval($cart_item['gia_moi']) * $cart_item['quantity'];
-
-// 					$unique_key = $id_sp . '_' . ($cart_item['ten_color'] ?? '') . '_' . ($cart_item['ten_size'] ?? '');
-// 					if ($k == 1) {
-// 						$list .= '"' . $unique_key . '":' . json_encode($item, JSON_UNESCAPED_UNICODE);
-// 					} else {
-// 						$list .= ',"' . $unique_key . '":' . json_encode($item, JSON_UNESCAPED_UNICODE);
-// 					}
-// 				}
-// 				$sanpham = '{' . $list . '}';
-
-// 				// Tính giảm giá từ coupon
-// 				if (isset($_SESSION['coupon'])) {
-// 					if (!updateVoucherUsage($coupon, $user_id)) {
-// 						echo json_encode(['ok' => 0, 'thongbao' => 'Voucher đã đạt giới hạn sử dụng.']);
-// 						exit();
-// 					}
-// 					$thongtin_counpon = mysqli_query($conn, "SELECT *,count(*) AS total FROM coupon WHERE ma='{$_SESSION['coupon']}' AND shop='$shop'");
-// 					$r_coupon = mysqli_fetch_assoc($thongtin_counpon);
-// 					if ($r_coupon['total'] > 0 && $r_coupon['expired'] > time()) {
-// 						if ($r_coupon['kieu'] == 'all') {
-// 							$giam_server = $r_coupon['loai'] == 'phantram' ? ceil(($tamtinh_server / 100) * $r_coupon['giam']) : $r_coupon['giam'];
-// 						} elseif ($r_coupon['kieu'] == 'sanpham') {
-// 							$tach_list_id = explode(',', $list_id);
-// 							$tach_sanpham_id = explode(',', $r_coupon['sanpham']);
-// 							$id_apdung = array_intersect($tach_sanpham_id, $tach_list_id);
-// 							foreach ($id_apdung as $id_sp) {
-// 								foreach ($_SESSION['cart'] as $item) {
-// 									if ($item['sp_id'] == $id_sp) {
-// 										$thanhtien = floatval($item['gia_moi']) * $item['quantity'];
-// 										$giam_server += $r_coupon['loai'] == 'phantram' ? ceil(($thanhtien / 100) * $r_coupon['giam']) : $r_coupon['giam'];
-// 									}
-// 								}
-// 							}
-// 						}
-// 					}
-// 				}
-
-// 				$tongtien_server = $tamtinh_server - $giam_server + $phi_ship;
-// 				$tamtinh = $tamtinh_server;
-// 				$giam = $giam_server;
-// 				$tongtien = $tongtien_server;
-
-// 				file_put_contents('debug.log', "Sanpham: $sanpham\nTamtinh: $tamtinh\nGiam: $giam\nPhi_ship: $phi_ship\nTongtien: $tongtien\n", FILE_APPEND);
-
-// 				// $dayMonth = (int)date("m", $time);
-// 				$ma_don = intval($shop . $check->random_number(8));
-// 				// $thongtin_tichdiem = mysqli_query($conn, "SELECT *,count(*) AS total FROM caidat_tichdiem WHERE shop='$shop'");
-// 				// $r_td = mysqli_fetch_assoc($thongtin_tichdiem);
-// 				// $diem = ceil(($tongtien / 100000) * $r_td['diem']);
-
-// 				$ok = 1;
-// 				$thongbao = 'Đang chuyển hướng...';
-// 				mysqli_query($conn, "INSERT INTO donhang_shop(ma_don,shop,user_id,ho_ten,email,dien_thoai,dia_chi,tinh,huyen,sanpham,tamtinh,coupon,giam,phi_ship,tongtien,status,thanhtoan,date_post,ghi_chu) VALUES ('$ma_don','$shop','$user_id','$ho_ten','$email','$dien_thoai','$dia_chi','$tinh','$huyen','$sanpham','$tamtinh','$coupon','$giam','$phi_ship','$tongtien','0','$thanhtoan'," . time() . ",'$ghi_chu')");
-
-// 				$noidung_notification = "Bạn có đơn hàng mới: #$ma_don - " . $ho_ten . " - " . $dien_thoai;
-// 				$date_post = time();
-// 				mysqli_query($conn, "INSERT INTO notification (user_id, sp_id, noi_dung, doc, bo_phan, admin, date_post) VALUES ('$user_id', '$ma_don', '$noidung_notification', '', 'donhang', '0', '$date_post')");
-// 				if ($ok == 1) {
-// 					$_SESSION['ma_don'] = $ma_don;
-// 					unset($_SESSION['cart']);
-// 					unset($_SESSION['coupon']);
-// 					unset($_SESSION['main_product']);
-// 					unset($_SESSION['muakem']);
-// 					if ($thanhtoan == 'vnpay') {
-// 						// Cấu hình VNPay
-// 						$vnp_TmnCode = '8TKOSK63';
-// 						$vnp_HashSecret = 'KWVSKMORO004EISIYKM91EVS2X5GSLH0';
-// 						$vnp_Url = 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html';
-// 						$vnp_Returnurl = 'https://giaodiennhat.vn/checkout.html?step=3';
-						
-// 						// Tạo URL thanh toán VNPay
-// 						//require_once($_SERVER['DOCUMENT_ROOT'] . '/vnpay_php/vnpay_create_payment.php');
-// 						$payment_url = $class_index->createOrderVnpay($ma_don, $vnp_TmnCode, $vnp_HashSecret, $vnp_Url, $vnp_Returnurl, $tongtien);
-// 						echo json_encode(['ok' => 1, 'thongbao' => 'Đang chuyển hướng tới VNPay...', 'redirect' => $payment_url]);
-// 					} else {
-// 						echo json_encode(['ok' => 1, 'thongbao' => 'Đang chuyển hướng...']);
-// 					}
-// 					exit();
-// 				}
-// 			}
-// 		}
-// 	}
-// 	echo json_encode(['ok' => $ok, 'thongbao' => $thongbao]);
-// } 
 else if ($action == 'checkout_complete') {
     $ho_ten = addslashes(strip_tags($_REQUEST['ho_ten'] ?? ''));
     $email = addslashes(strip_tags($_REQUEST['email'] ?? ''));
@@ -2423,7 +2178,8 @@ else if ($action == 'quick_view') {
 	$class_index = $tlca_do->load_skin($s, 'class_shop');
 	$suggestions = $class_index->get_search_suggestions($conn, $s, $shop, $keyword);
 	echo json_encode($suggestions);
-} else if ($action == 'show_cart') {
+} 
+else if ($action == 'show_cart') {
 	global $conn, $skin, $s, $shop;
 
 	$list_shopcart = '';
@@ -2445,7 +2201,8 @@ else if ($action == 'quick_view') {
 		]);
 		exit;
 	}
-
+// var_dump($_SESSION['cart']);
+// die;
 	// Collect product IDs
 	$list_id = '';
 	foreach ($_SESSION['cart'] as $item) {
@@ -2604,7 +2361,8 @@ else if ($action == 'quick_view') {
 		'thongbao' => 'Cập nhật giỏ hàng thành công'
 	]);
 	exit;
-} else if ($action == 'remove_cart' && isset($_POST['id'])) {
+}
+ else if ($action == 'remove_cart' && isset($_POST['id'])) {
 	$product_id = mysqli_real_escape_string($conn, $_POST['id']);
 
 	if (isset($_SESSION['cart'][$product_id])) {
@@ -2622,26 +2380,424 @@ else if ($action == 'quick_view') {
 	}
 	exit;
 } 
-// else if ($action == 'vnpay') {
-//     // Cấu hình VNPay
-//     $vnp_TmnCode = '8TKOSK63';
-//     $vnp_HashSecret = 'KWVSKMORO004EISIYKM91EVS2X5GSLH0';
-//     $vnp_Url = 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html';
-//     $vnp_Returnurl = 'http://' . $_SERVER['HTTP_HOST'] . '/vnpay_php/vnpay_return.php';
-    
-//     // Tạo đơn hàng trước
-//     $order_id = createOrder($conn, $user_id, $payment_method, $total_amount, $shipping_fee, $discount_amount);
-    
-//     if ($order_id) {
-//         require_once($_SERVER['DOCUMENT_ROOT'] . '/vnpay_php/vnpay_create_payment.php');
-//         $payment_url = createOrderVnpay($order_id, $vnp_TmnCode, $vnp_HashSecret, $vnp_Url, $vnp_Returnurl, $tongtien);
-//         echo json_encode(['ok' => 1, 'redirect_url' => $payment_url]);
-//         exit;
-//     } else {
-//         echo json_encode(['ok' => 0, 'msg' => 'Không thể tạo đơn hàng']);
-//         exit;
-//     }
-// } 
+else if($action == 'ai_chat') {
+   $message = isset($_POST['message']) ? trim($_POST['message']) : '';
+
+    if (empty($message)) {
+        echo json_encode(['ok' => 0, 'message' => 'Vui lòng nhập câu hỏi']);
+        exit;
+    }
+
+    // Lấy danh sách Flash Sale, Mua Kèm, Quà Tặng
+    $list_flashsale_id = '';
+    $list_muakem_id = '';
+    $list_tang_id = '';
+    $list_c = [];
+    $hientai = time(); // Thời gian hiện tại để kiểm tra Flash Sale và mã giảm giá
+
+    // Truy vấn bảng deal để lấy danh sách sản phẩm Flash Sale
+    $deal_query = mysqli_query($conn, "SELECT main_product, sub_product FROM deal WHERE loai = 'flash_sale' AND shop = '0' AND date_start <= $hientai AND date_end >= $hientai");
+    while ($deal = mysqli_fetch_assoc($deal_query)) {
+        $main_products = explode(',', $deal['main_product']);
+        foreach ($main_products as $main_product) {
+            $main_product = trim($main_product);
+            if (!empty($main_product)) {
+                $list_flashsale_id .= $main_product . ',';
+                $sub_product = json_decode($deal['sub_product'], true);
+                if (isset($sub_product[$main_product])) {
+                    $total_quantity = 0;
+                    foreach ($sub_product[$main_product] as $variant) {
+                        $total_quantity += (int)$variant['so_luong'];
+                    }
+                    $list_c[$main_product] = [
+                        'variants' => $sub_product[$main_product],
+                        'so_luong' => $total_quantity
+                    ];
+                }
+            }
+        }
+    }
+    $list_flashsale_id = rtrim($list_flashsale_id, ',');
+    $tach_list_flashsale_id = explode(',', $list_flashsale_id);
+
+    // Giả lập list_muakem_id và list_tang_id (cần bảng thực tế để truy vấn chính xác)
+    $list_muakem_id = '166'; // Giả lập sản phẩm ID 166 là Mua Kèm
+    $list_tang_id = ''; // Giả lập không có Quà Tặng
+    $tach_list_muakem_id = explode(',', $list_muakem_id);
+    $tach_list_tang_id = explode(',', $list_tang_id);
+
+    // Lấy danh sách mã giảm giá từ bảng coupon
+    $coupons = [];
+    $coupon_query = mysqli_query($conn, "SELECT * FROM coupon WHERE shop = '0' AND start <= $hientai AND expired >= $hientai AND (max_global_uses = 0 OR current_uses < max_global_uses)");
+    while ($coupon = mysqli_fetch_assoc($coupon_query)) {
+        // Chỉ lấy các mã giảm giá còn sử dụng được (dựa trên max_global_uses và current_uses)
+        $coupons[] = [
+            'ma' => $coupon['ma'],
+            'giam' => $coupon['giam'],
+            'loai' => $coupon['loai'], // phantram hoặc số tiền cố định
+            'kieu' => $coupon['kieu'], // Áp dụng cho tất cả (all) hay sản phẩm cụ thể
+            'sanpham' => $coupon['sanpham'], // Danh sách ID sản phẩm áp dụng (nếu có)
+            'min_price' => $coupon['min_price'],
+            'max_price' => $coupon['max_price'],
+            'max_uses_per_user' => $coupon['max_uses_per_user']
+        ];
+    }
+
+    // Lấy tất cả tiêu đề (tieu_de) từ các bảng để gợi ý
+    $all_titles = [];
+    $title_to_type = [];
+
+    // Từ bảng sanpham_shop
+    $sql_products = "SELECT id, tieu_de, gia_moi, gia_cu, kho_hang, cat, link, noi_dung, minh_hoa 
+                     FROM sanpham_shop WHERE shop = '0'";
+    $result_products = mysqli_query($conn, $sql_products);
+    $products = [];
+    while ($row = mysqli_fetch_assoc($result_products)) {
+        $all_titles[] = strtolower($row['tieu_de']);
+        $title_to_type[strtolower($row['tieu_de'])] = 'product';
+
+        // Lấy biến thể từ bảng phanloai_sanpham_shop
+        $variants = [];
+        $sql_variants = "SELECT id, ten_color, ten_size, gia_moi, kho_sanpham_shop 
+                         FROM phanloai_sanpham_shop 
+                         WHERE sp_id = ? AND user_id = '0'";
+        $stmt_variants = mysqli_prepare($conn, $sql_variants);
+        mysqli_stmt_bind_param($stmt_variants, "i", $row['id']);
+        mysqli_stmt_execute($stmt_variants);
+        $result_variants = mysqli_stmt_get_result($stmt_variants);
+
+        while ($variant = mysqli_fetch_assoc($result_variants)) {
+            $variants[] = [
+                'variant_id' => $variant['id'],
+                'color' => $variant['ten_color'],
+                'size' => $variant['ten_size'],
+                'gia_moi' => $variant['gia_moi'],
+                'kho' => $variant['kho_sanpham_shop']
+            ];
+        }
+        mysqli_stmt_close($stmt_variants);
+
+        // Xử lý giá max/min từ biến thể
+        $sql_price = "SELECT MAX(gia_cu) as max_gia_cu, MIN(gia_moi) as min_gia_moi 
+                      FROM phanloai_sanpham_shop 
+                      WHERE sp_id = ? AND user_id = '0'";
+        $stmt_price = mysqli_prepare($conn, $sql_price);
+        mysqli_stmt_bind_param($stmt_price, "i", $row['id']);
+        mysqli_stmt_execute($stmt_price);
+        $result_price = mysqli_stmt_get_result($stmt_price);
+        $price_data = mysqli_fetch_assoc($result_price);
+        $max_price = $price_data['max_gia_cu'] ?? $row['gia_cu'];
+        $min_price = $price_data['min_gia_moi'] ?? $row['gia_moi'];
+        mysqli_stmt_close($stmt_price);
+
+        // Xử lý loại sản phẩm (Flash Sale, Mua Kèm, Quà Tặng)
+        $loai = '';
+        $icon_label = '<div class="icon_label"></div>';
+        if (in_array($row['id'], $tach_list_flashsale_id)) {
+            $loai = 'flash_sale';
+            $total_quantity = $list_c[$row['id']]['so_luong'] ?? 0;
+            // $icon_label = '<div class="icon_label flash-sale"><span class="flash-icon"><i class="fa fa-bolt"></i></span><span class="flash-quantity">' . $total_quantity . '</span></div>';
+
+            // Lấy giá Flash Sale thấp nhất từ các biến thể
+            $gia_flash = 0;
+            if (isset($list_c[$row['id']]['variants']) && is_array($list_c[$row['id']]['variants'])) {
+                $flash_prices = array_map(function($variant) {
+                    return preg_replace('/[^0-9]/', '', $variant['gia']);
+                }, $list_c[$row['id']]['variants']);
+                $gia_flash = min($flash_prices);
+            }
+            if ($gia_flash == 0) {
+                $gia_flash = $row['gia_moi'] * 0.8; // Fallback: giảm 20% nếu không có giá Flash Sale
+            }
+            $max_price = $row['gia_cu']; // Giữ giá cũ gốc
+            $min_price = $gia_flash; // Giá Flash Sale thấp nhất
+        } elseif (in_array($row['id'], $tach_list_muakem_id)) {
+            $loai = 'muakem';
+            $icon_label = '<div class="icon_label text">Mua kèm deal sốc</div>';
+        } elseif (in_array($row['id'], $tach_list_tang_id)) {
+            $loai = 'tang';
+            $icon_label = '<div class="icon_label text">Mua hàng nhận quà tặng</div>';
+        } else {
+            $loai = '';
+        }
+
+        // Tính phần trăm giảm giá
+        $giam = 0;
+        $label_sale = '<div class="icon_label"></div>';
+        $max_price = floatval(preg_replace('/[^0-9]/', '', $max_price));
+        $min_price = floatval(preg_replace('/[^0-9]/', '', $min_price));
+        if ($max_price > $min_price && $max_price > 0) {
+            $giam = ceil((($max_price - $min_price) / $max_price) * 100);
+            $label_sale = '<span class="label-product label-sale">-' . $giam . '%</span>';
+        }
+
+        // Tìm mã giảm giá áp dụng cho sản phẩm này
+        $applicable_coupons = [];
+        foreach ($coupons as $coupon) {
+            // Kiểm tra điều kiện áp dụng mã giảm giá
+            $can_apply = false;
+
+            // 1. Kiểm tra kiểu mã (all hay sản phẩm cụ thể)
+            if ($coupon['kieu'] === 'all') {
+                $can_apply = true;
+            } elseif (!empty($coupon['sanpham'])) {
+                $coupon_products = explode(',', $coupon['sanpham']);
+                if (in_array($row['id'], $coupon_products)) {
+                    $can_apply = true;
+                }
+            }
+
+            // 2. Kiểm tra giá tối thiểu/tối đa
+            if ($can_apply) {
+                if ($coupon['min_price'] > 0 && $min_price < $coupon['min_price']) {
+                    $can_apply = false;
+                }
+                if ($coupon['max_price'] > 0 && $min_price > $coupon['max_price']) {
+                    $can_apply = false;
+                }
+            }
+
+            // 3. Nếu mã áp dụng được, thêm vào danh sách
+            if ($can_apply) {
+                $discount_text = $coupon['loai'] === 'phantram' ? "Giảm {$coupon['giam']}% (tối đa {$coupon['max_price']} VNĐ nếu có)" : "Giảm " . number_format($coupon['giam'], 0, ',', '.') . " VNĐ";
+                $applicable_coupons[] = "Mã: <strong>{$coupon['ma']}</strong> - {$discount_text}";
+            }
+        }
+
+        $products[] = [
+            'id' => $row['id'],
+            'tieu_de' => $row['tieu_de'],
+            'gia_moi' => $min_price,
+            'gia_cu' => $max_price,
+            'kho_hang' => $row['kho_hang'],
+            'cat' => $row['cat'],
+            'description' => $row['noi_dung'],
+            'link' => $row['link'],
+            'minh_hoa' => $row['minh_hoa'],
+            'loai' => $loai,
+            'icon_label' => $icon_label,
+            'label_sale' => $label_sale,
+            'variants' => $variants,
+            'coupons' => $applicable_coupons // Thêm danh sách mã giảm giá áp dụng
+        ];
+    }
+
+    // Từ bảng category_sanpham_shop
+    $categories = [];
+    $sql_categories = "SELECT cat_id, cat_tieude FROM category_sanpham_shop WHERE shop = '0'";
+    $result_categories = mysqli_query($conn, $sql_categories);
+    while ($row = mysqli_fetch_assoc($result_categories)) {
+        $categories[$row['cat_id']] = $row['cat_tieude'];
+        $all_titles[] = strtolower($row['cat_tieude']);
+        $title_to_type[strtolower($row['cat_tieude'])] = 'category';
+    }
+
+    // Từ bảng thuong_hieu
+    $brands = [];
+    $sql_brands = "SELECT id, tieu_de FROM thuong_hieu WHERE shop = '0'";
+    $result_brands = mysqli_query($conn, $sql_brands);
+    while ($row = mysqli_fetch_assoc($result_brands)) {
+        $brands[$row['id']] = $row['tieu_de'];
+        $all_titles[] = strtolower($row['tieu_de']);
+        $title_to_type[strtolower($row['tieu_de'])] = 'brand';
+    }
+
+    // Logic xử lý câu hỏi
+    $message = strtolower($message);
+    $reply = "Tôi là Grok 3, AI của xAI. Dưới đây là thông tin bạn yêu cầu (Cập nhật lúc 12:49 AM +07, 03/06/2025):<br>";
+
+    // Tìm kiếm và gợi ý dựa trên tiêu đề
+    $found = false;
+    $matched_titles = [];
+    foreach ($all_titles as $title) {
+        if (strpos($title, $message) !== false || strpos($message, $title) !== false) {
+            $matched_titles[] = $title;
+        }
+    }
+
+    // Nếu tìm thấy tiêu đề khớp
+    if (!empty($matched_titles)) {
+        foreach ($matched_titles as $matched_title) {
+            $type = $title_to_type[$matched_title];
+            
+            // Nếu là sản phẩm
+            if ($type === 'product') {
+                foreach ($products as $product) {
+                    if (strtolower($product['tieu_de']) === $matched_title) {
+                        $cat_names = array_map(function($cat_id) use ($categories) {
+                            return $categories[$cat_id] ?? 'Không xác định';
+                        }, explode(',', $product['cat']));
+                        $reply .= "<div class='ai-product-card'>";
+                        $reply .= "<img src='{$product['minh_hoa']}' alt='{$product['tieu_de']}' class='ai-product-image'>";
+                        $reply .= "<div class='ai-product-info'>";
+                        $reply .= "Sản phẩm: <strong>{$product['tieu_de']}</strong><br>";
+                        $reply .= "Giá: " . number_format($product['gia_moi'], 0, ',', '.') . " VNĐ<br>";
+                        $reply .= "Thuộc danh mục: " . implode(', ', $cat_names) . "<br>";
+                        if ($product['loai'] === 'flash_sale') {
+                            $reply .= "Trạng thái: Flash Sale {$product['icon_label']}<br>";
+                        } elseif ($product['loai'] === 'muakem') {
+                            $reply .= "Trạng thái: Mua kèm deal sốc<br>";
+                        }
+                        if (!empty($product['coupons'])) {
+                            $reply .= "Mã giảm giá áp dụng: <br>" . implode('<br>', $product['coupons']) . "<br>";
+                        }
+                        $reply .= "Link sản phẩm: <a href='/product/{$product['link']}.html' target='_blank'>Xem chi tiết</a>";
+                        $reply .= "</div>";
+                        $reply .= "</div>";
+                        $found = true;
+                        break;
+                    }
+                }
+            }
+            // Nếu là danh mục
+            elseif ($type === 'category') {
+                foreach ($products as $product) {
+                    $cat_ids = explode(',', $product['cat']);
+                    foreach ($cat_ids as $cat_id) {
+                        if (isset($categories[$cat_id]) && strtolower($categories[$cat_id]) === $matched_title) {
+                            $reply .= "<div class='ai-product-card'>";
+                            $reply .= "<img src='{$product['minh_hoa']}' alt='{$product['tieu_de']}' class='ai-product-image'>";
+                            $reply .= "<div class='ai-product-info'>";
+                            $reply .= "Tôi tìm thấy sản phẩm trong danh mục <strong>{$categories[$cat_id]}</strong>:<br>";
+                            $reply .= "Sản phẩm: <strong>{$product['tieu_de']}</strong><br>";
+                            $reply .= "Giá: " . number_format($product['gia_moi'], 0, ',', '.') . " VNĐ<br>";
+                            if ($product['loai'] === 'flash_sale') {
+                                $reply .= "Trạng thái: Flash Sale {$product['icon_label']}<br>";
+                            }
+                            if (!empty($product['coupons'])) {
+                                $reply .= "Mã giảm giá áp dụng: <br>" . implode('<br>', $product['coupons']) . "<br>";
+                            }
+                            $reply .= "Link sản phẩm: <a href='/product/{$product['link']}.html' target='_blank'>Xem chi tiết</a>";
+                            $reply .= "</div>";
+                            $reply .= "</div>";
+                            $found = true;
+                            break 2;
+                        }
+                    }
+                }
+            }
+            // Nếu là thương hiệu
+            elseif ($type === 'brand') {
+                $reply .= "Tôi tìm thấy thương hiệu: <strong>" . ucfirst($matched_title) . "</strong>.<br>";
+                $reply .= "Bạn có muốn xem các sản phẩm của thương hiệu này không? Ví dụ: hỏi 'Sản phẩm của Quạt Cầm Tay Mini'.";
+                $found = true;
+            }
+        }
+    }
+
+    // Tìm kiếm theo giá
+    if (strpos($message, 'giá') !== false || preg_match('/\d{1,3}(?:\.\d{3})*/', $message)) {
+        $price = preg_match('/\d{1,3}(?:\.\d{3})*/', $message, $matches) ? (int)str_replace('.', '', $matches[0]) : 0;
+        foreach ($products as $product) {
+            if ($price > 0 && $product['gia_moi'] <= $price) {
+                $reply .= "<div class='ai-product-card'>";
+                $reply .= "<img src='{$product['minh_hoa']}' alt='{$product['tieu_de']}' class='ai-product-image'>";
+                $reply .= "<div class='ai-product-info'>";
+                $reply .= "Sản phẩm: <strong>{$product['tieu_de']}</strong><br>";
+                $reply .= "Giá: " . number_format($product['gia_moi'], 0, ',', '.') . " VNĐ<br>";
+                $reply .= "Các biến thể: <br>";
+                foreach ($product['variants'] as $variant) {
+                    $reply .= "- {$variant['color']}, {$variant['size']}: " . number_format($variant['gia_moi'], 0, ',', '.') . " VNĐ (Còn {$variant['kho']} sản phẩm).<br>";
+                }
+                if ($product['loai'] === 'flash_sale') {
+                    $reply .= "Trạng thái: Flash Sale {$product['icon_label']}<br>";
+                }
+                if (!empty($product['coupons'])) {
+                    $reply .= "Mã giảm giá áp dụng: <br>" . implode('<br>', $product['coupons']) . "<br>";
+                }
+                $reply .= "Link sản phẩm: <a href='/product/{$product['link']}.html' target='_blank'>Xem chi tiết</a>";
+                $reply .= "</div>";
+                $reply .= "</div>";
+                $found = true;
+                break;
+            } elseif (strpos($message, 'giá') !== false && !$found) {
+                $reply .= "<div class='ai-product-card'>";
+                $reply .= "<img src='{$product['minh_hoa']}' alt='{$product['tieu_de']}' class='ai-product-image'>";
+                $reply .= "<div class='ai-product-info'>";
+                $reply .= "Sản phẩm: <strong>{$product['tieu_de']}</strong><br>";
+                $reply .= "Giá: " . number_format($product['gia_moi'], 0, ',', '.') . " VNĐ<br>";
+                $reply .= "Các biến thể: <br>";
+                foreach ($product['variants'] as $variant) {
+                    $reply .= "- {$variant['color']}, {$variant['size']}: " . number_format($variant['gia_moi'], 0, ',', '.') . " VNĐ (Còn {$variant['kho']} sản phẩm).<br>";
+                }
+                if ($product['loai'] === 'flash_sale') {
+                    $reply .= "Trạng thái: Flash Sale {$product['icon_label']}<br>";
+                }
+                if (!empty($product['coupons'])) {
+                    $reply .= "Mã giảm giá áp dụng: <br>" . implode('<br>', $product['coupons']) . "<br>";
+                }
+                $reply .= "Link sản phẩm: <a href='/product/{$product['link']}.html' target='_blank'>Xem chi tiết</a>";
+                $reply .= "</div>";
+                $reply .= "</div>";
+                $found = true;
+                break;
+            }
+        }
+    }
+
+    // Tìm kiếm sản phẩm Flash Sale
+    if (strpos($message, 'flash sale') !== false || strpos($message, 'flashsale') !== false) {
+        foreach ($products as $product) {
+            if ($product['loai'] === 'flash_sale') {
+                $reply .= "<div class='ai-product-card'>";
+                $reply .= "<img src='{$product['minh_hoa']}' alt='{$product['tieu_de']}' class='ai-product-image'>";
+                $reply .= "<div class='ai-product-info'>";
+                $reply .= "Sản phẩm Flash Sale: <strong>{$product['tieu_de']}</strong><br>";
+                $reply .= "Giá: " . number_format($product['gia_moi'], 0, ',', '.') . " VNĐ {$product['icon_label']}<br>";
+                if (!empty($product['coupons'])) {
+                    $reply .= "Mã giảm giá áp dụng: <br>" . implode('<br>', $product['coupons']) . "<br>";
+                }
+                $reply .= "Link sản phẩm: <a href='/product/{$product['link']}.html' target='_blank'>Xem chi tiết</a>";
+                $reply .= "</div>";
+                $reply .= "</div>";
+                $found = true;
+                break;
+            }
+        }
+    }
+
+    // Tìm kiếm mã giảm giá nếu người dùng hỏi trực tiếp
+    if (strpos($message, 'mã giảm giá') !== false || strpos($message, 'coupon') !== false) {
+        $reply .= "Danh sách mã giảm giá hiện tại:<br>";
+        if (empty($coupons)) {
+            $reply .= "Hiện tại không có mã giảm giá nào khả dụng.<br>";
+        } else {
+            foreach ($coupons as $coupon) {
+                $discount_text = $coupon['loai'] === 'phantram' ? "Giảm {$coupon['giam']}% (tối đa {$coupon['max_price']} VNĐ nếu có)" : "Giảm " . number_format($coupon['giam'], 0, ',', '.') . " VNĐ";
+                $reply .= "- Mã: <strong>{$coupon['ma']}</strong> - {$discount_text}<br>";
+                if ($coupon['min_price'] > 0) {
+                    $reply .= "  Áp dụng cho đơn hàng từ " . number_format($coupon['min_price'], 0, ',', '.') . " VNĐ<br>";
+                }
+                if ($coupon['max_price'] > 0) {
+                    $reply .= "  Áp dụng cho đơn hàng tối đa " . number_format($coupon['max_price'], 0, ',', '.') . " VNĐ<br>";
+                }
+                if ($coupon['kieu'] !== 'all' && !empty($coupon['sanpham'])) {
+                    $reply .= "  Chỉ áp dụng cho một số sản phẩm cụ thể.<br>";
+                }
+            }
+        }
+        $found = true;
+    }
+
+    // Gợi ý nếu không tìm thấy chính xác
+    if (!$found && !empty($matched_titles)) {
+        $reply .= "Tôi không tìm thấy kết quả chính xác, nhưng đây là một số gợi ý:<br>";
+        foreach ($matched_titles as $title) {
+            $reply .= "- " . ucfirst($title) . " (" . ($title_to_type[$title] === 'product' ? 'Sản phẩm' : ($title_to_type[$title] === 'category' ? 'Danh mục' : 'Thương hiệu')) . ")<br>";
+        }
+        $reply .= "Bạn có thể thử hỏi chi tiết hơn, ví dụ: 'Sản phẩm Quạt Cầm Tay Mini', 'Giá bàn là Sunhouse', hoặc 'Mã giảm giá'.";
+    }
+
+    // Mặc định nếu không khớp
+    if (!$found && empty($matched_titles)) {
+        $reply = "Tôi là Grok 3, AI của xAI. Tôi chưa hiểu rõ câu hỏi của bạn: '$message'. Bạn có thể hỏi về sản phẩm, giá, danh mục, thương hiệu, Flash Sale, hoặc mã giảm giá, ví dụ: 'Bàn là Sunhouse giá bao nhiêu?', 'Sản phẩm trong danh mục Quạt và máy nóng lạnh', 'Sản phẩm Flash Sale', hoặc 'Mã giảm giá'.";
+    }
+
+    echo json_encode(['ok' => 1, 'reply' => $reply]);
+    exit;
+} 
+
+
 else {
 	echo "Không có hành động nào được xử lý";
 }

@@ -38,26 +38,14 @@
           transition: opacity 0.5s, transform 1s;
         }
         
-        /* Dấu cộng 
-        .banner-item::after {
-          content: '+';
-          font-size: 100px;
-          color: rgba(255,255,255,0.5);
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%) scale(1.5);
-          transition: transform 0.5s ease;
-          pointer-events: none;
-        }
-        */
+        
         /* Khi hover vào banner */
         .banner-item:hover::before {
           opacity: 1;
           transform: rotate(30deg) translate(100%, 0);
         }
         
-        /* Hover vào: dấu cộng thu nhỏ lại */
+      
         .banner-item:hover::after {
           transform: translate(-50%, -50%) scale(0.8);
         }
@@ -95,7 +83,7 @@
     }
 
     .container-sub .swiper-slide {
-        width: 100% !important; /* Ensure 1 slide takes full width */
+        width: 100% !important; 
     }
     .slick-dotted.slick-slider
     {
@@ -115,7 +103,7 @@
     }
     .swiper-button-prev,
     .swiper-button-next {
-        width: 30px !important; /* Smaller buttons on mobile */
+        width: 30px !important; 
         height: 30px !important;
         font-size: 16px;
     }
@@ -123,11 +111,9 @@
     .swiper-button-prev::after,
     .swiper-button-next::after {
 
-        font-size: 16px !important; /* Smaller arrow icons */
+        font-size: 16px !important; 
     }
 }
-    /*Banner styles for the banner slider nhatthem214/*/
-   /* Scoped container for the layout */
 
 .container-sub {
     display: flex;
@@ -165,15 +151,6 @@
     font-size: 16px;
     font-weight: normal;
 }
-/*/
-.container-sub #menu2017 li h3 a {
-    color: #333;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-    */
 
 .container-sub #menu2017 li h3 a:hover {
     color: #007bff;
@@ -367,7 +344,6 @@
         });
       </script>
     <script>
-    //9-4
     var swiper = new Swiper(".testimonialSwiper", {
         slidesPerView: 1,
         spaceBetween: 30,
@@ -393,16 +369,15 @@
         }
     });
     </script>
+
     <script>
     
         var slide_recent = new Swiper('.slide_home', {
-            // Optional parameters
             direction: 'horizontal',
             slidesPerView: 1,
             loop: true,
             observer: true,
             observeParents: true,
-            // If we need pagination
             pagination: {
                 el: '.swiper-pagination',
                 clickable: true,
@@ -410,7 +385,6 @@
             autoplay: {
                 delay: 3000,
               },
-            // Navigation arrows
             navigation: {
                 nextEl: '#gallery_01 .owl-next',
                 prevEl: '#gallery_01 .owl-prev',
@@ -419,46 +393,6 @@
             },
         });
         
-/*
-        if ($(window).width() < 480) {
-           var sl=2;
-        }else if ($(window).width() < 640) {
-           var sl=3;
-        }else if ($(window).width() < 768) {
-           var sl=3;
-        }else if ($(window).width() < 1024) {
-            var sl=4;
-        }else {
-           var sl=5;
-        }
-        
-        var slide_product = new Swiper('.slide_product', {
-            // Optional parameters
-            direction: 'horizontal',
-            slidesPerView: sl,
-            loop: true,
-            observer: true,
-            observeParents: true,
-            // If we need pagination
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-            },
-            autoplay: {
-                delay: 3000,
-              },
-            // Navigation arrows
-            navigation: {
-                nextEl: '.box_index .button_next',
-                prevEl: '.box_index .button_prev',
-                disabledClass: 'hide_button',
-                hiddenClass: 'hide_button'
-            },
-        });
-*/
-
-
-//slide_bannerfirst nhatthem214
         var slide_recent = new Swiper('.banner_slider', {
             direction: 'horizontal',
             slidesPerView: 1,
@@ -525,9 +459,7 @@
                     hiddenClass: 'hide_button'
                 },
             });
-        
-            // Update slidesPerView on window resize
-            window.addEventListener('resize', function () {
+                window.addEventListener('resize', function () {
                 slide_product.params.slidesPerView = setSlidesPerView();
                 slide_product.update();
             });

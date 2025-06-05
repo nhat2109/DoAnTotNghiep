@@ -1,4 +1,8 @@
 <style>
+    .label {
+        font-weight: bold;
+        margin-left: 5px;
+    }
     .page_body .box_right .box_right_content .box_profile
     {
         width: 100%!important;
@@ -389,6 +393,8 @@
                             <p><i class="fa fa-user"></i> <span class="label">Họ tên:</span> {ho_ten}</p>
                             <p><i class="fa fa-map-marker"></i> <span class="label">Địa chỉ:</span> {dia_chi}, {huyen}, {tinh}</p>
                             <p><i class="fa fa-phone"></i> <span class="label">Điện thoại:</span> <a href="tel:{dien_thoai}">{dien_thoai}</a></p>
+                            <p><i class="fa fa-pencil"></i> <span class="label">Ghi chú:</span> {ghi_chu}</p>
+
                         </div>
                     </div>
                     <div class="box-address">

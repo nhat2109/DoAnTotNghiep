@@ -1,6 +1,4 @@
 <?php
-
-
 $tieu_de = mysqli_real_escape_string($conn, strip_tags($_REQUEST['tieu_de'] ?? ''));
 $kho = (int)preg_replace('/[^0-9]/', '', $_REQUEST['kho'] ?? 0);
 $anh = mysqli_real_escape_string($conn, strip_tags($_REQUEST['anh'] ?? ''));
@@ -72,7 +70,7 @@ if (!empty($thuong_hieu_2)) {
 }
 
 // Xử lý hình ảnh
-$minh_hoa = '/Uploads/minh-hoa/' . $check->blank($tieu_de) . '-' . time() . '.' . $duoi;
+$minh_hoa = '/uploads/minh-hoa/' . $check->blank($tieu_de) . '-' . time() . '.' . $duoi;
 if (!move_uploaded_file($_FILES['file']['tmp_name'], '..' . $minh_hoa)) {
     echo json_encode(['ok' => 0, 'thongbao' => 'Thất bại! Lỗi khi upload hình minh họa']);
     exit();
@@ -145,7 +143,7 @@ foreach ($tach_phanloai as $value) {
     $ten_color = mysqli_real_escape_string($conn, $value['ten_color'] ?? '');
     $ten_size = mysqli_real_escape_string($conn, $value['ten_size'] ?? '');
     $ma_mau = mysqli_real_escape_string($conn, $value['ma_mau'] ?? '');
-
+// var_dump($ma_mau);
     // Tính trọng lượng tính ship
     $thetich_sp = $chieudai_shop * $chieurong_shop * $chieucao_shop;
     $trongluong_kichthuoc = $thetich_sp / 6000;
@@ -160,7 +158,7 @@ foreach ($tach_phanloai as $value) {
         exit();
     }
 }
-
+// die; 
 // Thêm SEO cho website
 $query = "INSERT INTO seo_shop (loai, link, shop) VALUES ('sanpham', '$link', '$user_id')";
 if (!mysqli_query($conn, $query)) {

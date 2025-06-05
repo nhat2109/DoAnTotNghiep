@@ -32,6 +32,9 @@
 					viên</span><span class="right"></span></a>
 		</div>
 		<div class="li_menu">
+			<a href="/ncc/list-danhgia" class="a_main"><span class="left"><i class="fa fa-star"></i>Quản lý đánh giá sản phẩm</span></a>
+		</div>
+		<div class="li_menu">
 			<a href="javascript:;" class="a_main"><span class="left"><i class="fa fa-envelope"></i>Liên hệ nhận
 					tin</span><span class="right"><i class="fa fa-plus-square-o"></i></span></a>
 			<div class="list_menu_sub">
@@ -199,6 +202,15 @@
 		</div>
 	</div>
 </div>
+
+<!-- <div class="main_menu">
+	<div class="title" id="menu_title_5">Quản lý đánh giá</div>
+	<div class="list_menu">
+		<div class="li_menu">
+			<a href="/ncc/list-danhgia" class="a_main"><span class="left"><i class="fa fa-star"></i>Quản lý đánh giá sản phẩm</span></a>
+		</div>
+	</div>
+</div> -->
 
 <div class="main_menu_box">
 	<div class="title_box">Cài đặt cửa hàng</div>

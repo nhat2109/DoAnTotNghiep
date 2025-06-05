@@ -11,8 +11,8 @@
 					<th style="text-align: left;">Tên sản phẩm</th>
 					<th style="text-align: center;width: 100px;" class="hide_mobile">Giá niêm yết</th>
 					<th style="text-align: center;width: 100px;" class="hide_mobile">Giá bán lẻ</th>
-					<th style="text-align: center;width: 100px;" class="hide_mobile">Kho</th>
 					<th style="text-align: center;width: 100px;" class="hide_mobile">Đã bán</th>
+					<th style="text-align: center;width: 100px;" class="hide_mobile">Kho</th>
 					<th style="text-align: center;width: 100px;" class="hide_mobile">View</th>
 					<th style="text-align: center;width: 160px;">Hành động</th>
 				</tr>

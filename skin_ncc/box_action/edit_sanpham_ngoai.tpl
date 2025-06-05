@@ -231,10 +231,7 @@
         margin: 20px;
         height: 100%;
     }
-    .list_info .li_info .info_value input
-    {
-        margin-top: 5px;
-    }
+    
     
     .box_right_content {
         max-width: 1200px;
@@ -280,7 +277,7 @@
     }
     
     .form_control:focus {
-        border-color: #4a90e2;
+        border-color: #1a1f46;
         outline: none;
         box-shadow: 0 0 0 2px rgba(74,144,226,0.2);
     }
@@ -319,7 +316,7 @@
     
     /* Button styles */
     .button_all, .button_select_photo, .button_add_phanloai, .button_add_info {
-        background: #4a90e2;
+        background: #1a1f46;
         color: white;
         border: none;
         padding: 10px 20px;

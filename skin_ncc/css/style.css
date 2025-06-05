@@ -4154,7 +4154,7 @@ button {
     padding: 5px;
     padding-right: 15px;
     padding-left: 15px;
-    background: #f60;
+    background: #1a1f46;
     color: #fff;
 }
 
@@ -14904,6 +14904,7 @@ input:checked+.slider:before {
 }
 
 .list_info .li_info .info_value {
+    margin-top: 5px;
     width: calc(100% - 150px);
 }
 
@@ -16179,4 +16180,20 @@ input:checked+.slider:before {
         transform: translateX(0) translateY(0);
         opacity: 1;
     }
+}
+.btn-danhgia {
+    margin-left: 20px;
+    background-color: #00b894;
+    color: #fff;
+    border: none;
+    padding: 4px 10px;
+    text-decoration: none;
+    border-radius: 4px;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+}
+
+.btn-danhgia:hover {
+    background-color: #019870;
+    color: #fff;
 }

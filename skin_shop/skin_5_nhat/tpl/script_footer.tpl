@@ -1,5 +1,5 @@
 <input type="hidden" name="shop" value="{shop}">
-<button class="button_top" id="go_button">TOP</button>
+<!-- <button class="button_top" id="go_button">TOP</button> -->
 <script type="text/javascript" src="/js/jquery.countdown.js"></script>
 <script src="/swiper/swiper.min.js?t=<?php echo time();?>"></script>
 <script type="text/javascript" src="/js/jquery.priceformat.min.js"></script>
@@ -482,7 +482,339 @@
         </div>
     </div>
 </a>
+<!--    /* Chat Icon AI Styles */ -->
+<!-- Chat Icon AI -->
+<!-- Chat Icon AI -->
+<div id="ai-chat-trigger" class="ai-chat-icon-wrapper">
+    <div class="ai-chat-tooltip">
+        <span>Chat AI</span>
+    </div>
+    <div class="ai-chat-icon">
+        <div class="ai-chat-icon-inner">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+            </svg>
+        </div>
+        <span class="ai-chat-icon-text">Hỏi AI</span>
+    </div>
+</div>
+
+<!-- Chat Window AI -->
+<div id="ai-chat-window" class="ai-chat-modal" style="display: none;">
+    <div class="ai-chat-header">
+        <h3>Trò chuyện với AI</h3>
+        <span class="ai-chat-close">&times;</span>
+    </div>
+    <div class="ai-chat-messages" id="ai-chat-messages">
+        <div class="message ai-message">
+            <strong>AI:</strong> Xin chào! Tôi là Grok 3, AI của xAI. Bạn muốn tìm kiếm sản phẩm nào? Ví dụ: hỏi về giá, danh mục, hoặc mô tả sản phẩm.
+        </div>
+    </div>
+    <div class="ai-chat-input">
+        <input type="text" id="ai-chat-input" placeholder="Nhập câu hỏi của bạn..." />
+        <button id="ai-chat-send">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+            </svg>
+        </button>
+    </div>
+</div>
 <style>
+    /* Product Card in Chat */
+.ai-product-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    margin: 10px 0;
+    padding: 10px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.ai-product-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.ai-product-info {
+    flex-grow: 1;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.ai-product-info a {
+    color: #4CAF50;
+    text-decoration: none;
+}
+
+.ai-product-info a:hover {
+    text-decoration: underline;
+}
+
+.ai-product-info strong {
+    color: #333;
+}
+
+/* Flash Sale Icon */
+
+
+.flash-quantity {
+    font-weight: bold;
+}
+ /* Chat Icon AI Styles */
+.ai-chat-icon-wrapper {
+    position: fixed;
+    bottom: 70px;
+    right: 20px;
+    z-index: 999;
+    cursor: pointer;
+}
+
+.ai-chat-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+}
+
+.ai-chat-icon:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.ai-chat-icon::before,
+.ai-chat-icon::after {
+    content: "";
+    position: absolute;
+    border: 2px solid rgba(76, 175, 80, 0.5);
+    border-radius: 50%;
+    left: -10px;
+    right: -10px;
+    top: -10px;
+    bottom: -10px;
+    opacity: 0;
+    animation: zoom 2s infinite;
+}
+
+.ai-chat-icon::after {
+    animation-delay: 0.5s;
+}
+
+.ai-chat-icon-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60%;
+    height: 60%;
+}
+
+.ai-chat-icon-inner svg {
+    width: 100%;
+    height: 100%;
+    fill: #fff;
+}
+
+.ai-chat-icon-text {
+    position: absolute;
+    top: -30px;
+    background: #4CAF50;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: 600;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.ai-chat-icon:hover .ai-chat-icon-text {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.ai-chat-tooltip {
+    position: absolute;
+    bottom: 70px;
+    right: 0;
+    background: #fff;
+    padding: 8px 15px;
+    border-radius: 15px 15px 0 15px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    color: #4CAF50;
+    font-weight: 600;
+    font-size: 14px;
+    font-family: 'Roboto', sans-serif;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.ai-chat-icon-wrapper:hover .ai-chat-tooltip {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Chat Window Styles */
+.ai-chat-modal {
+    position: fixed;
+    bottom: 140px;
+    right: 20px;
+    width: 350px;
+    height: 450px;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    animation: slideIn 0.3s ease-out;
+    overflow: hidden;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.ai-chat-header {
+    background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+    color: #fff;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 15px 15px 0 0;
+}
+
+.ai-chat-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.ai-chat-close {
+    font-size: 24px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.ai-chat-close:hover {
+    color: #FFCDD2;
+}
+
+.ai-chat-messages {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 15px;
+    background: #f5f5f5;
+}
+
+.ai-chat-messages::-webkit-scrollbar {
+    width: 6px;
+}
+
+.ai-chat-messages::-webkit-scrollbar-thumb {
+    background: #4CAF50;
+    border-radius: 10px;
+}
+
+.ai-chat-messages::-webkit-scrollbar-track {
+    background: #e0e0e0;
+}
+
+.message {
+    margin-bottom: 15px;
+    line-height: 1.5;
+    font-size: 14px;
+}
+
+.message strong {
+    color: #333;
+}
+
+.user-message {
+    float: right;
+    text-align: right;
+    color: #fff;
+    background: #4CAF50;
+    padding: 8px 12px;
+    border-radius: 15px 15px 0 15px;
+    display: inline-block;
+    max-width: 80%;
+}
+
+.ai-message {
+    float: left;
+    text-align: left;
+    color: #333;
+    background: #fff;
+    padding: 8px 12px;
+    border-radius: 15px 15px 15px 0;
+    display: inline-block;
+    max-width: 80%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.ai-chat-input {
+    display: flex;
+    padding: 10px 15px;
+    background: #fff;
+    border-top: 1px solid #e0e0e0;
+}
+
+#ai-chat-input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+#ai-chat-input:focus {
+    border-color: #4CAF50;
+}
+
+#ai-chat-send {
+    background: #4CAF50;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 10px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+#ai-chat-send:hover {
+    background: #2E7D32;
+}
+
+#ai-chat-send svg {
+    width: 20px;
+    height: 20px;
+    fill: #fff;
+}
     @keyframes zoom {
         0% {
             transform: scale(.5);
@@ -636,6 +968,142 @@
         font-family: Roboto
     }
 </style>
+<style>
+    .layered-content {
+        max-width: 400px;
+        margin: 20px;
+    }
+    .check-box-list {
+        list-style: none;
+        padding: 0;
+        max-height: 200px; /* Adjust as needed */
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+    }
+    .check-box-list.expanded {
+        max-height: none;
+    }
+    .check-box-list li {
+        margin: 5px 0;
+    }
+    .check-box-list li.hidden { /* Add this rule */
+        display: none;
+    }
+    .view-more-btn {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        cursor: pointer;
+        border-radius: 5px;
+        margin-top: 10px;
+        display: block;
+        width: 100%;
+        text-align: center;
+    }
+    .view-more-btn:hover {
+        background-color: #0056b3;
+    }
+</style>
+
+<script>
+$(document).ready(function() {
+        const $list = $('.check-box-list');
+        const $viewMoreBtn = $('.view-more-btn');
+        const $hiddenItems = $('.check-box-list li.hidden');
+        let isExpanded = false;
+
+        // Check if there are hidden items to show/hide the button
+        if ($hiddenItems.length === 0) {
+            $viewMoreBtn.hide();
+        }
+
+        $viewMoreBtn.on('click', function() {
+            if (!isExpanded) {
+                $list.addClass('expanded');
+                $hiddenItems.removeClass('hidden');
+                $viewMoreBtn.text('Rút gọn');
+                isExpanded = true;
+            } else {
+                $list.removeClass('expanded');
+                $hiddenItems.addClass('hidden');
+                $viewMoreBtn.text('View More');
+                isExpanded = false;
+            }
+        });
+    });
+</script>
 <script>
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) { document.getElementById("linkzalo").href = "https://zalo.me/{hotline_number}"; }
+</script>
+
+<script>
+$(document).ready(function () {
+    // Xử lý click vào icon AI để mở cửa sổ chat
+    $("#ai-chat-trigger").on("click", function (e) {
+        e.preventDefault(); // Ngăn chặn hành vi mặc định
+        $("#ai-chat-window").css("display", "flex");
+    });
+
+    // Xử lý đóng cửa sổ chat
+    $(".ai-chat-close").on("click", function () {
+        $("#ai-chat-window").css("display", "none");
+    });
+
+    // Xử lý gửi tin nhắn đến AI
+    $("#ai-chat-send").on("click", function () {
+        const message = $("#ai-chat-input").val().trim();
+        if (message) {
+            // Thêm tin nhắn của người dùng vào giao diện
+            $("#ai-chat-messages").append(`
+                <div class="message user-message"><strong>Bạn:</strong> ${message}</div>
+            `);
+            $("#ai-chat-input").val(""); // Xóa input
+            $("#ai-chat-messages").scrollTop($("#ai-chat-messages")[0].scrollHeight); // Cuộn xuống cuối
+
+            // Gửi yêu cầu AJAX đến server
+            $.ajax({
+                url: "/process.php",
+                type: "POST",
+                data: {
+                    action: "ai_chat",
+                    message: message
+                },
+                success: function (response) {
+                    try {
+                        const info = JSON.parse(response);
+                        if (info.ok === 1) {
+                            // Thêm phản hồi từ AI vào giao diện
+                            $("#ai-chat-messages").append(`
+                                <div class="message ai-message"><strong>AI:</strong> ${info.reply}</div>
+                            `);
+                            $("#ai-chat-messages").scrollTop($("#ai-chat-messages")[0].scrollHeight);
+                        } else {
+                            $("#ai-chat-messages").append(`
+                                <div class="message ai-message"><strong>AI:</strong> Lỗi: ${info.message}</div>
+                            `);
+                        }
+                    } catch (e) {
+                        console.error("Lỗi phân tích JSON:", e);
+                        $("#ai-chat-messages").append(`
+                            <div class="message ai-message"><strong>AI:</strong> Lỗi xử lý dữ liệu.</div>
+                        `);
+                    }
+                },
+                error: function () {
+                    $("#ai-chat-messages").append(`
+                        <div class="message ai-message"><strong>AI:</strong> Lỗi kết nối đến server.</div>
+                    `);
+                }
+            });
+        }
+    });
+
+    // Bắt sự kiện Enter để gửi tin nhắn
+    $("#ai-chat-input").on("keypress", function (e) {
+        if (e.which === 13) {
+            $("#ai-chat-send").click();
+        }
+    });
+});
 </script>

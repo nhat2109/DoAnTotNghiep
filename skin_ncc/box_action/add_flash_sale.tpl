@@ -181,7 +181,7 @@
 
 .popup-footer button {
     padding: 4px 10px;
-    background: #ff6200;
+    background: #1a1f46;
     color: #fff;
     border: none;
     border-radius: 4px;
@@ -190,7 +190,7 @@
 }
 
 .popup-footer button:hover {
-    background: #e55a00;
+    background: #11142e;
 }
 
 /* CSS cho danh sách sản phẩm trong popup */

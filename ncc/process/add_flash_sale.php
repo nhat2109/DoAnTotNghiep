@@ -5,7 +5,7 @@ session_start();
 $tieu_de = mysqli_real_escape_string($conn, strip_tags($_REQUEST['tieu_de']));
 $date_start = mysqli_real_escape_string($conn, strip_tags($_REQUEST['date_start']));
 $date_end = mysqli_real_escape_string($conn, strip_tags($_REQUEST['date_end']));
-// Không dùng addslashes() cho dữ liệu JSON
+
 $sub_product = $_REQUEST['sub_product'];
 $sub_id = mysqli_real_escape_string($conn, strip_tags($_REQUEST['sub_id']));
 $list_product_sub = $_REQUEST['list_product_sub'];
@@ -57,7 +57,7 @@ if ($tieu_de == '') {
     $thongbao = 'Vui lòng chọn thời gian kết thúc';
 } elseif ($sub_id == '') {
     $ok = 0;
-    $thongbao = 'Vui lòng chọn sản phẩm';
+    // $thongbao = 'Vui lòng chọn sản phẩm';
 } elseif (empty($main_product_ids)) {
     $ok = 0;
     $thongbao = 'Không tìm thấy sản phẩm hợp lệ';

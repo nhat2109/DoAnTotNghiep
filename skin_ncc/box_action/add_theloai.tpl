@@ -95,7 +95,7 @@
         width: 200px;
         margin: 20px auto;
         padding: 10px;
-        background: #ff0000;
+        background: #1a1f46;;
         color: white;
         border: none;
         border-radius: 4px;
@@ -104,7 +104,7 @@
     }
 
     .button_all:hover {
-        background: #cc0000;
+        background: #11142e;
     }
 
     /* Responsive */

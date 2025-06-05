@@ -109,8 +109,9 @@
                                         <div class="layered_subtitle dropdown-filter"><span>Kích thước</span></div>
                                         <div class="layered-content filter-size s-filter">
                                             <ul class="check-box-list clearfix">
-                                            	{list_size}
+                                                {list_size}
                                             </ul>
+                                            <button class="view-more-btn">Xem thêm</button>
                                         </div>
                                     </div>
                                 </div>

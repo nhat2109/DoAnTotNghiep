@@ -1,3 +1,4 @@
+
 <div class="box_right">
 	<div class="box_right_content">
 		<div class="box_profile" style="width: 100%;padding: 10px;">
@@ -14,6 +15,9 @@
 				<button type="button" id="approve-selected" class="btn btn-primary" style="background-color: red;">Xóa
 					sản phẩm</button>
 				<span id="selected-count">Đã chọn: 0</span>
+					<a href="/ncc/list-danhgia" class="btn btn-success btn-danhgia">
+						Quản lý đánh giá sản phẩm
+					</a>
 			</div>
 			<table class="list_baiviet">
 				<thead style="z-index: 1;">

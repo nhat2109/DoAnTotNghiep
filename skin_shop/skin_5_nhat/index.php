@@ -16,8 +16,6 @@ if (isset($_COOKIE['user_id'])) {
     $box_header = $skin->skin_normal('skin_shop/' . $s . '/tpl/box_header');
     $header_menu_mobile=$skin->skin_normal('skin_shop/'.$s.'/tpl/header_menu_mobile');
 }
-
-// minhthem2404
 $hientai = time();
 $has_flash = 0;
 $event_expiry = '';
@@ -69,9 +67,10 @@ while ($r_d = mysqli_fetch_assoc($thongtin_deal)) {
         
         
     
-        if (empty($event_expiry) || $r_d['date_end'] < $event_expiry) {
+        if (empty($event_expiry) || $r_d['date_end'] > $event_expiry) {
             $event_expiry = $r_d['date_end'];
         }
+        // var_dump($event_expiry);
         $f++;
         $flash_sub_product[]=$r_d['sub_product'];
 
@@ -81,8 +80,6 @@ while ($r_d = mysqli_fetch_assoc($thongtin_deal)) {
         $list_tang_id .= $r_d['main_product'] . ',';
     }
 }
-
-// Sửa logic tạo $list_c: Chọn deal có thời gian hết hạn muộn nhất
 foreach ($list_check_product as $product_id => $deals) {
     $latest_deal = null;
 
@@ -104,8 +101,6 @@ foreach ($list_check_product as $product_id => $deals) {
     }
 }
 
-//  var_dump($list_c);
-//         die;
 $list_muakem_id = substr($list_muakem_id, 0, -1);
 $list_flashsale_id = substr($list_flashsale_id, 0, -1);
 $list_tang_id = substr($list_tang_id, 0, -1);
@@ -153,14 +148,12 @@ if ($index_setting['home_feature'] != '') {
     $service_high_lights = '';
 }
 
-// Lấy 2 banner đầu (vị trí: first, 1, 2)
-$banner_first = '<div class="banner_slider swiper">'; // Changed from slide_home to banner_slider
+
+$banner_first = '<div class="banner_slider swiper">'; 
 $banner_first .= '<div class="swiper-wrapper">';
 $exclude_ids = [];
 $i = 0;
 $query_first = "SELECT * FROM banner WHERE shop_id = '{$r_shop['user_id']}' AND vi_tri='banner_giua' ORDER BY thu_tu ASC LIMIT 2";
-// var_dump("SELECT * FROM banner WHERE shop_id = '{$r_shop['user_id']}' ORDER BY thu_tu ASC LIMIT 2");
-// die;
 $result_first = mysqli_query($conn, $query_first);
 while ($row = mysqli_fetch_assoc($result_first)) {
     $row['blank'] = $check->blank($row['post_tieude']);
@@ -170,13 +163,9 @@ while ($row = mysqli_fetch_assoc($result_first)) {
 }
 $banner_first .= '</div>';
 $banner_first .= '<div class="swiper-pagination"></div>';
-// $banner_first .= '<div class="swiper-button-prev"></div>';
-// $banner_first .= '<div class="swiper-button-next"></div>';
 $banner_first .= '</div>';
 
-
-// end banerfirst
-$banner_two = '<div class="banner_slider swiper">'; // Changed from slide_home to banner_slider
+$banner_two = '<div class="banner_slider swiper">'; 
 $banner_two .= '<div class="swiper-wrapper">';
 $ids = implode(',', $exclude_ids);
 $query_second = "SELECT * FROM banner WHERE shop_id = '{$r_shop['user_id']}' AND vi_tri='banner_giua' AND id NOT IN ($ids) ORDER BY thu_tu ASC LIMIT 2";
@@ -188,8 +177,6 @@ while ($row = mysqli_fetch_assoc($result_second)) {
 }
 $banner_two .= '</div>';
 $banner_two .= '<div class="swiper-pagination"></div>';
-// $banner_two .= '<div class="swiper-button-prev"></div>';
-// $banner_two .= '<div class="swiper-button-next"></div>';
 $banner_two .= '</div>';;
 
 

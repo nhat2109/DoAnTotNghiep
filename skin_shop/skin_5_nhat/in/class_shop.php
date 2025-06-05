@@ -87,7 +87,7 @@ class class_shop extends class_manage{
         $tach_list_muakem_id = explode(',', $list_muakem_id);
         $tach_list_tang_id = explode(',', $list_tang_id);
         $tach_list_flashsale_id = explode(',', $list_flashsale_id);
-        $thongtin = mysqli_query($conn, "SELECT * FROM category_sanpham_shop WHERE shop='$shop' AND cat_index='1' ORDER BY cat_thutu ASC LIMIT 3");
+        $thongtin = mysqli_query($conn, "SELECT * FROM category_sanpham_shop WHERE shop='$shop' ORDER BY cat_thutu DESC LIMIT 4");
        
         $list = '';
         while ($r_tt = mysqli_fetch_assoc($thongtin)) {
@@ -472,22 +472,23 @@ class class_shop extends class_manage{
         return $list;
     }
     ///////////////////
-    function list_size($conn,$s,$shop,$id){
-        $skin=$this->load('class_skin');
-        $check=$this->load('class_check');
-        $thongtin=mysqli_query($conn,"SELECT * FROM kich_co WHERE shop='$shop' ORDER BY thu_tu ASC");
-        $i=$start;
-        $tach_id=explode('*', $id);
-        while($r_tt=mysqli_fetch_assoc($thongtin)){
+    function list_size($conn, $s, $shop, $id) {
+        $skin = $this->load('class_skin');
+        $check = $this->load('class_check');
+        $thongtin = mysqli_query($conn, "SELECT * FROM kich_co WHERE shop='$shop' ORDER BY thu_tu ASC");
+        $i = 0; // Initialize counter
+        $list = '';
+        $tach_id = explode('*', $id);
+        $initial_display_limit = 10; // Number of items to show initially
+
+        while ($r_tt = mysqli_fetch_assoc($thongtin)) {
             $i++;
-            $r_tt['i']=$i;
-            $r_tt['tieu_de']=strtoupper($r_tt['tieu_de']);
-            if(in_array($r_tt['id'], $tach_id)==true){
-                $r_tt['checked']='checked="checked"';
-            }else{
-                $r_tt['checked']='';
-            }
-            $list.=$skin->skin_replace('skin_shop/'.$s.'/tpl/box_li/li_size',$r_tt);
+            $r_tt['i'] = $i;
+            $r_tt['tieu_de'] = strtoupper($r_tt['tieu_de']);
+            $r_tt['checked'] = in_array($r_tt['id'], $tach_id) ? 'checked="checked"' : '';
+            // Add 'hidden' class for items beyond the initial limit
+            $r_tt['hidden_class'] = ($i > $initial_display_limit) ? 'hidden' : '';
+            $list .= $skin->skin_replace('skin_shop/' . $s . '/tpl/box_li/li_size', $r_tt);
         }
         return $list;
     }
@@ -1527,7 +1528,141 @@ class class_shop extends class_manage{
         return $vnp_Url;
     }
 
+    function check_user_purchased($conn, $user_id, $sp_id) {
+        // Đếm số lần user đã mua sản phẩm này ở trạng thái 5 hoặc 7
+        $query = "SELECT * FROM donhang_shop WHERE user_id = '$user_id' AND (status = '5' OR status = '7')";
+        $result = mysqli_query($conn, $query);
+        $count = 0;
+        while($row = mysqli_fetch_assoc($result)) {
+            $sanpham = json_decode($row['sanpham'], true);
+            foreach($sanpham as $item) {
+                if($item['sp_id'] == $sp_id) {
+                    $count += $item['soluong'] ?? 1;
+                }
+            }
+        }
+        return $count;
+    }
 
+    function count_user_reviews($conn, $user_id, $sp_id) {
+        $query = "SELECT COUNT(*) as total FROM product_reviews WHERE user_id = '$user_id' AND sp_id = '$sp_id' AND status = 1";
+        $result = mysqli_query($conn, $query);
+        $row = mysqli_fetch_assoc($result);
+        return (int)($row['total'] ?? 0);
+    }
+
+    function get_product_reviews($conn, $shop, $sp_id, $page = 1, $limit = 10) {
+        $start = ($page - 1) * $limit;
+        $reviews = array();
+        
+        $query = "SELECT r.*, u.username, u.avatar 
+                 FROM product_reviews r 
+                 LEFT JOIN user_info u ON r.user_id = u.user_id 
+                 WHERE r.shop = '$shop' AND r.sp_id = '$sp_id' AND r.status = 1 
+                 ORDER BY r.date_post DESC 
+                 LIMIT $start, $limit";
+                 
+        $result = mysqli_query($conn, $query);
+        while($row = mysqli_fetch_assoc($result)) {
+            $reviews[] = $row;
+        }
+        
+        return $reviews;
+    }
+
+    function add_product_review($conn, $shop, $user_id, $sp_id, $rating, $comment, $images = '') {
+        $date_post = time();
+        $query = "INSERT INTO product_reviews (shop, user_id, sp_id, rating, comment, images, date_post) 
+                 VALUES ('$shop', '$user_id', '$sp_id', '$rating', '$comment', '$images', '$date_post')";
+        return mysqli_query($conn, $query);
+    }
+
+    function get_review_form($conn, $shop, $sp_id, $user_id) {
+        if($user_id == 0) {
+            return '<div class="alert alert-info">Vui lòng <a href="/dang-nhap.html">đăng nhập</a> để đánh giá sản phẩm</div>';
+        }
+        $can_review = $this->check_user_purchased($conn, $user_id, $sp_id);
+        $reviewed = $this->count_user_reviews($conn, $user_id, $sp_id);
+        if($can_review <= 0) {
+            return '<div class="alert alert-info">Bạn cần mua sản phẩm này để đánh giá</div>';
+        }
+        if($reviewed >= $can_review) {
+            return '<div class="alert alert-info">Bạn đã đánh giá đủ số lần cho sản phẩm này (' . $can_review . ' lần)</div>';
+        }
+        $form = '<form id="review-form" class="review-form">
+                    <input type="hidden" name="shop" value="'.$shop.'">
+                    <input type="hidden" name="user_id" value="'.$user_id.'">
+                    <input type="hidden" name="sp_id" value="'.$sp_id.'">
+                    <div class="form-group">
+                        <label>Đánh giá của bạn</label>
+                        <div class="rating">
+                            <input type="radio" name="rating" value="5" id="5"><label for="5">☆</label>
+                            <input type="radio" name="rating" value="4" id="4"><label for="4">☆</label>
+                            <input type="radio" name="rating" value="3" id="3"><label for="3">☆</label>
+                            <input type="radio" name="rating" value="2" id="2"><label for="2">☆</label>
+                            <input type="radio" name="rating" value="1" id="1"><label for="1">☆</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Nhận xét của bạn</label>
+                        <textarea name="comment" class="form-control" rows="4" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Hình ảnh (tùy chọn)</label>
+                        <input type="file" name="images[]" multiple accept="image/*">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Gửi đánh giá</button>
+                </form>';
+        return $form;
+    }
+
+    function get_review_stats($conn, $sp_id) {
+        $query = "SELECT COUNT(*) as total, AVG(rating) as avg_rating FROM product_reviews WHERE sp_id = '$sp_id' AND status = 1";
+        $result = mysqli_query($conn, $query);
+        $row = mysqli_fetch_assoc($result);
+        return [
+            'total' => (int)($row['total'] ?? 0),
+            'avg' => round($row['avg_rating'] ?? 0, 1)
+        ];
+    }
+
+    function display_reviews($conn, $shop, $sp_id, $page = 1) {
+        $stats = $this->get_review_stats($conn, $sp_id);
+        $reviews = $this->get_product_reviews($conn, $shop, $sp_id, $page);
+        $html = '';
+        $html .= '<div class="review-stats"><b>'.$stats['total'].' đánh giá</b> - Trung bình: <span class="review-avg">'.$stats['avg'].'/5</span></div>';
+        if(empty($reviews)) {
+            return $html.'<div class="no-reviews">Chưa có đánh giá nào cho sản phẩm này</div>';
+        }
+        foreach($reviews as $review) {
+            $html .= '<div class="review-item">
+                        <div class="review-header">
+                            <div class="reviewer-info">
+                                <img src="'.$review['avatar'].'" alt="'.$review['username'].'" class="reviewer-avatar">
+                                <span class="reviewer-name">'.$review['username'].'</span>
+                            </div>
+                            <div class="review-rating">';
+            for($i = 1; $i <= 5; $i++) {
+                $html .= '<span class="star '.($i <= $review['rating'] ? 'filled' : '').'">☆</span>';
+            }
+            $html .= '</div>
+                        </div>
+                        <div class="review-content">
+                            <p>'.$review['comment'].'</p>';
+            if(!empty($review['images'])) {
+                $images = explode(',', $review['images']);
+                $html .= '<div class="review-images">';
+                foreach($images as $image) {
+                    $html .= '<img src="/'.$image.'" alt="Review image">';
+                }
+                $html .= '</div>';
+            }
+            $html .= '</div>
+                        <div class="review-date">'.date('d/m/Y', $review['date_post']).'</div>
+                    </div>';
+        }
+        return $html;
+    }
 
 }
 ?>

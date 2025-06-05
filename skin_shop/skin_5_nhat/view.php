@@ -488,6 +488,7 @@ $script_variants = '<script>
 
 $initial_gia_cu = !empty($variants) ? $variants[0]['gia_cu'] : $r_tt['max_gia_cu'];
 
+$stats = $class_index->get_review_stats($conn, $r_tt['id']);
 $replace = array(
     'header' => $skin->skin_normal('skin_shop/' . $s . '/tpl/header_view'),
     'box_header' => $box_header,
@@ -576,6 +577,11 @@ $replace = array(
     'text_button' => $text_button,
     'link_aff' => $r_tt['link_aff'],
     'shop' => $r_shop['user_id'],
+    
+    'review_form' => $class_index->get_review_form($conn, $r_shop['user_id'], $r_tt['id'], $user_info['user_id']),
+    'list_reviews' => $class_index->display_reviews($conn, $r_shop['user_id'], $r_tt['id']),
+    'total_reviews' => $stats['total'],
+    'average_rating' => $stats['avg'],
 );
 
 if ($r_tt['link_aff'] != '') {

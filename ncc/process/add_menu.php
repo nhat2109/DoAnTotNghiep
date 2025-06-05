@@ -15,7 +15,7 @@
 				} else {
 					$ok = 1;
 					$thongbao = 'Thêm menu thành công';
-					mysqli_query($conn, "INSERT INTO menu_shop (shop,menu_tieude,menu_cat,menu_link,menu_target,menu_thutu,menu_loai,menu_vitri)VALUES('$user_id','$tieu_de','','$page','$target','$thu_tu','$loai','$vi_tri')");
+					mysqli_query($conn, "INSERT INTO menu_shop (shop,menu_tieude,menu_cat,menu_link,menu_target,menu_thutu,menu_loai,menu_vitri)VALUES('$user_id','$tieu_de','0','$page','$target','$thu_tu','$loai','$vi_tri')");
 				}
 			} else if ($loai == 'theloai') {
 				if (strlen($tieu_de) < 2) {
@@ -58,7 +58,7 @@
 				} else {
 					$ok = 1;
 					$thongbao = 'Thêm menu thành công';
-					mysqli_query($conn, "INSERT INTO menu_shop (shop,menu_tieude,menu_cat,menu_link,menu_target,menu_thutu,menu_loai,menu_vitri)VALUES('$user_id','$tieu_de','','$link','$target','$thu_tu','$loai','$vi_tri')");
+					mysqli_query($conn, "INSERT INTO menu_shop (shop,menu_tieude,menu_cat,menu_link,menu_target,menu_thutu,menu_loai,menu_vitri)VALUES('$user_id','$tieu_de','0','$link','$target','$thu_tu','$loai','$vi_tri')");
 				}
 			}
 			$info = array(

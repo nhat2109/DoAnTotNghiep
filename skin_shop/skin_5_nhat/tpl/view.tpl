@@ -175,9 +175,22 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div>
-                                    <div class="fb-comments" data-href="{link_xem}" data-numposts="5" data-lazy="true"
-                                        data-width="100%"></div>
+
+                                <!-- Review Section -->
+                                <div id="tab-2" class="tab-content-reviews">
+                                    <div class="product-reviews">
+                                        <!-- <div class="review-stats">
+                                            <span>{total_reviews}</span>
+                                            <span class="review-avg">{average_rating}</span>
+                                        </div> -->
+                                        <div class="review-form-container">
+                                            <div id="review-message" style="display:none; margin-bottom:15px;"></div>
+                                            {review_form}
+                                        </div>
+                                        <div class="reviews-list">
+                                            {list_reviews}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -857,6 +870,153 @@
                 text-align: center;
             }
         }
+
+        /* Review Section Styles */
+        .product-reviews {
+            padding: 20px;
+            background: #fafbfc;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            margin-bottom: 30px;
+        }
+        .review-stats {
+            font-size: 18px;
+            margin-bottom: 18px;
+            color: #e53935;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .review-avg {
+            background: #ffd700;
+            color: #222;
+            border-radius: 4px;
+            padding: 2px 8px;
+            font-size: 16px;
+            margin-left: 6px;
+        }
+        .review-form {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+        }
+        .review-form .form-group {
+            margin-bottom: 15px;
+        }
+        .review-form label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        .rating {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-start;
+        }
+        .rating input {
+            display: none;
+        }
+        .rating label {
+            cursor: pointer;
+            font-size: 32px;
+            color: #ddd;
+            padding: 5px;
+            transition: color 0.2s;
+        }
+        .rating label:hover,
+        .rating label:hover ~ label,
+        .rating input:checked ~ label {
+            color: #ffd700;
+        }
+        .review-item {
+            border-bottom: 1px solid #eee;
+            padding: 20px 0 10px 0;
+            background: #fff;
+            border-radius: 6px;
+            margin-bottom: 12px;
+        }
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .reviewer-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .reviewer-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1.5px solid #eee;
+        }
+        .reviewer-name {
+            font-weight: 500;
+            color: #333;
+        }
+        .review-rating {
+            display: flex;
+            gap: 2px;
+        }
+        .star {
+            color: #ddd;
+            font-size: 20px;
+        }
+        .star.filled {
+            color: #ffd700;
+        }
+        .review-content {
+            margin: 10px 0 0 0;
+            color: #444;
+        }
+        .review-images {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        .review-images img {
+            width: 90px;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 4px;
+            cursor: pointer;
+            border: 1px solid #eee;
+            transition: box-shadow 0.2s;
+        }
+        .review-images img:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        }
+        .review-date {
+            color: #888;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+        .no-reviews {
+            text-align: center;
+            padding: 20px;
+            color: #888;
+        }
+        @media (max-width: 768px) {
+            .product-reviews {
+                padding: 10px;
+            }
+            .review-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            .review-images img {
+                width: 70px;
+                height: 70px;
+            }
+        }
     </style>
     <style type="text/css">
         .image-source-link {
@@ -1063,6 +1223,82 @@
         });
     </script>
 
+    <script>
+        // Review Form Handler
+            $(document).ready(function () {
+                $('#review-form').on('submit', function (e) {
+                    e.preventDefault();
+        
+                    // Hiển thị overlay và thông báo đang xử lý
+                    $(".load_overlay").show();
+                    $(".load_process").show();
+                    $(".load_note").html("Đang xử lý...");
+        
+                    var formData = new FormData(this);
+                    formData.append('action', 'submit_review');
+        
+                    $.ajax({
+                        url: '/process.php',
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function (response) {
+                            try {
+                                var result = JSON.parse(response);
+                                
+                                // Hiển thị thông báo trả về từ server sau 1 giây
+                               
+        
+                                // Ẩn overlay và thông báo sau 2 giây
+                                setTimeout(function () {
+                                    $(".load_process").hide();
+                                    $(".load_note").html("Hệ thống đang xử lý");
+                                    $(".load_overlay").hide();
+        
+                                    if (result.success) {
+                                      //  alert('Cảm ơn bạn đã đánh giá sản phẩm!');
+                                        setTimeout(function () {
+                                            $(".load_note").html(result.thongbao || 'Cảm ơn bạn đã đánh giá sản phẩm!');
+                                        }, 3000);
+                                        location.reload();
+                                    } else {
+                                        alert(result.message || 'Có lỗi xảy ra, vui lòng thử lại!');
+                                    }
+                                }, 2000);
+                            } catch (e) {
+                                $(".load_process").hide();
+                                $(".load_note").html("Hệ thống đang xử lý");
+                                $(".load_overlay").hide();
+                                alert('Có lỗi xảy ra, vui lòng thử lại!');
+                            }
+                        },
+                        error: function () {
+                            $(".load_process").hide();
+                            $(".load_note").html("Hệ thống đang xử lý");
+                            $(".load_overlay").hide();
+                            alert('Có lỗi xảy ra, vui lòng thử lại!');
+                        }
+                    });
+                });
+        
+                // Image preview
+                       
+            // Image preview
+            $('input[type="file"]').on('change', function() {
+                var files = this.files;
+                var preview = $('<div class="image-preview"></div>');
+                for(var i = 0; i < files.length; i++) {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        preview.append('<img src="' + e.target.result + '">');
+                    }
+                    reader.readAsDataURL(files[i]);
+                }
+                $(this).after(preview);
+            });
+        });
+    </script>
   
     
 </body>

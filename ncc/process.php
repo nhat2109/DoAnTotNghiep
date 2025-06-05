@@ -84,49 +84,49 @@ if (!isset($_COOKIE['user_id'])) {
 	
 		$current_time = time();
 
-// Truy vấn bảng deal để lấy danh sách main_product còn hiệu lực
-$deal_query = "SELECT main_product FROM deal WHERE date_end > '$current_time' AND loai = 'flash_sale'";
-$deal_result = mysqli_query($conn, $deal_query);
+		// Truy vấn bảng deal để lấy danh sách main_product còn hiệu lực
+		$deal_query = "SELECT main_product FROM deal WHERE date_end > '$current_time' AND loai = 'flash_sale'";
+		$deal_result = mysqli_query($conn, $deal_query);
 
-if (!$deal_result) {
-    die('Deal Query Error: ' . mysqli_error($conn));
-}
+		if (!$deal_result) {
+			die('Deal Query Error: ' . mysqli_error($conn));
+		}
 
-// Mảng lưu tất cả các ID sản phẩm đang có trong deal
-$deal_product_ids = [];
+		// Mảng lưu tất cả các ID sản phẩm đang có trong deal
+		$deal_product_ids = [];
 
-while ($deal_row = mysqli_fetch_assoc($deal_result)) {
-    // Tách chuỗi main_product thành mảng các ID
-    $ids = explode(',', $deal_row['main_product']);
-    foreach ($ids as $id) {
-        $deal_product_ids[] = trim($id);
-    }
-}
+		while ($deal_row = mysqli_fetch_assoc($deal_result)) {
+			// Tách chuỗi main_product thành mảng các ID
+			$ids = explode(',', $deal_row['main_product']);
+			foreach ($ids as $id) {
+				$deal_product_ids[] = trim($id);
+			}
+		}
 
-// Truy vấn sản phẩm từ sanpham_shop, loại bỏ sản phẩm còn trong deal
-$result = mysqli_query($conn, "SELECT id, tieu_de, gia_cu, gia_moi, minh_hoa FROM sanpham_shop WHERE $where");
+		// Truy vấn sản phẩm từ sanpham_shop, loại bỏ sản phẩm còn trong deal
+		$result = mysqli_query($conn, "SELECT id, tieu_de, gia_cu, gia_moi, minh_hoa FROM sanpham_shop WHERE $where");
 
-if (!$result) {
-    die('Query Error: ' . mysqli_error($conn));
-}
+		if (!$result) {
+			die('Query Error: ' . mysqli_error($conn));
+		}
 
-$products = [];
+		$products = [];
 
-while ($row = mysqli_fetch_assoc($result)) {
-    // Nếu sản phẩm không nằm trong danh sách deal thì mới thêm vào
-    if (!in_array($row['id'], $deal_product_ids)) {
-        $products[] = [
-            'sp_id' => $row['id'],
-            'ten_sp' => $row['tieu_de'],
-            'gia_cu' => number_format($row['gia_cu']) . 'đ',
-            'gia_moi' => number_format($row['gia_moi']) . 'đ',
-            'minh_hoa' => $row['minh_hoa']
-        ];
-    }
-}
+		while ($row = mysqli_fetch_assoc($result)) {
+			// Nếu sản phẩm không nằm trong danh sách deal thì mới thêm vào
+			if (!in_array($row['id'], $deal_product_ids)) {
+				$products[] = [
+					'sp_id' => $row['id'],
+					'ten_sp' => $row['tieu_de'],
+					'gia_cu' => number_format($row['gia_cu']) . 'đ',
+					'gia_moi' => number_format($row['gia_moi']) . 'đ',
+					'minh_hoa' => $row['minh_hoa']
+				];
+			}
+		}
 
-echo json_encode($products);
-exit;
+		echo json_encode($products);
+		exit;
 	}
 	else if ($action == 'get_variants_by_product') {
 		$sp_id = mysqli_real_escape_string($conn, $_REQUEST['sp_id']);

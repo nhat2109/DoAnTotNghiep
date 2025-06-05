@@ -2830,7 +2830,7 @@ $(document).ready(function () {
             }, 1500);
         } else if (sub_product == "") {
             setTimeout(function () {
-                $(".load_note").html("Vui lòng chọn sản phẩm");
+                // $(".load_note").html("Vui lòng chọn sản phẩm");
             }, 500);
             setTimeout(function () {
                 $(".load_process").hide();
@@ -10623,24 +10623,43 @@ $(document).ready(function () {
         var chieurong_shop = $("input[name=chieurong_shop]").val();
         var chieucao_shop = $("input[name=chieucao_shop]").val();
         var list_phanloai = [];
+        
         $(".list_phanloai .li_phanloai").each(function () {
             var phanloai = {
-                ma_sp: $(this).find("input[name^=ma]").val() || "",
-                size: $(this).find("input[name^=size]").attr("giatri") || "",
-                color: $(this).find("input[name^=color]").attr("giatri") || "",
-                ten_size: $(this).find("input[name^=ten_size]").val() || "",
-                ten_color: $(this).find("input[name^=ten_color]").val() || "",
-                ma_mau: $(this).find("input[name^=ma_mau]").val() || "",
-                can_nang: $(this).find("input[name^=can_nang]").val() || "0",
-                gia_cu: $(this).find("input[name^=gia_cu]").val() || "0",
-                gia_moi: $(this).find("input[name^=gia_moi]").val() || "0",
-                kho_sanpham_shop:
-                    $(this).find("input[name^=kho_sanpham_shop]").val() || "0",
-                trongluongtinhship:
-                    $(this).find("input[name^=trongluongtinhship]").val() || "0",
+                // ma_sp: $(this).find("input[name^=ma]").val() || "",
+                // size: $(this).find("input[name^=size]").attr("giatri") || "",
+                // color: $(this).find("input[name^=color]").attr("giatri") || "",
+                // ten_color: $(this).find("input[name^=ten_color]").val() || "",
+                // ma_mau: $(this).find("input[name='ma_mau[]']").attr("ma_mau") || "",
+                // ten_size: $(this).find("input[name^=ten_size]").val() || "",
+                // can_nang: $(this).find("input[name^=can_nang]").val() || "0",
+                // gia_cu: $(this).find("input[name^=gia_cu]").val() || "0",
+                // gia_moi: $(this).find("input[name^=gia_moi]").val() || "0",
+                // kho_sanpham_shop:
+                //     $(this).find("input[name^=kho_sanpham_shop]").val() || "0",
+                // trongluongtinhship:
+                //     $(this).find("input[name^=trongluongtinhship]").val() || "0",
+                    ma_sp: $(this).find("input[name^=ma]").val() || "",
+                    size_shop: $(this).find("input[name^=size_shop]").attr("giatri") || "0",
+                    color_shop: $(this).find("input[name^=color_shop]").attr("giatri") || "0",
+                    ten_size_shop: $(this).find("input[name^=ten_size_shop]").val() || "",
+                    ten_color_shop: $(this).find("input[name^=ten_color_shop]").val() || "",
+                    size: $(this).find("input[name^=size]").attr("giatri") || "0",
+                    color: $(this).find("input[name^=color]").attr("giatri") || "",
+                    ten_color: $(this).find("input[name^=ten_color]").val() || "",
+                    ma_mau: $(this).find("input[ma_mau]").attr("ma_mau") || "",
+                    ten_size: $(this).find("input[name^=ten_size]").val() || "",
+                    can_nang: $(this).find("input[name^=can_nang]").val() || "0",
+                    gia_cu: $(this).find("input[name^=gia_cu]").val() || "0",
+                    gia_moi: $(this).find("input[name^=gia_moi]").val() || "0",
+                    kho_sanpham_shop: $(this).find("input[name^=kho_sanpham_shop]").val() || "0",
+                    trongluongtinhship: $(this).find("input[name^=trongluongtinhship]").val() || "0",
+
             };
             list_phanloai.push(phanloai);
         });
+        // console.log("Danh sách phân loại:", list_phanloai); // Debug: Kiểm tra danh sách phân loại
+        // debugger;
         var tong_kho_sanpham = $(".list_phanloai .li_phanloai")
             .toArray()
             .reduce((sum, el) => {
@@ -10922,15 +10941,14 @@ $(document).ready(function () {
                 ma_sp: $(this).find("input[name^=ma]").val() || "",
                 size_shop: $(this).find("input[name^=size_shop]").attr("giatri") || "0",
                 color_shop:
-                    $(this).find("input[name^=color_shop]").attr("giatri") || "0",
+                $(this).find("input[name^=color_shop]").attr("giatri") || "0",
                 ten_size_shop: $(this).find("input[name^=ten_size_shop]").val() || "",
                 ten_color_shop: $(this).find("input[name^=ten_color_shop]").val() || "",
-                ma_mau_shop: $(this).find("input[name^=ma_mau_shop]").val() || "",
                 size: $(this).find("input[name^=size]").attr("giatri") || "0",
-                color: $(this).find("input[name^=color]").attr("giatri") || "0",
-                ten_size: $(this).find("input[name^=ten_size]").val() || "",
+                color: $(this).find("input[name^=color]").attr("giatri") || "",
                 ten_color: $(this).find("input[name^=ten_color]").val() || "",
-                ma_mau: $(this).find("input[name^=ma_mau]").attr("ma_mau") || "",
+                ma_mau: $(this).find("input[name='ma_mau[]']").attr("ma_mau") || "",
+                ten_size: $(this).find("input[name^=ten_size]").val() || "",
                 can_nang: $(this).find("input[name^=can_nang]").val() || "0",
                 gia_cu: $(this).find("input[name^=gia_cu]").val() || "0",
                 gia_moi: $(this).find("input[name^=gia_moi]").val() || "0",
@@ -10945,6 +10963,8 @@ $(document).ready(function () {
             };
             list_phanloai.push(phanloai);
         });
+        console.log("Danh sách phân loại:", list_phanloai); // Debug: Kiểm tra danh sách phân loại
+        debugger;
         var tong_kho_sanpham = $(".list_phanloai .li_phanloai")
             .toArray()
             .reduce((sum, el) => {

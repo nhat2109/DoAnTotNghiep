@@ -1,5 +1,5 @@
 {header}
-
+     
 <body>
     {box_header}
     <section class="bread-crumb margin-bottom-10">
@@ -106,12 +106,13 @@
                                         </div>
                                     </div> -->
                                     <!-- ./filter size -->
-                                    <div class="group-filter" aria-expanded="true">
+                                   <div class="group-filter" aria-expanded="true">
                                         <div class="layered_subtitle dropdown-filter"><span>Kích thước</span></div>
                                         <div class="layered-content filter-size s-filter">
                                             <ul class="check-box-list clearfix">
-                                            	{list_size}
+                                                {list_size}
                                             </ul>
+                                            <button class="view-more-btn">Xem thêm</button>
                                         </div>
                                     </div>
                                 </div>
@@ -257,6 +258,7 @@
             $('select[name=sort]').val('{sort}');
         });
     </script>
+
 </body>
 
 </html>

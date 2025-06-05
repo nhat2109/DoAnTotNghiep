@@ -1,4 +1,6 @@
 <style>
+    .form_container { display: flex; gap: 20px; }
+    .form_column { flex: 1; }
     .form_group { margin-bottom: 15px; }
     h3 { margin: 20px 0 10px; color: #333; font-size: 16px; border-bottom: 1px solid #ddd; padding-bottom: 5px; }
     .tooltip { position: relative; display: inline-block; cursor: pointer; margin-left: 5px; }
@@ -9,7 +11,11 @@
         transition: opacity 0.3s; font-size: 12px; 
     }
     .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
+    .time_grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .time_grid label { margin-bottom: 5px; display: block; }
+    .time_grid input { width: 100%; box-sizing: border-box; }
 </style>
+
 <div class="box_right">
     <div class="box_right_content">
         <div class="box_profile">
@@ -18,78 +24,82 @@
                 <div class="line"></div>
                 <hr>
             </div>
-            <div class="col_50">
-                <!-- Nhóm 1: Thông tin cơ bản -->
-                <h3>Thông tin cơ bản</h3>
-                <div class="form_group">
-                    <label for="">Nhập mã <span class="tooltip">ⓘ<span class="tooltiptext">Mã voucher, tối đa 5 ký tự, không dấu</span></span></label>
-                    <input type="text" class="form_control" name="ma" value="" placeholder="Viết liền, không dấu, tối đa 5 ký tự..." maxlength="5" oninput="this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '')">
-                </div>
-                <div class="form_group">
-                    <label for="">Kiểu khuyến mại</label>
-                    <select class="form_control" name="loai">
-                        <option value="tru">Trừ theo giá trị (đ)</option>
-                        <option value="phantram">Trừ theo phần trăm (%)</option>
-                    </select>
-                </div>
-                <div class="form_group">
-                    <label for="">Khuyến mại</label>
-                    <input type="text" class="form_control price_format" name="giam" value="" placeholder="Nhập giá trị khuyến mại...">
-                </div>
+            <div class="form_container">
+                <div class="form_column">
+                    <!-- Nhóm 1: Thông tin cơ bản -->
+                    <h3>Thông tin cơ bản</h3>
+                    <div class="form_group">
+                        <label for="">Nhập mã <span class="tooltip">ⓘ<span class="tooltiptext">Mã voucher, tối đa 5 ký tự, không dấu</span></span></label>
+                        <input type="text" class="form_control" name="ma" value="" placeholder="Viết liền, không dấu, tối đa 5 ký tự..." maxlength="5" oninput="this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '')">
+                    </div>
+                    <div class="form_group">
+                        <label for="">Kiểu khuyến mại</label>
+                        <select class="form_control" name="loai">
+                            <option value="tru">Trừ theo giá trị (đ)</option>
+                            <option value="phantram">Trừ theo phần trăm (%)</option>
+                        </select>
+                    </div>
+                    <div class="form_group">
+                        <label for="">Khuyến mại</label>
+                        <input type="text" class="form_control price_format" name="giam" value="" placeholder="Nhập giá trị khuyến mại...">
+                    </div>
 
-                <!-- Nhóm 2: Điều kiện áp dụng -->
-                <h3>Điều kiện áp dụng</h3>
-                <div class="form_group">
-                    <label for="">Kiểu áp dụng</label>
-                    <select class="form_control" name="apdung">
-                        <option value="all">Toàn bộ sản phẩm</option>
-                        <option value="sanpham">Sản phẩm được chọn</option>
-                    </select>
+                    <!-- Nhóm 3: Giới hạn sử dụng -->
+                    <h3>Giới hạn sử dụng</h3>
+                    <div class="form_group" style="display: none;">
+                        <label for="">Cho phép kết hợp với voucher khác</label>
+                        <input type="checkbox" name="allow_combination" value="1">
+                    </div>
+                    <div class="form_group">
+                        <label for="max_uses_per_user">Giới hạn lượt sử dụng/tài khoản</label>
+                        <input type="text" class="form_control number_format" name="max_uses_per_user" value="" placeholder="Nhập số lượt...">
+                    </div>
+                    <div class="form_group">
+                        <label for="">Giới hạn tổng lượt sử dụng</label>
+                        <input type="text" class="form_control number_format" name="max_global_uses" value="" placeholder="Nhập số lượt...">
+                    </div>
                 </div>
-                <div class="form_group">
-                    <label for="">Giá trị đơn hàng tối thiểu (đ)</label>
-                    <input type="text" class="form_control price_format" name="min_price" value="" placeholder="Nhập giá trị tối thiểu...">
-                </div>
-                <div class="form_group">
-                    <label for="">Giá trị đơn hàng tối đa (đ)</label>
-                    <input type="text" class="form_control price_format" name="max_price" value="" placeholder="Nhập giá trị tối đa...">
-                </div>
+                <div class="form_column">
+                    <!-- Nhóm 2: Điều kiện áp dụng -->
+                    <h3>Điều kiện áp dụng</h3>
+                    <div class="form_group">
+                        <label for="">Kiểu áp dụng</label>
+                        <select class="form_control" name="apdung">
+                            <option value="all">Toàn bộ sản phẩm</option>
+                            <option value="sanpham">Sản phẩm được chọn</option>
+                        </select>
+                    </div>
+                    <div class="form_group">
+                        <label for="">Giá trị đơn hàng tối thiểu (đ)</label>
+                        <input type="text" class="form_control price_format" name="min_price" value="" placeholder="Nhập giá trị tối thiểu...">
+                    </div>
+                    <div class="form_group">
+                        <label for="">Giá trị đơn hàng tối đa (đ)</label>
+                        <input type="text" class="form_control price_format" name="max_price" value="" placeholder="Nhập giá trị tối đa...">
+                    </div>
 
-                <!-- Nhóm 3: Giới hạn sử dụng -->
-                <h3>Giới hạn sử dụng</h3>
-                <div class="form_group" style="display: none;">
-                    <label for="">Cho phép kết hợp với voucher khác</label>
-                    <input type="checkbox" name="allow_combination" value="1">
-                </div>
-                <div class="form_group">
-                    <label for="max_uses_per_user" for="">Giới hạn lượt sử dụng/tài khoản</label>
-                    <input type="text" class="form_control number_format" name="max_uses_per_user" value="" placeholder="Nhập số lượt...">
-                </div>
-                <div class="form_group">
-                    <label for="">Giới hạn tổng lượt sử dụng</label>
-                    <input type="text" class="form_control number_format" name="max_global_uses" value="" placeholder="Nhập số lượt...">
-                </div>
-
-                <!-- Nhóm 4: Thời gian áp dụng -->
-                <h3>Thời gian áp dụng</h3>
-                <div class="form_group">
-                    <div class="col_50">
-                        <label for="">Giờ áp dụng</label>
-                        <input type="text" class="form_control timepicker" name="time_start" value="" placeholder="Nhập giờ áp dụng...">
+                    <!-- Nhóm 4: Thời gian áp dụng -->
+                    <h3>Thời gian áp dụng</h3>
+                    <div class="form_group">
+                        <div class="time_grid">
+                            <div>
+                                <label for="">Giờ áp dụng</label>
+                                <input type="text" class="form_control timepicker" name="time_start" value="" placeholder="Nhập giờ áp dụng...">
+                            </div>
+                            <div>
+                                <label for="">Ngày áp dụng</label>
+                                <input type="text" class="form_control datepicker" name="date_start" value="" placeholder="Nhập ngày áp dụng...">
+                            </div>
+                            <div>
+                                <label for="">Giờ hết hạn</label>
+                                <input type="text" class="form_control timepicker" name="time_expired" value="" placeholder="Nhập giờ hết hạn...">
+                            </div>
+                            <div>
+                                <label for="">Ngày hết hạn</label>
+                                <input type="text" class="form_control datepicker" name="date_expired" value="" placeholder="Nhập ngày hết hạn...">
+                            </div>
+                        </div>
                     </div>
-                    <div class="col_50">
-                        <label for="">Ngày áp dụng</label>
-                        <input type="text" class="form_control datepicker" name="date_start" value="" placeholder="Nhập ngày áp dụng...">
-                    </div>
-                    <div class="col_50">
-                        <label for="">Giờ hết hạn</label>
-                        <input type="text" class="form_control timepicker" name="time_expired" value="" placeholder="Nhập giờ hết hạn...">
-                    </div>
-                    <div class="col_50">
-                        <label for="">Ngày hết hạn</label>
-                        <input type="text" class="form_control datepicker" name="date_expired" value="" placeholder="Nhập ngày hết hạn...">
-                    </div>
-                    <div style="clear: both;"></div>
                 </div>
             </div>
 
@@ -106,7 +116,7 @@
 
             <div style="clear: both;"></div>
             <div class="form_group">
-                <button name="add_coupon" class="button_all">Thêm coupon</button>
+                <button name="add_coupon" class="button_all">Thêm voucher</button>
             </div>
         </div>
     </div>
@@ -135,8 +145,8 @@
         $('input.timepicker').timepicker({'timeFormat': 'H:i:s','step': 5});
         $.datepicker.setDefaults({
             closeText: "Đóng",
-            prevText: "&#x3C;Trước",
-            nextText: "Tiếp&#x3E;",
+            prevText: "<Trước",
+            nextText: "Tiếp>",
             currentText: "Hôm nay",
             monthNames: ["Tháng Một", "Tháng Hai", "Tháng Ba", "Tháng Tư", "Tháng Năm", "Tháng Sáu",
                 "Tháng Bảy", "Tháng Tám", "Tháng Chín", "Tháng Mười", "Tháng Mười Một", "Tháng Mười Hai"
@@ -161,6 +171,4 @@
     $('.number_format').on('input', function() {
         this.value = this.value.replace(/[^0-9]/g, '');
     });
-   
 </script>
-

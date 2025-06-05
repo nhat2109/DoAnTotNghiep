@@ -40,7 +40,7 @@ if ($r_tt['total'] == 0) {
     if (isset($_FILES['file']) && $_FILES['file']['error'] == 0) {
         $duoi = $check->duoi_file($_FILES['file']['name']);
         if (in_array($duoi, ['jpg', 'jpeg', 'png175', 'gif', 'webp'])) {
-            $minh_hoa = '/Uploads/minh-hoa/' . $check->blank($tieu_de) . '-' . time() . '.' . $duoi;
+            $minh_hoa = '/uploads/minh-hoa/' . $check->blank($tieu_de) . '-' . time() . '.' . $duoi;
             move_uploaded_file($_FILES['file']['tmp_name'], '..' . $minh_hoa);
             if ($r_tt['minh_hoa'] && $r_tt['minh_hoa'] != $r_sp['minh_hoa']) {
                 @unlink('..' . $r_tt['minh_hoa']);
